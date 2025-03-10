@@ -60,6 +60,7 @@ kotlin {
             implementation(libs.bundles.paging)
         }
         commonTest.dependencies {
+            implementation(libs.koin.test)
             implementation(libs.bundles.paging)
             implementation(projects.core.testing)
             implementation(libs.kotlin.test)
@@ -92,6 +93,9 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+    testOptions {
+        unitTests.isReturnDefaultValues = true
     }
 }
 
