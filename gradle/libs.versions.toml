@@ -18,7 +18,7 @@ kotlin = "2.1.0"
 ktor = "3.1.1"
 androidx-lifecycle-viewmodel-compose = "2.8.2"
 collectionImmutable = "0.3.7"
-koin = "4.1.0-Beta5"
+koin = "3.6.0-Beta4"
 koinComposeMultiplatform = "1.2.0-Beta4"
 navigationCompose = "2.8.0-alpha02"
 kotlinVersion = "1.9.0"
@@ -30,6 +30,7 @@ coil = "2.4.0"
 paging3 = "3.3.0"
 paging = "3.3.0-alpha02-0.4.0"
 buildConfig= "5.5.2"
+kotlinx-coroutines = "1.10.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -47,6 +48,7 @@ androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle
 androidx-material3 = { module = "androidx.compose.material3:material3", version.ref = "androidx-material3" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 
 assertk = { module = "com.willowtreeapps.assertk:assertk", version.ref = "assertk" }
 compose-ui-test-junit4-android = { module = "androidx.compose.ui:ui-test-junit4-android", version.ref = "composeTest" }

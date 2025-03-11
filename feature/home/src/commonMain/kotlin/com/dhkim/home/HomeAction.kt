@@ -1,6 +1,6 @@
 package com.dhkim.home
 
-import com.dhim.core.movie.domain.model.Movie
+import com.dhkim.core.movie.domain.model.Movie
 
 sealed interface HomeAction {
 

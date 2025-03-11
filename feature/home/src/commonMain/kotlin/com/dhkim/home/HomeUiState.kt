@@ -1,7 +1,7 @@
 package com.dhkim.home
 
 import app.cash.paging.PagingData
-import com.dhim.core.movie.domain.model.Movie
+import com.dhkim.core.movie.domain.model.Movie
 import kotlinx.coroutines.flow.StateFlow
 
 data class HomeUiState(

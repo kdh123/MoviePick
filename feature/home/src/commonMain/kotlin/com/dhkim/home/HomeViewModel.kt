@@ -3,8 +3,8 @@ package com.dhkim.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.paging.PagingData
-import com.dhim.core.movie.domain.model.Movie
-import com.dhim.core.movie.domain.usecase.GetMoviesUseCase
+import com.dhkim.core.movie.domain.model.Movie
+import com.dhkim.core.movie.domain.usecase.GetMoviesUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch

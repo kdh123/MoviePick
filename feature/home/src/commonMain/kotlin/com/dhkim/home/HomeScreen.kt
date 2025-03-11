@@ -14,8 +14,7 @@ import app.cash.paging.compose.LazyPagingItems
 import app.cash.paging.compose.collectAsLazyPagingItems
 import app.cash.paging.compose.itemContentType
 import app.cash.paging.compose.itemKey
-import com.dhim.core.movie.domain.model.Movie
-import com.dhim.core.movie.domain.model.MovieGenre
+import com.dhkim.core.movie.domain.model.Movie
 import com.skydoves.landscapist.coil3.CoilImage
 import moviepick.feature.home.generated.resources.Res
 import moviepick.feature.home.generated.resources.ic_smile

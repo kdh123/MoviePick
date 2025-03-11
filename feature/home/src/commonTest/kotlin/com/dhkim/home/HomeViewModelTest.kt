@@ -1,4 +1,4 @@
-import com.dhim.core.movie.domain.usecase.GetMoviesUseCase
+import com.dhkim.core.movie.domain.usecase.GetMoviesUseCase
 import com.dhkim.core.testing.FakeGetTopRatedMoviesUseCase
 import com.dhkim.core.testing.MovieStatus
 import com.dhkim.home.HomeViewModel

@@ -28,9 +28,12 @@ kotlin {
             isStatic = true
         }
     }
+
+    jvm("desktop")
     
     sourceSets {
-        
+        val desktopMain by getting
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
@@ -60,6 +63,10 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.navigation.compose)
+        }
+        desktopMain.dependencies {
+            implementation(compose.desktop.currentOs)
+            implementation(libs.kotlinx.coroutines.swing)
         }
     }
 }
@@ -94,5 +101,17 @@ android {
 dependencies {
     implementation(project(":feature:home"))
     debugImplementation(compose.uiTooling)
+}
+
+compose.desktop {
+    application {
+        mainClass = "com.dhkim.moviepick.MainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            packageName = "com.dhkim.moviepick"
+            packageVersion = "1.0.0"
+        }
+    }
 }
 

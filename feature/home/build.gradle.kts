@@ -1,5 +1,6 @@
 
 import org.jetbrains.compose.ExperimentalComposeLibrary
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -28,7 +29,10 @@ kotlin {
         }
     }
 
+    jvm("desktop")
+
     sourceSets {
+        val desktopMain by getting
 
         androidMain.dependencies {
             implementation(compose.preview)
@@ -62,7 +66,10 @@ kotlin {
             implementation(libs.navigation.compose)
             implementation(libs.bundles.paging)
         }
-
+        desktopMain.dependencies {
+            implementation(compose.desktop.currentOs)
+            implementation(libs.kotlinx.coroutines.swing)
+        }
         commonTest.dependencies {
             implementation(projects.core.testing)
             implementation(libs.kotlin.test)
@@ -101,5 +108,17 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
+}
+
+compose.desktop {
+    application {
+        mainClass = "com.dhkim.moviepick.MainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            packageName = "com.dhkim.moviepick"
+            packageVersion = "1.0.0"
+        }
+    }
 }
 

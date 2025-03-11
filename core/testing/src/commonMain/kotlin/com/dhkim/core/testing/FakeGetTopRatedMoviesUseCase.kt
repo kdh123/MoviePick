@@ -1,9 +1,9 @@
 package com.dhkim.core.testing
 
 import app.cash.paging.PagingData
-import com.dhim.core.movie.domain.model.Movie
-import com.dhim.core.movie.domain.model.MovieGenre
-import com.dhim.core.movie.domain.usecase.GetMoviesUseCase
+import com.dhkim.core.movie.domain.model.Movie
+import com.dhkim.core.movie.domain.model.MovieGenre
+import com.dhkim.core.movie.domain.usecase.GetMoviesUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow

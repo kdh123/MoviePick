@@ -1,8 +1,8 @@
 package movie
 
 import app.cash.paging.testing.asSnapshot
-import com.dhim.core.movie.data.di.movieModule
-import com.dhim.core.movie.domain.usecase.GetMoviesUseCase
+import com.dhkim.core.movie.data.di.movieModule
+import com.dhkim.core.movie.domain.usecase.GetMoviesUseCase
 import com.dhkim.core.testing.FakeGetTopRatedMoviesUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -3,12 +3,10 @@ package com.dhkim.home
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import app.cash.paging.PagingData
-import com.dhim.core.movie.domain.model.Movie
-import com.dhim.core.movie.domain.model.MovieGenre
-import com.dhim.core.movie.domain.usecase.GetMoviesUseCase
+import com.dhkim.core.movie.domain.model.Movie
+import com.dhkim.core.movie.domain.model.MovieGenre
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import org.koin.compose.koinInject
 
 @Preview(showBackground = true)
 @Composable

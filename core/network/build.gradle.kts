@@ -38,7 +38,10 @@ kotlin {
         }
     }
 
+    jvm("desktop")
+
     sourceSets {
+        val desktopMain by getting
 
         androidMain.dependencies {
             implementation(compose.preview)
@@ -68,6 +71,11 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.navigation.compose)
+        }
+        desktopMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
+            implementation(compose.desktop.currentOs)
+            implementation(libs.kotlinx.coroutines.swing)
         }
         nativeMain.dependencies {
             implementation(libs.ktor.client.darwin)
