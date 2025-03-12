@@ -27,6 +27,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+include(":core:designsystem")
 
 include(":core:network")
 include(":core:movie")
