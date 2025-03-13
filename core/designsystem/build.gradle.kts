@@ -1,5 +1,3 @@
-import org.jetbrains.compose.ExperimentalComposeLibrary
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -31,14 +29,6 @@ kotlin {
     jvm("desktop")
 
     sourceSets {
-        val desktopMain by getting
-
-        androidMain.dependencies {
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.koin.android)
-            implementation(libs.koin.androidx.compose)
-        }
         commonMain.dependencies {
             implementation(projects.core.network)
             implementation(compose.runtime)
@@ -48,35 +38,7 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodel)
-            implementation(libs.androidx.lifecycle.runtime.compose)
-
-            implementation(libs.kotlinx.collections.immutable)
             implementation(compose.components.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodel)
-            implementation(libs.androidx.lifecycle.runtime.compose)
-
-            implementation(libs.bundles.ktor)
-
-            api(libs.koin.core)
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
-            implementation(libs.navigation.compose)
-            implementation(libs.bundles.paging)
-        }
-        desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutines.swing)
-        }
-        commonTest.dependencies {
-            implementation(libs.koin.test)
-            implementation(libs.bundles.paging)
-            implementation(projects.core.testing)
-            implementation(libs.kotlin.test)
-            implementation(kotlin("test-annotations-common"))
-            implementation(libs.assertk)
-            @OptIn(ExperimentalComposeLibrary::class)
-            implementation(compose.uiTest)
         }
     }
 }

@@ -1,5 +1,4 @@
 import org.jetbrains.compose.ExperimentalComposeLibrary
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -31,14 +30,7 @@ kotlin {
     jvm("desktop")
 
     sourceSets {
-        val desktopMain by getting
 
-        androidMain.dependencies {
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.koin.android)
-            implementation(libs.koin.androidx.compose)
-        }
         commonMain.dependencies {
             implementation(projects.core.network)
             implementation(compose.runtime)
@@ -63,10 +55,7 @@ kotlin {
             implementation(libs.navigation.compose)
             implementation(libs.bundles.paging)
         }
-        desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutines.swing)
-        }
+
         commonTest.dependencies {
             implementation(libs.koin.test)
             implementation(libs.bundles.paging)
