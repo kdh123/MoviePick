@@ -3,6 +3,7 @@ package com.dhkim.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.paging.PagingData
+import app.cash.paging.cachedIn
 import com.dhkim.core.movie.domain.model.Movie
 import com.dhkim.core.movie.domain.usecase.GetMoviesUseCase
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,9 +15,10 @@ import kotlinx.coroutines.flow.stateIn
 import org.koin.core.component.KoinComponent
 
 class HomeViewModel(
-     private val getTopRatedMoviesUseCase: GetMoviesUseCase
+    private val getTopRatedMoviesUseCase: GetMoviesUseCase
 ) : ViewModel(), KoinComponent {
     val uiState: StateFlow<HomeUiState> = getTopRatedMoviesUseCase()
+        .cachedIn(viewModelScope)
         .map { it.toUiState() }
         .catch {
             val error = it.message

@@ -43,6 +43,7 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.core.designsystem)
             implementation(projects.feature.home)
+            implementation(projects.feature.upcoming)
 
             implementation(compose.runtime)
             implementation(compose.foundation)
