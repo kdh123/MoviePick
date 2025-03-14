@@ -13,4 +13,8 @@ class FakeMovieRepository : MovieRepository {
     override fun getTopRatedMovies(): Flow<PagingData<Movie>> {
         return remoteMovieDataSource.getTopRatedMovies()
     }
+
+    override fun getNowPlayingMovies(): Flow<List<Movie>> {
+        return remoteMovieDataSource.getNowPlayingMovies()
+    }
 }

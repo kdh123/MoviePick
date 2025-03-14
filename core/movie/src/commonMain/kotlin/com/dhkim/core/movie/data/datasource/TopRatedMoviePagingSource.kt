@@ -26,7 +26,7 @@ internal class TopRatedMoviePagingSource(
                 url {
                     path("/3/movie/top_rated")
                 }
-                parameter("language", "en-US")
+                parameter("language", "ko-KR")
                 parameter("page", nextPageNumber)
             }
 

@@ -1,4 +1,7 @@
+import com.dhkim.core.movie.data.di.NOW_PLAYING_MOVIES_KEY
+import com.dhkim.core.movie.data.di.TOP_RATED_MOVIES_KEY
 import com.dhkim.core.movie.domain.usecase.GetMoviesUseCase
+import com.dhkim.core.testing.FakeGetNowPlayingMoviesUseCase
 import com.dhkim.core.testing.FakeGetTopRatedMoviesUseCase
 import com.dhkim.core.testing.MovieStatus
 import com.dhkim.home.HomeViewModel
@@ -17,7 +20,8 @@ import kotlin.test.Test
 class HomeViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
-    private lateinit var getMoviesUseCase: GetMoviesUseCase
+    private lateinit var getTopRatedMoviesUseCase: GetMoviesUseCase
+    private lateinit var getNowPlayingMoviesUseCase: GetMoviesUseCase
     private lateinit var viewModel: HomeViewModel
 
     @BeforeTest
@@ -27,20 +31,29 @@ class HomeViewModelTest {
 
     @Test
     fun `영화 탑 순위 가져오기 성공`() = runTest {
-        getMoviesUseCase = FakeGetTopRatedMoviesUseCase()
-        viewModel = HomeViewModel(getMoviesUseCase)
+        getTopRatedMoviesUseCase = FakeGetTopRatedMoviesUseCase()
+        getNowPlayingMoviesUseCase = FakeGetNowPlayingMoviesUseCase()
+
+        viewModel = HomeViewModel(
+            getTopRatedMoviesUseCase,
+            getNowPlayingMoviesUseCase
+        )
 
         viewModel.uiState.first()
-
         println("answer : ${viewModel.uiState.value}")
     }
 
     @Test
     fun `영화 탑 순위 가져오기 실패`() = runTest {
-        getMoviesUseCase = FakeGetTopRatedMoviesUseCase().apply {
+        getTopRatedMoviesUseCase = FakeGetTopRatedMoviesUseCase().apply {
             setStatus(MovieStatus.Error)
         }
-        viewModel = HomeViewModel(getMoviesUseCase)
+        getNowPlayingMoviesUseCase = FakeGetNowPlayingMoviesUseCase()
+
+        viewModel = HomeViewModel(
+            getTopRatedMoviesUseCase,
+            getNowPlayingMoviesUseCase
+        )
 
         viewModel.uiState.first()
 
@@ -50,7 +63,8 @@ class HomeViewModelTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @AfterTest
     fun tearDown() {
-        (getMoviesUseCase as FakeGetTopRatedMoviesUseCase).setStatus(MovieStatus.Success)
+        (getTopRatedMoviesUseCase as FakeGetTopRatedMoviesUseCase).setStatus(MovieStatus.Success)
+        (getNowPlayingMoviesUseCase as FakeGetNowPlayingMoviesUseCase).setStatus(MovieStatus.Success)
         Dispatchers.resetMain()
     }
 }

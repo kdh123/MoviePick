@@ -7,4 +7,5 @@ import kotlinx.coroutines.flow.Flow
 interface RemoteMovieDataSource {
 
     fun getTopRatedMovies(): Flow<PagingData<Movie>>
+    fun getNowPlayingMovies(): Flow<List<Movie>>
 }

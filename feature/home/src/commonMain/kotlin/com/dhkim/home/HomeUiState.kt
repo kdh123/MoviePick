@@ -1,8 +1,6 @@
 package com.dhkim.home
 
-import app.cash.paging.PagingData
-import com.dhkim.core.movie.domain.model.Movie
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.collections.immutable.ImmutableList
 
 data class HomeUiState(
     val displayState: HomeDisplayState = HomeDisplayState.Loading
@@ -11,5 +9,5 @@ data class HomeUiState(
 sealed interface HomeDisplayState {
     data object Loading : HomeDisplayState
     data class Error(val errorCode: String, val message: String) : HomeDisplayState
-    data class Contents(val movies: StateFlow<PagingData<Movie>>) : HomeDisplayState
+    data class Contents(val movies: ImmutableList<HomeMovieItem>) : HomeDisplayState
 }

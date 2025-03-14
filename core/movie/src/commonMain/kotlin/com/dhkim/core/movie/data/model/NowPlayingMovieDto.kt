@@ -6,11 +6,13 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TopRatedMovieDto(
+data class NowPlayingMovieDto(
+    @SerialName("dates")
+    val dates: Dates,
     @SerialName("page")
     val page: Int,
     @SerialName("results")
-    val results: List<TopRatedMovieResult>,
+    val results: List<NowPlayingMovieResult>,
     @SerialName("total_pages")
     val totalPages: Int,
     @SerialName("total_results")
@@ -18,15 +20,21 @@ data class TopRatedMovieDto(
 )
 
 @Serializable
-data class TopRatedMovieResult(
+data class Dates(
+    val maximum: String,
+    val minimum: String
+)
+
+@Serializable
+data class NowPlayingMovieResult(
+    @SerialName("id")
+    val id: Int,
     @SerialName("adult")
     val adult: Boolean,
     @SerialName("backdrop_path")
-    val backdropPath: String,
+    val backdropPath: String?,
     @SerialName("genre_ids")
     val genreIds: List<Int>,
-    @SerialName("id")
-    val id: Int,
     @SerialName("original_language")
     val originalLanguage: String,
     @SerialName("original_title")
@@ -48,7 +56,7 @@ data class TopRatedMovieResult(
     @SerialName("vote_count")
     val voteCount: Int
 ) {
-    fun toTopRatedMovie(): Movie {
+    fun toNowPlayingMovie(): Movie {
         return Movie(
             id = "$id",
             title = title,

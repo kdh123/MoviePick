@@ -5,7 +5,10 @@ data class Movie(
     val title: String,
     val overview: String,
     val genre: List<String>,
-    val imageUrl: String,
+    val releasedDate: String,
+    val popularity: Double,
+    val voteAverage: Double,
+    val imageUrl: String
 )
 
 enum class MovieGenre(val id: Int, val genre: String) {

@@ -13,21 +13,41 @@ import kotlinx.coroutines.flow.flow
 
 class FakeRemoteMovieDataSource : RemoteMovieDataSource {
 
-    private val movies = mutableListOf<Movie>().apply {
+    private val topRatedMovies = mutableListOf<Movie>().apply {
         repeat(50) {
             add(
                 Movie(
-                    id = "id$it",
-                    title = "title$it",
+                    id = "topRatedId$it",
+                    title = "top rated title$it",
                     overview = "overview $it",
                     genre = listOf(MovieGenre.ACTION.genre, MovieGenre.DRAMA.genre),
-                    imageUrl = "imageUrl$it"
+                    imageUrl = "imageUrl$it",
+                    releasedDate = "2025-03-13",
+                    voteAverage = 5.5 + it.toDouble(),
+                    popularity = 45.38 + it.toDouble()
                 )
             )
         }
     }
 
-    private val pagingSourceFactory = movies.asPagingSourceFactory()
+    private val nowPlayingMovies = mutableListOf<Movie>().apply {
+        repeat(50) {
+            add(
+                Movie(
+                    id = "nowPlayingId$it",
+                    title = "now playing title$it",
+                    overview = "overview $it",
+                    genre = listOf(MovieGenre.ACTION.genre, MovieGenre.DRAMA.genre),
+                    imageUrl = "imageUrl$it",
+                    releasedDate = "2025-02-05",
+                    voteAverage = 5.5 + it.toDouble(),
+                    popularity = 45.38 + it.toDouble()
+                )
+            )
+        }
+    }
+
+    private val pagingSourceFactory = topRatedMovies.asPagingSourceFactory()
     private val pagingSource = pagingSourceFactory()
 
     override fun getTopRatedMovies(): Flow<PagingData<Movie>> {
@@ -38,6 +58,12 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
                 append()
             } as PagingSource.LoadResult.Page
             emit(PagingData.from(page.data))
+        }
+    }
+
+    override fun getNowPlayingMovies(): Flow<List<Movie>> {
+        return flow {
+            emit(nowPlayingMovies)
         }
     }
 }

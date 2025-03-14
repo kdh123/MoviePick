@@ -20,7 +20,10 @@ private fun HomeScreenPreview() {
                     title = "title$it",
                     overview = "overview $it",
                     genre = listOf(MovieGenre.ACTION.genre, MovieGenre.DRAMA.genre),
-                    imageUrl = "imageUrl$it"
+                    imageUrl = "imageUrl$it",
+                    releasedDate = "2025-03-13",
+                    voteAverage = 5.5 + it.toDouble(),
+                    popularity = 45.38 + it.toDouble()
                 )
             )
         }
@@ -28,7 +31,7 @@ private fun HomeScreenPreview() {
 
     val pagingData = MutableStateFlow(PagingData.from(movies)).asStateFlow()
 
-    HomeScreen(
+   /* HomeScreen(
         uiState = HomeUiState(displayState = HomeDisplayState.Contents(pagingData))
-    )
+    )*/
 }

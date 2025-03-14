@@ -6,13 +6,11 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import app.cash.paging.compose.LazyPagingItems
-import app.cash.paging.compose.collectAsLazyPagingItems
 import app.cash.paging.compose.itemContentType
 import app.cash.paging.compose.itemKey
 import com.dhkim.core.designsystem.MoviePickTheme
@@ -24,7 +22,7 @@ fun UpcomingScreen(
     uiState: UpcomingUiState
 ) {
 
-    Text(text = "Upcoming", style = MoviePickTheme.typography.headlineLarge, color = Color.White)
+    Text(text = "Upcoming", style = MoviePickTheme.typography.headlineLarge)
     /*when (uiState.displayState) {
         UpcomingDisplayState.Loading -> {
 
