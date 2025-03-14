@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import app.cash.paging.PagingData
 import app.cash.paging.cachedIn
 import com.dhkim.common.handle
+import com.dhkim.core.movie.data.di.NOW_PLAYING_MOVIES_KEY
+import com.dhkim.core.movie.data.di.TOP_RATED_MOVIES_KEY
 import com.dhkim.core.movie.domain.model.Movie
 import com.dhkim.core.movie.domain.usecase.GetMoviesUseCase
 import kotlinx.collections.immutable.persistentListOf
@@ -21,8 +23,7 @@ import org.koin.core.component.KoinComponent
 
 @ExperimentalCoroutinesApi
 class HomeViewModel(
-    private val getTopRatedMoviesUseCase: GetMoviesUseCase,
-    private val getNowPlayingMoviesUseCase: GetMoviesUseCase,
+    private val getMoviesUseCase: Map<String, GetMoviesUseCase>
 ) : ViewModel(), KoinComponent {
 
     private val _uiState = MutableStateFlow(HomeUiState(HomeDisplayState.Loading))
@@ -37,8 +38,8 @@ class HomeViewModel(
     private fun init() {
         viewModelScope.handle(
             block = {
-                val topRatedMovies = getTopRatedMoviesUseCase().cachedIn(viewModelScope).first().toHomeMovieItem(group = HomeMovieGroup.TOP_RATED)
-                val nowPlayingMovies = getNowPlayingMoviesUseCase().cachedIn(viewModelScope).first().toHomeMovieItem(group = HomeMovieGroup.NOW_PLAYING)
+                val topRatedMovies = getMoviesUseCase[TOP_RATED_MOVIES_KEY]!!().cachedIn(viewModelScope).first().toHomeMovieItem(group = HomeMovieGroup.TOP_RATED)
+                val nowPlayingMovies = getMoviesUseCase[NOW_PLAYING_MOVIES_KEY]!!().cachedIn(viewModelScope).first().toHomeMovieItem(group = HomeMovieGroup.NOW_PLAYING)
                 val movies = persistentListOf(topRatedMovies, nowPlayingMovies)
 
                 _uiState.update { HomeUiState(HomeDisplayState.Contents(movies = movies)) }
