@@ -43,7 +43,7 @@ kotlin {
             implementation(projects.core.common)
             implementation(projects.core.designsystem)
             implementation(projects.core.network)
-            implementation(projects.core.movie)
+            implementation(projects.domain.movie)
             implementation(projects.core.tv)
 
             implementation(compose.runtime)
@@ -77,7 +77,8 @@ kotlin {
             implementation(libs.assertk)
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.uiTest)
-            implementation(projects.core.movie)
+            implementation(projects.domain.movie)
+            implementation(projects.data.movie)
         }
     }
 }

@@ -1,8 +1,8 @@
 package com.dhkim.core.testing.movie
 
 import app.cash.paging.PagingData
-import com.dhkim.core.movie.domain.model.Movie
-import com.dhkim.core.movie.domain.usecase.GetMoviesUseCase
+import com.dhkim.domain.movie.model.Movie
+import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow

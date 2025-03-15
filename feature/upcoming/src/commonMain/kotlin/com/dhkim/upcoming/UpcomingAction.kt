@@ -1,6 +1,6 @@
 package com.dhkim.upcoming
 
-import com.dhkim.core.movie.domain.model.Movie
+import com.dhkim.domain.movie.model.Movie
 
 sealed interface UpcomingAction {
 

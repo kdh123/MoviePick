@@ -15,7 +15,7 @@ import app.cash.paging.compose.LazyPagingItems
 import app.cash.paging.compose.itemContentType
 import app.cash.paging.compose.itemKey
 import com.dhkim.core.designsystem.MoviePickTheme
-import com.dhkim.core.movie.domain.model.Movie
+import com.dhkim.domain.movie.model.Movie
 import com.skydoves.landscapist.coil3.CoilImage
 
 @Composable

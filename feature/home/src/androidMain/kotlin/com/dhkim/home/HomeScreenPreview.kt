@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import app.cash.paging.PagingData
 import com.dhkim.common.Genre
-import com.dhkim.core.movie.domain.model.Movie
+import com.dhkim.domain.movie.model.Movie
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 

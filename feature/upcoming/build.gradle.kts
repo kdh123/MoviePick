@@ -42,7 +42,8 @@ kotlin {
 
             implementation(projects.core.common)
             implementation(projects.core.designsystem)
-            implementation(projects.core.movie)
+            implementation(projects.domain.movie)
+            implementation(projects.data.movie)
 
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -75,7 +76,7 @@ kotlin {
             implementation(libs.assertk)
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.uiTest)
-            implementation(projects.core.movie)
+            implementation(projects.domain.movie)
         }
     }
 }

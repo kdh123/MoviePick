@@ -40,7 +40,8 @@ kotlin {
         }
         commonMain.dependencies {
             implementation(projects.core.common)
-            implementation(projects.core.movie)
+            implementation(projects.domain.movie)
+            implementation(projects.domain.movie)
             implementation(projects.core.tv)
 
             implementation(compose.runtime)

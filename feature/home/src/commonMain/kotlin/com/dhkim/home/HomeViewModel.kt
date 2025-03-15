@@ -10,13 +10,13 @@ import com.dhkim.common.Region
 import com.dhkim.common.Series
 import com.dhkim.common.handle
 import com.dhkim.common.onetimeStateIn
-import com.dhkim.core.movie.data.di.NOW_PLAYING_MOVIES_KEY
-import com.dhkim.core.movie.data.di.TOP_RATED_MOVIES_KEY
-import com.dhkim.core.movie.domain.usecase.GetMoviesUseCase
 import com.dhkim.core.tv.data.di.AIRING_TODAY_TVS_KEY
 import com.dhkim.core.tv.data.di.ON_THE_AIR_TVS_KEY
 import com.dhkim.core.tv.data.di.TOP_RATED_TVS_KEY
 import com.dhkim.core.tv.domain.usecase.GetTvsUseCase
+import com.dhkim.domain.movie.usecase.GetMoviesUseCase
+import com.dhkim.domain.movie.usecase.NOW_PLAYING_MOVIES_KEY
+import com.dhkim.domain.movie.usecase.TOP_RATED_MOVIES_KEY
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow

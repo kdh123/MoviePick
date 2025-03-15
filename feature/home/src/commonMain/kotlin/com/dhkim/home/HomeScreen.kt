@@ -19,8 +19,8 @@ import app.cash.paging.compose.itemContentType
 import app.cash.paging.compose.itemKey
 import com.dhkim.common.Series
 import com.dhkim.core.designsystem.MoviePickTheme
-import com.dhkim.core.movie.domain.model.Movie
 import com.dhkim.core.tv.domain.model.Tv
+import com.dhkim.domain.movie.model.Movie
 import com.skydoves.landscapist.coil3.CoilImage
 import kotlinx.collections.immutable.ImmutableList
 import moviepick.feature.home.generated.resources.Res

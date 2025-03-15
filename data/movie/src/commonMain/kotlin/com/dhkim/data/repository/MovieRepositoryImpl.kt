@@ -1,21 +1,26 @@
-package com.dhkim.core.testing.movie
-
+package com.dhkim.data.repository
 
 import app.cash.paging.PagingData
+import com.dhkim.domain.movie.datasource.RemoteMovieDataSource
 import com.dhkim.domain.movie.model.Movie
 import com.dhkim.domain.movie.repository.MovieRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 
-class FakeMovieRepository : MovieRepository {
-
-    private val remoteMovieDataSource = FakeRemoteMovieDataSource()
+class MovieRepositoryImpl(
+    private val remoteMovieDataSource: RemoteMovieDataSource
+) : MovieRepository {
 
     override fun getTopRatedMovies(language: String, region: String): Flow<PagingData<Movie>> {
         return remoteMovieDataSource.getTopRatedMovies(language, region)
     }
 
     override fun getNowPlayingMovies(language: String, region: String): Flow<PagingData<Movie>> {
-        return remoteMovieDataSource.getNowPlayingMovies(language, region)
+        return flow {
+            val nowPlayingMovies = remoteMovieDataSource.getNowPlayingMovies(language, region).first()
+            emit(nowPlayingMovies)
+        }
     }
 
     override fun getUpcomingMovies(language: String, region: String): Flow<PagingData<Movie>> {

@@ -6,8 +6,8 @@ import app.cash.paging.PagingData
 import app.cash.paging.testing.TestPager
 import app.cash.paging.testing.asPagingSourceFactory
 import com.dhkim.common.Genre
-import com.dhkim.core.movie.domain.model.Movie
-import com.dhkim.core.movie.domain.datasource.RemoteMovieDataSource
+import com.dhkim.domain.movie.datasource.RemoteMovieDataSource
+import com.dhkim.domain.movie.model.Movie
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

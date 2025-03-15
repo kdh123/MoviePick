@@ -22,7 +22,7 @@ kotlin {
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "core.di"
+            baseName = "domain.movie"
             isStatic = true
         }
     }
@@ -33,9 +33,7 @@ kotlin {
 
         commonMain.dependencies {
             implementation(projects.core.network)
-            implementation(projects.domain.movie)
-            implementation(projects.data.movie)
-            implementation(projects.core.tv)
+            implementation(projects.core.common)
 
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -74,7 +72,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.dhkim.core.di"
+    namespace = "com.dhkim.domain.movie"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {

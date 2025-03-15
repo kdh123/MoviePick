@@ -1,7 +1,7 @@
 package com.dhkim.upcoming
 
 import app.cash.paging.PagingData
-import com.dhkim.core.movie.domain.model.Movie
+import com.dhkim.domain.movie.model.Movie
 import kotlinx.coroutines.flow.StateFlow
 
 data class UpcomingUiState(
