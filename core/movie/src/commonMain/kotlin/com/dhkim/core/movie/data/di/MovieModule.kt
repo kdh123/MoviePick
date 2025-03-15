@@ -20,6 +20,7 @@ const val NOW_PLAYING_MOVIES_KEY = "nowPlayingMovie"
 const val UPCOMING_MOVIES_KEY = "upcomingMovie"
 
 val movieModule = module {
+    includes(platformModule, networkModule)
     singleOf(::RemoteMovieDataSourceImpl).bind<RemoteMovieDataSource>()
     singleOf(::MovieRepositoryImpl).bind<MovieRepository>()
     single<GetMoviesUseCase>(named(TOP_RATED_MOVIES_KEY)) { GetTopRatedMoviesUseCase(get()) }
@@ -32,5 +33,5 @@ val movieModule = module {
             UPCOMING_MOVIES_KEY to get<GetMoviesUseCase>(named(UPCOMING_MOVIES_KEY))
         )
     }
-    includes(platformModule, networkModule)
+
 }

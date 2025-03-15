@@ -1,15 +1,15 @@
-package com.dhkim.tv.data.model
+package com.dhkim.core.tv.data.model
 
 import com.dhkim.common.Genre
 import com.dhkim.common.Region
-import com.dhkim.tv.domain.model.Tv
+import com.dhkim.core.tv.domain.model.Tv
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class OnTheAirTvDto(
+internal data class TopRatedTvDto(
     val page: Int,
-    val results: List<OnTheAirTvResult>,
+    val results: List<TopRatedTvResult>,
     @SerialName("total_pages")
     val totalPages: Int,
     @SerialName("total_results")
@@ -17,10 +17,10 @@ internal data class OnTheAirTvDto(
 )
 
 @Serializable
-internal data class OnTheAirTvResult(
+internal data class TopRatedTvResult(
     val adult: Boolean,
     @SerialName("backdrop_path")
-    val backdropPath: String?,
+    val backdropPath: String,
     @SerialName("first_air_date")
     val firstAirDate: String,
     @SerialName("genre_ids")
@@ -42,7 +42,7 @@ internal data class OnTheAirTvResult(
     @SerialName("vote_count")
     val voteCount: Int
 ) {
-    fun toOnTheAirTv(): Tv {
+    fun toTopRatedTv(): Tv {
         return Tv(
             id = "$id",
             title = name,

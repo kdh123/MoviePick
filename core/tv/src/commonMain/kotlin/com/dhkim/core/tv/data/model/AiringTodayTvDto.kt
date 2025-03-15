@@ -1,8 +1,8 @@
-package com.dhkim.tv.data.model
+package com.dhkim.core.tv.data.model
 
 import com.dhkim.common.Genre
 import com.dhkim.common.Region
-import com.dhkim.tv.domain.model.Tv
+import com.dhkim.core.tv.domain.model.Tv
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

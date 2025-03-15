@@ -1,8 +1,8 @@
 package com.dhkim.core.testing.tv
 
 import app.cash.paging.PagingData
-import com.dhkim.tv.domain.model.Tv
-import com.dhkim.tv.domain.repository.TvRepository
+import com.dhkim.core.tv.domain.model.Tv
+import com.dhkim.core.tv.domain.repository.TvRepository
 import kotlinx.coroutines.flow.Flow
 
 class FakeTvRepository : TvRepository {

@@ -1,10 +1,10 @@
-package com.dhkim.tv.data.datasource
+package com.dhkim.core.tv.data.datasource
 
 import app.cash.paging.PagingSource
 import app.cash.paging.PagingState
 import com.dhkim.core.network.AppException
-import com.dhkim.tv.data.model.OnTheAirTvDto
-import com.dhkim.tv.domain.model.Tv
+import com.dhkim.core.tv.data.model.OnTheAirTvDto
+import com.dhkim.core.tv.domain.model.Tv
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get

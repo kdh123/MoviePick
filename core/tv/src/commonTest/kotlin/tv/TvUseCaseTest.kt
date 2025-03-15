@@ -3,11 +3,11 @@ package tv
 import app.cash.paging.testing.asSnapshot
 import com.dhkim.common.Language
 import com.dhkim.core.testing.tv.FakeGetTopRatedTvsUseCase
-import com.dhkim.tv.data.di.AIRING_TODAY_TVS_KEY
-import com.dhkim.tv.data.di.ON_THE_AIR_TVS_KEY
-import com.dhkim.tv.data.di.TOP_RATED_TVS_KEY
-import com.dhkim.tv.data.di.tvModule
-import com.dhkim.tv.domain.usecase.GetTvsUseCase
+import com.dhkim.core.tv.data.di.AIRING_TODAY_TVS_KEY
+import com.dhkim.core.tv.data.di.ON_THE_AIR_TVS_KEY
+import com.dhkim.core.tv.data.di.TOP_RATED_TVS_KEY
+import com.dhkim.core.tv.data.di.tvModule
+import com.dhkim.core.tv.domain.usecase.GetTvsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher

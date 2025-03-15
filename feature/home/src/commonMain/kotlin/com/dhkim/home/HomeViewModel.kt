@@ -11,9 +11,11 @@ import com.dhkim.common.Series
 import com.dhkim.common.handle
 import com.dhkim.core.movie.data.di.NOW_PLAYING_MOVIES_KEY
 import com.dhkim.core.movie.data.di.TOP_RATED_MOVIES_KEY
-import com.dhkim.core.movie.domain.model.Movie
 import com.dhkim.core.movie.domain.usecase.GetMoviesUseCase
-import com.dhkim.tv.domain.usecase.GetTvsUseCase
+import com.dhkim.core.tv.data.di.AIRING_TODAY_TVS_KEY
+import com.dhkim.core.tv.data.di.ON_THE_AIR_TVS_KEY
+import com.dhkim.core.tv.data.di.TOP_RATED_TVS_KEY
+import com.dhkim.core.tv.domain.usecase.GetTvsUseCase
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -52,9 +54,11 @@ class HomeViewModel(
                     .toHomeMovieItem(group = HomeMovieGroup.TOP_RATED_MOVIE)
                 val nowPlayingMovies = getMoviesUseCase[NOW_PLAYING_MOVIES_KEY]!!(language, region)
                     .toHomeMovieItem(group = HomeMovieGroup.NOW_PLAYING_MOVIE_TOP_10)
-                val movies = persistentListOf(topRatedMovies, nowPlayingMovies)
-
-                _uiState.update { HomeUiState(HomeDisplayState.Contents(movies = movies)) }
+                val airingTodayTvs = getTvsUseCase[AIRING_TODAY_TVS_KEY]!!(language).toHomeMovieItem(group = HomeMovieGroup.AIRING_TODAY_TV)
+                val onTheAirTvs = getTvsUseCase[ON_THE_AIR_TVS_KEY]!!(language).toHomeMovieItem(group = HomeMovieGroup.ON_THE_AIR_TV)
+                val topRatedTvs = getTvsUseCase[TOP_RATED_TVS_KEY]!!(language).toHomeMovieItem(group = HomeMovieGroup.TOP_RATED_TV)
+                val series = persistentListOf(topRatedMovies, nowPlayingMovies, airingTodayTvs, onTheAirTvs, topRatedTvs)
+                _uiState.update { HomeUiState(HomeDisplayState.Contents(movies = series)) }
             },
             error = {
                 val errorMessage = it.message ?: ""
@@ -71,7 +75,7 @@ class HomeViewModel(
         }
     }
 
-    private suspend fun Flow<PagingData<Movie>>.toHomeMovieItem(group: HomeMovieGroup): HomeMovieItem {
+    private suspend fun Flow<PagingData<out Series>>.toHomeMovieItem(group: HomeMovieGroup): HomeMovieItem {
         return HomeMovieItem(
             group = group,
             series = map { pagingData -> pagingData.map { it as Series } }

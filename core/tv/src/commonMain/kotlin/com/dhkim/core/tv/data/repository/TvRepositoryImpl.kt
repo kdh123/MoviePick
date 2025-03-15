@@ -1,9 +1,9 @@
-package com.dhkim.tv.data.repository
+package com.dhkim.core.tv.data.repository
 
 import app.cash.paging.PagingData
-import com.dhkim.tv.domain.datasource.RemoteTvDataSource
-import com.dhkim.tv.domain.model.Tv
-import com.dhkim.tv.domain.repository.TvRepository
+import com.dhkim.core.tv.domain.datasource.RemoteTvDataSource
+import com.dhkim.core.tv.domain.model.Tv
+import com.dhkim.core.tv.domain.repository.TvRepository
 import kotlinx.coroutines.flow.Flow
 
 class TvRepositoryImpl(

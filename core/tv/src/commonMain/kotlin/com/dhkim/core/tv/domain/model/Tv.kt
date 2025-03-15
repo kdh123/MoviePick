@@ -1,4 +1,4 @@
-package com.dhkim.tv.domain.model
+package com.dhkim.core.tv.domain.model
 
 import com.dhkim.common.Series
 

@@ -1,15 +1,15 @@
-package com.dhkim.tv.data.di
+package com.dhkim.core.tv.data.di
 
 import com.dhkim.core.network.di.networkModule
 import com.dhkim.core.network.di.platformModule
-import com.dhkim.tv.data.usecase.GetAiringTodayTvsUseCase
-import com.dhkim.tv.data.usecase.GetOnTheAirTvsUseCase
-import com.dhkim.tv.data.usecase.GetTopRatedTvsUseCase
-import com.dhkim.tv.data.datasource.RemoteTvDataSourceImpl
-import com.dhkim.tv.data.repository.TvRepositoryImpl
-import com.dhkim.tv.domain.datasource.RemoteTvDataSource
-import com.dhkim.tv.domain.repository.TvRepository
-import com.dhkim.tv.domain.usecase.GetTvsUseCase
+import com.dhkim.core.tv.data.usecase.GetAiringTodayTvsUseCase
+import com.dhkim.core.tv.data.usecase.GetOnTheAirTvsUseCase
+import com.dhkim.core.tv.data.usecase.GetTopRatedTvsUseCase
+import com.dhkim.core.tv.data.datasource.RemoteTvDataSourceImpl
+import com.dhkim.core.tv.data.repository.TvRepositoryImpl
+import com.dhkim.core.tv.domain.datasource.RemoteTvDataSource
+import com.dhkim.core.tv.domain.repository.TvRepository
+import com.dhkim.core.tv.domain.usecase.GetTvsUseCase
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.bind
@@ -32,5 +32,5 @@ val tvModule = module {
             TOP_RATED_TVS_KEY to get<GetTvsUseCase>(named(TOP_RATED_TVS_KEY))
         )
     }
-    includes(platformModule, networkModule)
+    //includes(platformModule, networkModule)
 }

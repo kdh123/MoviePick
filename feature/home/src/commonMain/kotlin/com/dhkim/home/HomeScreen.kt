@@ -20,6 +20,7 @@ import app.cash.paging.compose.itemKey
 import com.dhkim.common.Series
 import com.dhkim.core.designsystem.MoviePickTheme
 import com.dhkim.core.movie.domain.model.Movie
+import com.dhkim.core.tv.domain.model.Tv
 import com.skydoves.landscapist.coil3.CoilImage
 import kotlinx.collections.immutable.ImmutableList
 import moviepick.feature.home.generated.resources.Res
@@ -49,27 +50,37 @@ fun HomeScreen(
 @Composable
 fun ContentsScreen(homeMovieItems: ImmutableList<HomeMovieItem>) {
     LazyColumn {
-        items(items = homeMovieItems, key = { it.group }) {
+        items(items = homeMovieItems, key = { item -> item.group }) {
             val movies = it.series.collectAsLazyPagingItems()
             when (it.group) {
                 HomeMovieGroup.NOW_PLAYING_MOVIE_TOP_10 -> {
-                    SeriesList(title = it.group.title, movies = movies)
+                    SeriesList(title = it.group.title, series = movies) { movie ->
+                        MovieItem(movie = movie as Movie)
+                    }
                 }
 
                 HomeMovieGroup.TOP_RATED_MOVIE -> {
-                    SeriesList(title = it.group.title, movies = movies)
+                    SeriesList(title = it.group.title, series = movies) { movie ->
+                        MovieItem(movie = movie as Movie)
+                    }
                 }
 
                 HomeMovieGroup.AIRING_TODAY_TV -> {
-
+                    SeriesList(title = it.group.title, series = movies) { tv ->
+                        TvItem(tv = tv as Tv)
+                    }
                 }
 
                 HomeMovieGroup.ON_THE_AIR_TV -> {
-
+                    SeriesList(title = it.group.title, series = movies) { tv ->
+                        TvItem(tv = tv as Tv)
+                    }
                 }
 
                 HomeMovieGroup.TOP_RATED_TV -> {
-
+                    SeriesList(title = it.group.title, series = movies) { tv ->
+                        TvItem(tv = tv as Tv)
+                    }
                 }
             }
         }
@@ -77,7 +88,7 @@ fun ContentsScreen(homeMovieItems: ImmutableList<HomeMovieItem>) {
 }
 
 @Composable
-fun SeriesList(title: String, movies: LazyPagingItems<Series>) {
+fun SeriesList(title: String, series: LazyPagingItems<Series>, seriesItem: @Composable (Series) -> Unit) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -90,21 +101,36 @@ fun SeriesList(title: String, movies: LazyPagingItems<Series>) {
             contentPadding = PaddingValues(horizontal = 16.dp)
         ) {
             items(
-                count = movies.itemCount,
-                key = movies.itemKey(key = {
+                count = series.itemCount,
+                key = series.itemKey(key = {
                     it.id
                 }),
-                contentType = movies.itemContentType()
+                contentType = series.itemContentType()
             ) { index ->
-                val item = movies[index] as? Movie
+                val item = series[index]
                 if (item != null) {
-                    MovieItem(movie = item)
+                    seriesItem(item)
                 }
             }
         }
     }
 }
 
+@Composable
+fun TvItem(tv: Tv) {
+    CoilImage(
+        modifier = Modifier
+            .size(250.dp),
+        imageModel = { tv.imageUrl },
+        failure = {
+            Image(
+                painter = painterResource(Res.drawable.ic_smile),
+                contentDescription = null
+            )
+        },
+        previewPlaceholder = painterResource(Res.drawable.ic_smile)
+    )
+}
 
 @Composable
 fun MovieItem(movie: Movie) {

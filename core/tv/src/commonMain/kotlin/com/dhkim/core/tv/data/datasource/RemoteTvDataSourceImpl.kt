@@ -1,14 +1,14 @@
-package com.dhkim.tv.data.datasource
+package com.dhkim.core.tv.data.datasource
 
 import androidx.paging.PagingConfig
 import app.cash.paging.Pager
 import app.cash.paging.PagingData
-import com.dhkim.tv.domain.datasource.RemoteTvDataSource
-import com.dhkim.tv.domain.model.Tv
+import com.dhkim.core.tv.domain.datasource.RemoteTvDataSource
+import com.dhkim.core.tv.domain.model.Tv
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.flow.Flow
 
-internal class RemoteTvDataSourceImpl(
+class RemoteTvDataSourceImpl(
     private val apiService: HttpClient
 ) : RemoteTvDataSource {
 

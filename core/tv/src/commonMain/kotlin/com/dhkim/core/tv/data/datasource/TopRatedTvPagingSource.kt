@@ -1,10 +1,10 @@
-package com.dhkim.tv.data.datasource
+package com.dhkim.core.tv.data.datasource
 
 import app.cash.paging.PagingSource
 import app.cash.paging.PagingState
 import com.dhkim.core.network.AppException
-import com.dhkim.tv.data.model.AiringTodayTvDto
-import com.dhkim.tv.domain.model.Tv
+import com.dhkim.core.tv.data.model.TopRatedTvDto
+import com.dhkim.core.tv.domain.model.Tv
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -14,7 +14,7 @@ import io.ktor.util.network.UnresolvedAddressException
 import io.ktor.utils.io.errors.IOException
 import kotlinx.serialization.SerializationException
 
-internal class AiringTodayTvPagingSource(
+internal class TopRatedTvPagingSource(
     private val apiService: HttpClient,
     private val language: String,
 ) : PagingSource<Int, Tv>() {
@@ -24,18 +24,18 @@ internal class AiringTodayTvPagingSource(
             val nextPageNumber = params.key ?: 1
             val response = apiService.get {
                 url {
-                    path("/3/tv/airing_today")
+                    path("/3/tv/top_rated")
                 }
                 parameter("language", language)
                 parameter("page", nextPageNumber)
             }
 
-            val airingTodayTvDto = response.body<AiringTodayTvDto>()
+            val topRatedTvDto = response.body<TopRatedTvDto>()
 
             return LoadResult.Page(
-                data = airingTodayTvDto.results.map { it.toAiringTodayTv() },
+                data = topRatedTvDto.results.map { it.toTopRatedTv() },
                 prevKey = if (nextPageNumber == 1) null else nextPageNumber - 1,
-                nextKey = if (airingTodayTvDto.results.isNotEmpty()) {
+                nextKey = if (topRatedTvDto.results.isNotEmpty()) {
                     nextPageNumber + 1
                 } else null
             )
