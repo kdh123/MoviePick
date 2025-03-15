@@ -24,19 +24,10 @@ class RemoteMovieDataSourceImpl(
         }.flow
     }
 
-    override fun getNowPlayingMovies(language: String, region: String): Flow<List<Movie>> {
-        return flow {
-            val response = apiService.get {
-                url {
-                    path("/3/movie/now_playing")
-                }
-                parameter("language", "ko-KR")
-                parameter("region", region)
-            }
-
-            val nowPlayingMovies = response.body<NowPlayingMovieDto>()
-            emit(nowPlayingMovies.results.map { it.toNowPlayingMovie() })
-        }
+    override fun getNowPlayingMovies(language: String, region: String): Flow<PagingData<Movie>> {
+        return Pager(PagingConfig(pageSize = 15)) {
+            NowPlayingMoviePagingSource(apiService, language, region)
+        }.flow
     }
 
     override fun getUpcomingMovies(language: String, region: String): Flow<PagingData<Movie>> {

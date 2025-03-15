@@ -3,7 +3,7 @@ package com.dhkim.core.movie.data.datasource
 
 import app.cash.paging.PagingSource
 import app.cash.paging.PagingState
-import com.dhkim.core.movie.data.model.TopRatedMovieDto
+import com.dhkim.core.movie.data.model.NowPlayingMovieDto
 import com.dhkim.core.movie.domain.model.Movie
 import com.dhkim.core.network.AppException
 import io.ktor.client.HttpClient
@@ -15,7 +15,7 @@ import io.ktor.util.network.UnresolvedAddressException
 import io.ktor.utils.io.errors.IOException
 import kotlinx.serialization.SerializationException
 
-internal class TopRatedMoviePagingSource(
+internal class NowPlayingMoviePagingSource(
     private val apiService: HttpClient,
     private val language: String,
     private val region: String
@@ -26,19 +26,19 @@ internal class TopRatedMoviePagingSource(
             val nextPageNumber = params.key ?: 1
             val response = apiService.get {
                 url {
-                    path("/3/movie/top_rated")
+                    path("/3/movie/now_playing")
                 }
                 parameter("language", language)
                 parameter("region", region)
                 parameter("page", nextPageNumber)
             }
 
-            val topRatedMovieDto = response.body<TopRatedMovieDto>()
+            val nowPlayingMovieDto = response.body<NowPlayingMovieDto>()
 
             return LoadResult.Page(
-                data = topRatedMovieDto.results.map { it.toTopRatedMovie() },
+                data = nowPlayingMovieDto.results.map { it.toNowPlayingMovie() },
                 prevKey = if (nextPageNumber == 1) null else nextPageNumber - 1,
-                nextKey = if (topRatedMovieDto.results.isNotEmpty()) {
+                nextKey = if (nowPlayingMovieDto.results.isNotEmpty()) {
                     nextPageNumber + 1
                 } else null
             )

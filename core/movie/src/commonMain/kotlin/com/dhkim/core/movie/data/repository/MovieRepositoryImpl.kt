@@ -16,7 +16,7 @@ class MovieRepositoryImpl(
         return remoteMovieDataSource.getTopRatedMovies(language, region)
     }
 
-    override fun getNowPlayingMovies(language: String, region: String): Flow<List<Movie>> {
+    override fun getNowPlayingMovies(language: String, region: String): Flow<PagingData<Movie>> {
         return flow {
             val nowPlayingMovies = remoteMovieDataSource.getNowPlayingMovies(language, region).first()
             emit(nowPlayingMovies)

@@ -33,12 +33,12 @@ internal class UpcomingMoviePagingSource(
                 parameter("page", nextPageNumber)
             }
 
-            val topRatedMovie = response.body<UpcomingMovieDto>()
+            val upcomingMovieDto = response.body<UpcomingMovieDto>()
 
             return LoadResult.Page(
-                data = topRatedMovie.results.map { it.toUpcomingMovie() },
+                data = upcomingMovieDto.results.map { it.toUpcomingMovie() },
                 prevKey = if (nextPageNumber == 1) null else nextPageNumber - 1,
-                nextKey = if (topRatedMovie.results.isNotEmpty()) {
+                nextKey = if (upcomingMovieDto.results.isNotEmpty()) {
                     nextPageNumber + 1
                 } else null
             )
