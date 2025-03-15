@@ -33,5 +33,4 @@ val movieModule = module {
             UPCOMING_MOVIES_KEY to get<GetMoviesUseCase>(named(UPCOMING_MOVIES_KEY))
         )
     }
-
 }

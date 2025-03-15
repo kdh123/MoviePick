@@ -20,6 +20,7 @@ const val ON_THE_AIR_TVS_KEY = "onTheAirTv"
 const val TOP_RATED_TVS_KEY = "topRatedTv"
 
 val tvModule = module {
+    includes(platformModule, networkModule)
     singleOf(::RemoteTvDataSourceImpl).bind<RemoteTvDataSource>()
     singleOf(::TvRepositoryImpl).bind<TvRepository>()
     single<GetTvsUseCase>(named(AIRING_TODAY_TVS_KEY)) { GetAiringTodayTvsUseCase(get()) }
@@ -32,5 +33,4 @@ val tvModule = module {
             TOP_RATED_TVS_KEY to get<GetTvsUseCase>(named(TOP_RATED_TVS_KEY))
         )
     }
-    //includes(platformModule, networkModule)
 }
