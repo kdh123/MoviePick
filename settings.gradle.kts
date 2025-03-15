@@ -29,6 +29,7 @@ dependencyResolutionManagement {
 }
 include(":core:common")
 include(":core:designsystem")
+include(":core:di")
 
 include(":core:network")
 include(":core:movie")

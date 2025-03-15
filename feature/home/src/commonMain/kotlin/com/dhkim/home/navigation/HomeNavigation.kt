@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import com.dhkim.home.HomeScreen
 import com.dhkim.home.HomeUiState
 import com.dhkim.home.HomeViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
@@ -15,6 +16,7 @@ const val HOME_ROUTE = "home_route"
 
 fun NavController.navigateToHome() = navigate(HOME_ROUTE)
 
+@ExperimentalCoroutinesApi
 @KoinExperimentalAPI
 fun NavGraphBuilder.home() {
     composable(HOME_ROUTE) {

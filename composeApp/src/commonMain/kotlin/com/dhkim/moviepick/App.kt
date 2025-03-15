@@ -11,26 +11,22 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
-import com.dhkim.home.HomeViewModel
 import com.dhkim.home.navigation.home
 import com.dhkim.upcoming.navigation.upcoming
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
+@ExperimentalCoroutinesApi
 @OptIn(KoinExperimentalAPI::class)
 @Composable
 @Preview
 fun App() {
-    val viewModel = koinViewModel<HomeViewModel>()
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val appState = rememberAppState()
 
     Surface(

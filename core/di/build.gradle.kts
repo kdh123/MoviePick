@@ -1,10 +1,9 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.androidLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlin.serialization)
@@ -12,44 +11,34 @@ plugins {
 
 kotlin {
     androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "ComposeApp"
+            baseName = "core.di"
             isStatic = true
         }
     }
 
     jvm("desktop")
-    
-    sourceSets {
-        val desktopMain by getting
 
-        androidMain.dependencies {
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.koin.android)
-            implementation(libs.koin.androidx.compose)
-        }
+    sourceSets {
+
         commonMain.dependencies {
-            implementation(projects.core.designsystem)
-            implementation(projects.core.di)
-            implementation(projects.feature.home)
-            implementation(projects.feature.upcoming)
+            implementation(projects.core.network)
+            implementation(projects.core.movie)
+            implementation(projects.core.tv)
 
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material)
-            implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
@@ -67,24 +56,29 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.navigation.compose)
+            implementation(libs.bundles.paging)
         }
-        desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutines.swing)
+
+        commonTest.dependencies {
+            implementation(libs.koin.test)
+            implementation(libs.bundles.paging)
+            implementation(projects.core.testing)
+            implementation(libs.kotlin.test)
+            implementation(kotlin("test-annotations-common"))
+            implementation(libs.assertk)
+            @OptIn(ExperimentalComposeLibrary::class)
+            implementation(compose.uiTest)
         }
     }
 }
 
 android {
-    namespace = "com.dhkim.moviepick"
+    namespace = "com.dhkim.core.di"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.dhkim.moviepick"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
     }
     packaging {
         resources {
@@ -100,22 +94,13 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {
-    implementation(project(":feature:home"))
     debugImplementation(compose.uiTooling)
 }
 
-compose.desktop {
-    application {
-        mainClass = "com.dhkim.moviepick.MainKt"
-
-        nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.dhkim.moviepick"
-            packageVersion = "1.0.0"
-        }
-    }
-}
 
