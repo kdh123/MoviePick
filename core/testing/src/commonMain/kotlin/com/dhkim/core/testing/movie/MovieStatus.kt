@@ -1,4 +1,4 @@
-package com.dhkim.core.testing
+package com.dhkim.core.testing.movie
 
 enum class MovieStatus {
     Success,

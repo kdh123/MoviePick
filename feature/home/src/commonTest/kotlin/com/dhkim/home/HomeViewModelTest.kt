@@ -1,10 +1,17 @@
 import com.dhkim.core.movie.data.di.NOW_PLAYING_MOVIES_KEY
 import com.dhkim.core.movie.data.di.TOP_RATED_MOVIES_KEY
 import com.dhkim.core.movie.domain.usecase.GetMoviesUseCase
-import com.dhkim.core.testing.FakeGetNowPlayingMoviesUseCase
-import com.dhkim.core.testing.FakeGetTopRatedMoviesUseCase
-import com.dhkim.core.testing.MovieStatus
+import com.dhkim.core.testing.movie.FakeGetNowPlayingMoviesUseCase
+import com.dhkim.core.testing.movie.FakeGetTopRatedMoviesUseCase
+import com.dhkim.core.testing.movie.MovieStatus
+import com.dhkim.core.testing.tv.FakeGetAiringTodayTvsUseCase
+import com.dhkim.core.testing.tv.FakeGetOnTheAirTvsUseCase
+import com.dhkim.core.testing.tv.FakeGetTopRatedTvsUseCase
 import com.dhkim.home.HomeViewModel
+import com.dhkim.tv.data.di.AIRING_TODAY_TVS_KEY
+import com.dhkim.tv.data.di.ON_THE_AIR_TVS_KEY
+import com.dhkim.tv.data.di.TOP_RATED_TVS_KEY
+import com.dhkim.tv.domain.usecase.GetTvsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -22,6 +29,9 @@ class HomeViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
     private lateinit var getTopRatedMoviesUseCase: GetMoviesUseCase
     private lateinit var getNowPlayingMoviesUseCase: GetMoviesUseCase
+    private lateinit var getAiringTodayTvsUseCase: GetTvsUseCase
+    private lateinit var getOnTheAirTvsUseCase: GetTvsUseCase
+    private lateinit var getTopRatedTvsUseCase: GetTvsUseCase
     private lateinit var viewModel: HomeViewModel
 
     @BeforeTest
@@ -33,11 +43,19 @@ class HomeViewModelTest {
     fun `영화 탑 순위 가져오기 성공`() = runTest {
         getTopRatedMoviesUseCase = FakeGetTopRatedMoviesUseCase()
         getNowPlayingMoviesUseCase = FakeGetNowPlayingMoviesUseCase()
+        getAiringTodayTvsUseCase = FakeGetAiringTodayTvsUseCase()
+        getOnTheAirTvsUseCase = FakeGetOnTheAirTvsUseCase()
+        getTopRatedTvsUseCase = FakeGetTopRatedTvsUseCase()
 
         viewModel = HomeViewModel(
             mapOf(
                 TOP_RATED_MOVIES_KEY to getTopRatedMoviesUseCase,
                 NOW_PLAYING_MOVIES_KEY to getNowPlayingMoviesUseCase
+            ),
+            mapOf(
+                AIRING_TODAY_TVS_KEY to getAiringTodayTvsUseCase,
+                ON_THE_AIR_TVS_KEY to getOnTheAirTvsUseCase,
+                TOP_RATED_TVS_KEY to getTopRatedTvsUseCase
             )
         )
 
@@ -51,11 +69,19 @@ class HomeViewModelTest {
             setStatus(MovieStatus.Error)
         }
         getNowPlayingMoviesUseCase = FakeGetNowPlayingMoviesUseCase()
+        getAiringTodayTvsUseCase = FakeGetAiringTodayTvsUseCase()
+        getOnTheAirTvsUseCase = FakeGetOnTheAirTvsUseCase()
+        getTopRatedTvsUseCase = FakeGetTopRatedTvsUseCase()
 
         viewModel = HomeViewModel(
             mapOf(
                 TOP_RATED_MOVIES_KEY to getTopRatedMoviesUseCase,
                 NOW_PLAYING_MOVIES_KEY to getNowPlayingMoviesUseCase
+            ),
+            mapOf(
+                AIRING_TODAY_TVS_KEY to getAiringTodayTvsUseCase,
+                ON_THE_AIR_TVS_KEY to getOnTheAirTvsUseCase,
+                TOP_RATED_TVS_KEY to getTopRatedTvsUseCase
             )
         )
 

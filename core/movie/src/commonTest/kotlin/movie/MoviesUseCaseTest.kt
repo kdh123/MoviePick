@@ -8,8 +8,8 @@ import com.dhkim.core.movie.data.di.TOP_RATED_MOVIES_KEY
 import com.dhkim.core.movie.data.di.UPCOMING_MOVIES_KEY
 import com.dhkim.core.movie.data.di.movieModule
 import com.dhkim.core.movie.domain.usecase.GetMoviesUseCase
-import com.dhkim.core.testing.FakeGetTopRatedMoviesUseCase
-import com.dhkim.core.testing.FakeGetUpcomingMoviesUseCase
+import com.dhkim.core.testing.movie.FakeGetTopRatedMoviesUseCase
+import com.dhkim.core.testing.movie.FakeGetUpcomingMoviesUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher

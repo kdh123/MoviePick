@@ -17,6 +17,7 @@ import app.cash.paging.compose.LazyPagingItems
 import app.cash.paging.compose.collectAsLazyPagingItems
 import app.cash.paging.compose.itemContentType
 import app.cash.paging.compose.itemKey
+import com.dhkim.common.Series
 import com.dhkim.core.designsystem.MoviePickTheme
 import com.dhkim.core.movie.domain.model.Movie
 import com.skydoves.landscapist.coil3.CoilImage
@@ -49,13 +50,26 @@ fun HomeScreen(
 fun ContentsScreen(homeMovieItems: ImmutableList<HomeMovieItem>) {
     LazyColumn {
         items(items = homeMovieItems, key = { it.group }) {
-            val movies = it.movie.collectAsLazyPagingItems()
+            val movies = it.series.collectAsLazyPagingItems()
             when (it.group) {
-                HomeMovieGroup.NOW_PLAYING_TOP_10 -> {
-                    MovieList(title = it.group.title, movies = movies)
+                HomeMovieGroup.NOW_PLAYING_MOVIE_TOP_10 -> {
+                    SeriesList(title = it.group.title, movies = movies)
                 }
-                HomeMovieGroup.TOP_RATED -> {
-                    MovieList(title = it.group.title, movies = movies)
+
+                HomeMovieGroup.TOP_RATED_MOVIE -> {
+                    SeriesList(title = it.group.title, movies = movies)
+                }
+
+                HomeMovieGroup.AIRING_TODAY_TV -> {
+
+                }
+
+                HomeMovieGroup.ON_THE_AIR_TV -> {
+
+                }
+
+                HomeMovieGroup.TOP_RATED_TV -> {
+
                 }
             }
         }
@@ -63,7 +77,7 @@ fun ContentsScreen(homeMovieItems: ImmutableList<HomeMovieItem>) {
 }
 
 @Composable
-fun MovieList(title: String, movies: LazyPagingItems<Movie>) {
+fun SeriesList(title: String, movies: LazyPagingItems<Series>) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -82,7 +96,7 @@ fun MovieList(title: String, movies: LazyPagingItems<Movie>) {
                 }),
                 contentType = movies.itemContentType()
             ) { index ->
-                val item = movies[index]
+                val item = movies[index] as? Movie
                 if (item != null) {
                     MovieItem(movie = item)
                 }

@@ -1,15 +1,18 @@
 package com.dhkim.home
 
 import app.cash.paging.PagingData
-import com.dhkim.core.movie.domain.model.Movie
+import com.dhkim.common.Series
 import kotlinx.coroutines.flow.StateFlow
 
 data class HomeMovieItem(
     val group: HomeMovieGroup,
-    val movie: StateFlow<PagingData<Movie>>
+    val series: StateFlow<PagingData<Series>>,
 )
 
 enum class HomeMovieGroup(val title: String) {
-    NOW_PLAYING_TOP_10(title = "오늘 TOP 10 시리즈"),
-    TOP_RATED(title = "평단의 극찬을 받은 명작"),
+    NOW_PLAYING_MOVIE_TOP_10(title = "오늘 영화 TOP 10 시리즈"),
+    TOP_RATED_MOVIE(title = "평단의 극찬을 받은 영화 명작"),
+    AIRING_TODAY_TV(title = "오늘 방영하는 TV 시리즈"),
+    ON_THE_AIR_TV(title = "지금 방송 중인 TV 시리즈"),
+    TOP_RATED_TV(title = "평단의 극찬을 받은 TV 시리즈"),
 }

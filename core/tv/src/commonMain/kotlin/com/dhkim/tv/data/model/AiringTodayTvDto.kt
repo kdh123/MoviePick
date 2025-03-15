@@ -1,15 +1,15 @@
-package com.dhkim.core.movie.data.model
+package com.dhkim.tv.data.model
 
 import com.dhkim.common.Genre
-import com.dhkim.core.movie.domain.model.Movie
+import com.dhkim.common.Region
+import com.dhkim.tv.domain.model.Tv
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UpcomingMovieDto(
-    val dates: Dates,
+internal data class AiringTodayTvDto(
     val page: Int,
-    val results: List<UpcomingMovieResults>,
+    val results: List<AiringTodayTvResult>,
     @SerialName("total_pages")
     val totalPages: Int,
     @SerialName("total_results")
@@ -17,40 +17,42 @@ data class UpcomingMovieDto(
 )
 
 @Serializable
-data class UpcomingMovieResults(
-    val id: Int,
+internal data class AiringTodayTvResult(
     val adult: Boolean,
     @SerialName("backdrop_path")
     val backdropPath: String?,
+    @SerialName("first_air_date")
+    val firstAirDate: String,
     @SerialName("genre_ids")
     val genreIds: List<Int>,
+    val id: Int,
+    val name: String,
+    @SerialName("origin_country")
+    val originCountry: List<String>,
     @SerialName("original_language")
     val originalLanguage: String,
-    @SerialName("original_title")
-    val originalTitle: String,
+    @SerialName("original_name")
+    val originalName: String,
     val overview: String,
     val popularity: Double,
     @SerialName("poster_path")
     val posterPath: String,
-    @SerialName("release_date")
-    val releaseDate: String,
-    val title: String,
-    val video: Boolean,
     @SerialName("vote_average")
     val voteAverage: Double,
     @SerialName("vote_count")
     val voteCount: Int
 ) {
-    fun toUpcomingMovie(): Movie {
-        return Movie(
+    fun toAiringTodayTv(): Tv {
+        return Tv(
             id = "$id",
-            title = title,
+            title = name,
             adult = adult,
+            country = Region.entries.firstOrNull { it.code == originCountry[0] }?.country ?: Region.Unknown.country,
             overview = overview,
-            imageUrl = "https://image.tmdb.org/t/p/original$posterPath",
+            imageUrl = "https://image.tmdb.org/t/p/original${posterPath}",
             genre = genreIds.map { Genre.movieGenre(it).genre },
             voteAverage = voteAverage,
-            releasedDate = releaseDate,
+            firstAirDate = firstAirDate,
             popularity = popularity
         )
     }

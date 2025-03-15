@@ -1,14 +1,13 @@
-package com.dhkim.core.testing
+package com.dhkim.core.testing.movie
 
 import app.cash.paging.PagingData
 import com.dhkim.core.movie.domain.model.Movie
-import com.dhkim.core.movie.domain.model.MovieGenre
 import com.dhkim.core.movie.domain.usecase.GetMoviesUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 
-class FakeGetTopRatedMoviesUseCase : GetMoviesUseCase {
+class FakeGetNowPlayingMoviesUseCase : GetMoviesUseCase {
 
     private var currentStatus = MovieStatus.Success
 
@@ -21,9 +20,10 @@ class FakeGetTopRatedMoviesUseCase : GetMoviesUseCase {
     override operator fun invoke(language: String, region: String): Flow<PagingData<Movie>> {
         return flow {
             if (currentStatus == MovieStatus.Success) {
-                emit(movieRepository.getTopRatedMovies(language, region).first())
+                val movies = movieRepository.getTopRatedMovies(language, region).first()
+                emit(movies)
             } else {
-                throw Exception("top rated movies error")
+                throw Exception("now playing movies error")
             }
         }
     }

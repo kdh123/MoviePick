@@ -1,7 +1,8 @@
 package com.dhkim.common
 
-enum class Region(val code: String) {
-    Korea("KR"),
-    US("US"),
-    Japan("JP"),
+enum class Region(val country: String, val code: String) {
+    Korea("대한민국", "KR"),
+    US("미국", "US"),
+    Japan("일본", "JP"),
+    Unknown("알 수 없음", "Unknown")
 }

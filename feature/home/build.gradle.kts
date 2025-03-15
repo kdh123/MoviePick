@@ -43,6 +43,7 @@ kotlin {
             implementation(projects.core.common)
             implementation(projects.core.designsystem)
             implementation(projects.core.movie)
+            implementation(projects.core.tv)
 
             implementation(compose.runtime)
             implementation(compose.foundation)

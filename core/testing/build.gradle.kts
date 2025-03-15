@@ -39,7 +39,10 @@ kotlin {
             implementation(libs.koin.androidx.compose)
         }
         commonMain.dependencies {
+            implementation(projects.core.common)
             implementation(projects.core.movie)
+            implementation(projects.core.tv)
+
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material)

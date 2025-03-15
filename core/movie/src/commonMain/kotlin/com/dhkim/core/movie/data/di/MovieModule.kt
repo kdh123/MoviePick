@@ -15,9 +15,9 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
-const val TOP_RATED_MOVIES_KEY = "topRated"
-const val NOW_PLAYING_MOVIES_KEY = "nowPlaying"
-const val UPCOMING_MOVIES_KEY = "upcoming"
+const val TOP_RATED_MOVIES_KEY = "topRatedMovie"
+const val NOW_PLAYING_MOVIES_KEY = "nowPlayingMovie"
+const val UPCOMING_MOVIES_KEY = "upcomingMovie"
 
 val movieModule = module {
     singleOf(::RemoteMovieDataSourceImpl).bind<RemoteMovieDataSource>()

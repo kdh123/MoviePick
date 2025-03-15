@@ -1,12 +1,12 @@
-package com.dhkim.core.testing
+package com.dhkim.core.testing.movie
 
 import androidx.paging.PagingSource
 import app.cash.paging.PagingConfig
 import app.cash.paging.PagingData
 import app.cash.paging.testing.TestPager
 import app.cash.paging.testing.asPagingSourceFactory
+import com.dhkim.common.Genre
 import com.dhkim.core.movie.domain.model.Movie
-import com.dhkim.core.movie.domain.model.MovieGenre
 import com.dhkim.core.movie.domain.datasource.RemoteMovieDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -19,8 +19,9 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
                 Movie(
                     id = "topRatedId$it",
                     title = "top rated title$it",
+                    adult = false,
                     overview = "overview $it",
-                    genre = listOf(MovieGenre.ACTION.genre, MovieGenre.DRAMA.genre),
+                    genre = listOf(Genre.ACTION.genre, Genre.DRAMA.genre),
                     imageUrl = "imageUrl$it",
                     releasedDate = "2025-03-13",
                     voteAverage = 5.5 + it.toDouble(),
@@ -36,8 +37,9 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
                 Movie(
                     id = "nowPlayingId$it",
                     title = "now playing title$it",
+                    adult = false,
                     overview = "overview $it",
-                    genre = listOf(MovieGenre.ACTION.genre, MovieGenre.DRAMA.genre),
+                    genre = listOf(Genre.ACTION.genre, Genre.DRAMA.genre),
                     imageUrl = "imageUrl$it",
                     releasedDate = "2025-02-05",
                     voteAverage = 5.5 + it.toDouble(),
@@ -53,8 +55,9 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
                 Movie(
                     id = "upcomingId$it",
                     title = "upcoming title$it",
+                    adult = false,
                     overview = "overview $it",
-                    genre = listOf(MovieGenre.ACTION.genre, MovieGenre.DRAMA.genre),
+                    genre = listOf(Genre.ACTION.genre, Genre.DRAMA.genre),
                     imageUrl = "imageUrl$it",
                     releasedDate = "2025-05-12",
                     voteAverage = 4.3 + it.toDouble(),

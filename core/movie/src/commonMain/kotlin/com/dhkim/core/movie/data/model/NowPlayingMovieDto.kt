@@ -1,7 +1,7 @@
 package com.dhkim.core.movie.data.model
 
+import com.dhkim.common.Genre
 import com.dhkim.core.movie.domain.model.Movie
-import com.dhkim.core.movie.domain.model.MovieGenre
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -54,9 +54,10 @@ data class NowPlayingMovieResult(
         return Movie(
             id = "$id",
             title = title,
+            adult = adult,
             overview = overview,
             imageUrl = "https://image.tmdb.org/t/p/original$posterPath",
-            genre = genreIds.map { MovieGenre.movieGenre(it).genre },
+            genre = genreIds.map { Genre.movieGenre(it).genre },
             voteAverage = voteAverage,
             releasedDate = releaseDate,
             popularity = popularity

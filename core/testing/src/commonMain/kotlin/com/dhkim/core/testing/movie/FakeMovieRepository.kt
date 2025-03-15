@@ -1,4 +1,4 @@
-package com.dhkim.core.testing
+package com.dhkim.core.testing.movie
 
 
 import app.cash.paging.PagingData
