@@ -1,6 +1,7 @@
 package com.dhkim.upcoming
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,8 +22,13 @@ import com.skydoves.landscapist.coil3.CoilImage
 fun UpcomingScreen(
     uiState: UpcomingUiState
 ) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Text(text = "Upcoming", style = MoviePickTheme.typography.headlineLarge)
+    }
 
-    Text(text = "Upcoming", style = MoviePickTheme.typography.headlineLarge)
     /*when (uiState.displayState) {
         UpcomingDisplayState.Loading -> {
 

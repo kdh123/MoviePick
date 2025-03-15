@@ -9,6 +9,7 @@ import com.dhkim.common.Language
 import com.dhkim.common.Region
 import com.dhkim.common.Series
 import com.dhkim.common.handle
+import com.dhkim.common.onetimeStateIn
 import com.dhkim.core.movie.data.di.NOW_PLAYING_MOVIES_KEY
 import com.dhkim.core.movie.data.di.TOP_RATED_MOVIES_KEY
 import com.dhkim.core.movie.domain.usecase.GetMoviesUseCase
@@ -20,7 +21,6 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -38,10 +38,9 @@ class HomeViewModel(
     private val _uiState = MutableStateFlow(HomeUiState(HomeDisplayState.Loading))
     val uiState: StateFlow<HomeUiState> = _uiState.onStart {
         init()
-    }.stateIn(
+    }.onetimeStateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        HomeUiState(HomeDisplayState.Loading)
+        initialValue = HomeUiState(HomeDisplayState.Loading)
     )
 
     private fun init() {
