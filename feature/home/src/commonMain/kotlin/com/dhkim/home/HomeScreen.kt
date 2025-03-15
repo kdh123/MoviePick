@@ -51,7 +51,7 @@ fun ContentsScreen(homeMovieItems: ImmutableList<HomeMovieItem>) {
         items(items = homeMovieItems, key = { it.group }) {
             val movies = it.movie.collectAsLazyPagingItems()
             when (it.group) {
-                HomeMovieGroup.NOW_PLAYING -> {
+                HomeMovieGroup.NOW_PLAYING_TOP_10 -> {
                     MovieList(title = it.group.title, movies = movies)
                 }
                 HomeMovieGroup.TOP_RATED -> {

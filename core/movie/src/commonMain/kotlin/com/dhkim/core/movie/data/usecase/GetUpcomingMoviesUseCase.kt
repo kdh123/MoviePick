@@ -5,17 +5,12 @@ import com.dhkim.core.movie.domain.model.Movie
 import com.dhkim.core.movie.domain.repository.MovieRepository
 import com.dhkim.core.movie.domain.usecase.GetMoviesUseCase
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 
-class GetNowPlayingMoviesUseCase(
+class GetUpcomingMoviesUseCase(
     private val movieRepository: MovieRepository
 ) : GetMoviesUseCase {
 
     override fun invoke(language: String, region: String): Flow<PagingData<Movie>> {
-        return flow {
-            val movies = PagingData.from(movieRepository.getNowPlayingMovies(language, region).first())
-            emit(movies)
-        }
+        return movieRepository.getUpcomingMovies(language, region)
     }
 }

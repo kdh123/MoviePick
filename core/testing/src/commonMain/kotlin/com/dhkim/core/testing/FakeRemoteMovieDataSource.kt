@@ -47,12 +47,32 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
         }
     }
 
-    private val pagingSourceFactory = topRatedMovies.asPagingSourceFactory()
-    private val pagingSource = pagingSourceFactory()
+    private val upcomingMovies = mutableListOf<Movie>().apply {
+        repeat(50) {
+            add(
+                Movie(
+                    id = "upcomingId$it",
+                    title = "upcoming title$it",
+                    overview = "overview $it",
+                    genre = listOf(MovieGenre.ACTION.genre, MovieGenre.DRAMA.genre),
+                    imageUrl = "imageUrl$it",
+                    releasedDate = "2025-05-12",
+                    voteAverage = 4.3 + it.toDouble(),
+                    popularity = 45.38 + it.toDouble()
+                )
+            )
+        }
+    }
 
-    override fun getTopRatedMovies(): Flow<PagingData<Movie>> {
+    private val topRatedPagingSourceFactory = topRatedMovies.asPagingSourceFactory()
+    private val topRatedPagingSource = topRatedPagingSourceFactory()
+
+    private val upcomingPagingSourceFactory = upcomingMovies.asPagingSourceFactory()
+    private val upcomingPagingSource = upcomingPagingSourceFactory()
+
+    override fun getTopRatedMovies(language: String, region: String): Flow<PagingData<Movie>> {
         return flow {
-            val pager = TestPager(PagingConfig(pageSize = 15), pagingSource)
+            val pager = TestPager(PagingConfig(pageSize = 15), topRatedPagingSource)
             val page = with(pager) {
                 refresh()
                 append()
@@ -61,9 +81,20 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
         }
     }
 
-    override fun getNowPlayingMovies(): Flow<List<Movie>> {
+    override fun getNowPlayingMovies(language: String, region: String): Flow<List<Movie>> {
         return flow {
             emit(nowPlayingMovies)
+        }
+    }
+
+    override fun getUpcomingMovies(language: String, region: String): Flow<PagingData<Movie>> {
+        return flow {
+            val pager = TestPager(PagingConfig(pageSize = 15), upcomingPagingSource)
+            val page = with(pager) {
+                refresh()
+                append()
+            } as PagingSource.LoadResult.Page
+            emit(PagingData.from(page.data))
         }
     }
 }

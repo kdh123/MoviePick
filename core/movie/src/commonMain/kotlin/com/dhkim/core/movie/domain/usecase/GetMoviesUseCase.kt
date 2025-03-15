@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface GetMoviesUseCase {
 
-    operator fun invoke(): Flow<PagingData<Movie>>
+    operator fun invoke(language: String, region: String): Flow<PagingData<Movie>>
 }

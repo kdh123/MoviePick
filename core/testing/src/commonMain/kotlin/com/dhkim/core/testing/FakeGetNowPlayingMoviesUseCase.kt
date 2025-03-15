@@ -17,10 +17,10 @@ class FakeGetNowPlayingMoviesUseCase : GetMoviesUseCase {
         currentStatus = status
     }
 
-    override operator fun invoke(): Flow<PagingData<Movie>> {
+    override operator fun invoke(language: String, region: String): Flow<PagingData<Movie>> {
         return flow {
             if (currentStatus == MovieStatus.Success) {
-                val movies = movieRepository.getTopRatedMovies().first()
+                val movies = movieRepository.getTopRatedMovies(language, region).first()
                 emit(movies)
             } else {
                 throw Exception("now playing movies error")

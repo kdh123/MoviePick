@@ -20,12 +20,6 @@ data class NowPlayingMovieDto(
 )
 
 @Serializable
-data class Dates(
-    val maximum: String,
-    val minimum: String
-)
-
-@Serializable
 data class NowPlayingMovieResult(
     @SerialName("id")
     val id: Int,

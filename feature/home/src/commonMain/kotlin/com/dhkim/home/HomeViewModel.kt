@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.paging.PagingData
 import app.cash.paging.cachedIn
+import com.dhkim.common.Language
+import com.dhkim.common.Region
 import com.dhkim.common.handle
 import com.dhkim.core.movie.data.di.NOW_PLAYING_MOVIES_KEY
 import com.dhkim.core.movie.data.di.TOP_RATED_MOVIES_KEY
@@ -11,9 +13,11 @@ import com.dhkim.core.movie.domain.model.Movie
 import com.dhkim.core.movie.domain.usecase.GetMoviesUseCase
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onStart
@@ -36,10 +40,15 @@ class HomeViewModel(
     )
 
     private fun init() {
+        val language = Language.Korea.code
+        val region = Region.Korea.code
+
         viewModelScope.handle(
             block = {
-                val topRatedMovies = getMoviesUseCase[TOP_RATED_MOVIES_KEY]!!().cachedIn(viewModelScope).first().toHomeMovieItem(group = HomeMovieGroup.TOP_RATED)
-                val nowPlayingMovies = getMoviesUseCase[NOW_PLAYING_MOVIES_KEY]!!().cachedIn(viewModelScope).first().toHomeMovieItem(group = HomeMovieGroup.NOW_PLAYING)
+                val topRatedMovies = getMoviesUseCase[TOP_RATED_MOVIES_KEY]!!(language, region)
+                    .toHomeMovieItem(group = HomeMovieGroup.TOP_RATED)
+                val nowPlayingMovies = getMoviesUseCase[NOW_PLAYING_MOVIES_KEY]!!(language, region)
+                    .toHomeMovieItem(group = HomeMovieGroup.NOW_PLAYING_TOP_10)
                 val movies = persistentListOf(topRatedMovies, nowPlayingMovies)
 
                 _uiState.update { HomeUiState(HomeDisplayState.Contents(movies = movies)) }
@@ -59,8 +68,13 @@ class HomeViewModel(
         }
     }
 
-    private suspend fun PagingData<Movie>.toHomeMovieItem(group: HomeMovieGroup): HomeMovieItem {
-        return HomeMovieItem(group = group, movie = flowOf(this).stateIn(viewModelScope))
+    private suspend fun Flow<PagingData<Movie>>.toHomeMovieItem(group: HomeMovieGroup): HomeMovieItem {
+        val movies = catch { error ->
+            _uiState.update { HomeUiState(HomeDisplayState.Error(errorCode = "300", message = error.message ?: "")) }
+        }
+            .cachedIn(viewModelScope)
+            .first()
+        return HomeMovieItem(group = group, movie = flowOf(movies).stateIn(viewModelScope))
     }
 }
 

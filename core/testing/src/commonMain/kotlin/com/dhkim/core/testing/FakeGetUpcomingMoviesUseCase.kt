@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 
-class FakeGetTopRatedMoviesUseCase : GetMoviesUseCase {
+class FakeGetUpcomingMoviesUseCase : GetMoviesUseCase {
 
     private var currentStatus = MovieStatus.Success
 
@@ -21,7 +21,7 @@ class FakeGetTopRatedMoviesUseCase : GetMoviesUseCase {
     override operator fun invoke(language: String, region: String): Flow<PagingData<Movie>> {
         return flow {
             if (currentStatus == MovieStatus.Success) {
-                emit(movieRepository.getTopRatedMovies(language, region).first())
+                emit(movieRepository.getUpcomingMovies(language, region).first())
             } else {
                 throw Exception("top rated movies error")
             }

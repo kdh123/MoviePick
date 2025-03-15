@@ -18,24 +18,30 @@ class RemoteMovieDataSourceImpl(
     private val apiService: HttpClient
 ) : RemoteMovieDataSource {
 
-    override fun getTopRatedMovies(): Flow<PagingData<Movie>> {
+    override fun getTopRatedMovies(language: String, region: String): Flow<PagingData<Movie>> {
         return Pager(PagingConfig(pageSize = 15)) {
-            TopRatedMoviePagingSource(apiService = apiService)
+            TopRatedMoviePagingSource(apiService, language, region)
         }.flow
     }
 
-    override fun getNowPlayingMovies(): Flow<List<Movie>> {
+    override fun getNowPlayingMovies(language: String, region: String): Flow<List<Movie>> {
         return flow {
             val response = apiService.get {
                 url {
                     path("/3/movie/now_playing")
                 }
                 parameter("language", "ko-KR")
-                parameter("page", 1)
+                parameter("region", region)
             }
 
             val nowPlayingMovies = response.body<NowPlayingMovieDto>()
             emit(nowPlayingMovies.results.map { it.toNowPlayingMovie() })
         }
+    }
+
+    override fun getUpcomingMovies(language: String, region: String): Flow<PagingData<Movie>> {
+        return Pager(PagingConfig(pageSize = 15)) {
+            UpcomingMoviePagingSource(apiService, language, region)
+        }.flow
     }
 }

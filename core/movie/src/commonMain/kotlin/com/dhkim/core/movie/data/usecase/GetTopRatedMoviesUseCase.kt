@@ -10,7 +10,7 @@ class GetTopRatedMoviesUseCase(
     private val movieRepository: MovieRepository
 ) : GetMoviesUseCase {
 
-    override fun invoke(): Flow<PagingData<Movie>> {
-        return movieRepository.getTopRatedMovies()
+    override fun invoke(language: String, region: String): Flow<PagingData<Movie>> {
+        return movieRepository.getTopRatedMovies(language, region)
     }
 }

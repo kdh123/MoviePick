@@ -10,6 +10,6 @@ data class HomeMovieItem(
 )
 
 enum class HomeMovieGroup(val title: String) {
-    NOW_PLAYING(title = "Now Playing"),
-    TOP_RATED(title = "TOP 10 시리즈"),
+    NOW_PLAYING_TOP_10(title = "오늘 TOP 10 시리즈"),
+    TOP_RATED(title = "평단의 극찬을 받은 명작"),
 }

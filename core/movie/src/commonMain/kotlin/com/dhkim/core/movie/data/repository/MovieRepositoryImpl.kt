@@ -12,14 +12,18 @@ class MovieRepositoryImpl(
     private val remoteMovieDataSource: RemoteMovieDataSource
 ) : MovieRepository {
 
-    override fun getTopRatedMovies(): Flow<PagingData<Movie>> {
-        return remoteMovieDataSource.getTopRatedMovies()
+    override fun getTopRatedMovies(language: String, region: String): Flow<PagingData<Movie>> {
+        return remoteMovieDataSource.getTopRatedMovies(language, region)
     }
 
-    override fun getNowPlayingMovies(): Flow<List<Movie>> {
+    override fun getNowPlayingMovies(language: String, region: String): Flow<List<Movie>> {
         return flow {
-            val nowPlayingMovies = remoteMovieDataSource.getNowPlayingMovies().first()
+            val nowPlayingMovies = remoteMovieDataSource.getNowPlayingMovies(language, region).first()
             emit(nowPlayingMovies)
         }
+    }
+
+    override fun getUpcomingMovies(language: String, region: String): Flow<PagingData<Movie>> {
+        return remoteMovieDataSource.getUpcomingMovies(language, region)
     }
 }

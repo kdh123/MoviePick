@@ -35,8 +35,10 @@ class HomeViewModelTest {
         getNowPlayingMoviesUseCase = FakeGetNowPlayingMoviesUseCase()
 
         viewModel = HomeViewModel(
-            getTopRatedMoviesUseCase,
-            getNowPlayingMoviesUseCase
+            mapOf(
+                TOP_RATED_MOVIES_KEY to getTopRatedMoviesUseCase,
+                NOW_PLAYING_MOVIES_KEY to getNowPlayingMoviesUseCase
+            )
         )
 
         viewModel.uiState.first()
@@ -51,8 +53,10 @@ class HomeViewModelTest {
         getNowPlayingMoviesUseCase = FakeGetNowPlayingMoviesUseCase()
 
         viewModel = HomeViewModel(
-            getTopRatedMoviesUseCase,
-            getNowPlayingMoviesUseCase
+            mapOf(
+                TOP_RATED_MOVIES_KEY to getTopRatedMoviesUseCase,
+                NOW_PLAYING_MOVIES_KEY to getNowPlayingMoviesUseCase
+            )
         )
 
         viewModel.uiState.first()
