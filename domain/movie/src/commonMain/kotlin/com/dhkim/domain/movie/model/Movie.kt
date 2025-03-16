@@ -4,6 +4,7 @@ import com.dhkim.common.Series
 
 data class Movie(
     override val id: String,
+    override val imageUrl: String,
     val title: String,
     val adult: Boolean,
     val overview: String,
@@ -11,5 +12,4 @@ data class Movie(
     val releasedDate: String,
     val popularity: Double,
     val voteAverage: Double,
-    val imageUrl: String
 ) : Series

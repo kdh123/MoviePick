@@ -6,7 +6,7 @@ enum class Genre(val id: Int, val genre: String) {
     ANIMATION(16, "애니메이션"),
     COMEDY(35, "코미디"),
     CRIME(80, "범죄"),
-    DOCUMENTARY(99, "다큐"),
+    DOCUMENTARY(99, "다큐멘터리"),
     DRAMA(18, "드라마"),
     FAMILY(10751, "가족"),
     FANTASY(14, "판타지"),

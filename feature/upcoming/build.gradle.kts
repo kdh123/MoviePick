@@ -41,6 +41,7 @@ kotlin {
         commonMain.dependencies {
 
             implementation(projects.core.common)
+            implementation(projects.core.ui)
             implementation(projects.core.designsystem)
             implementation(projects.domain.movie)
             implementation(projects.data.movie)

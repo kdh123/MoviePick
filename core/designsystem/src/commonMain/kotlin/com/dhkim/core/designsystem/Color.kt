@@ -3,6 +3,12 @@ package com.dhkim.core.designsystem
 import androidx.compose.ui.graphics.Color
 
 val Black = Color(0xFF000000)
+val Black70 = Color(0xC4000000)
+val Black50 = Color(0x80000000)
+val Black30 = Color(0x4D000000)
+val Black10 = Color(0x1A000000)
+val Black00 = Color(0x00000000)
+
 val White = Color(0xFFFFFFFF)
 val Primary = Color(0xFF3C5AFA)
 val Gray = Color(0xFFC3C3C3)

@@ -1,6 +1,4 @@
-
 import org.jetbrains.compose.ExperimentalComposeLibrary
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -24,7 +22,7 @@ kotlin {
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "home"
+            baseName = "core.ui"
             isStatic = true
         }
     }
@@ -32,20 +30,10 @@ kotlin {
     jvm("desktop")
 
     sourceSets {
-        androidMain.dependencies {
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.koin.android)
-            implementation(libs.koin.androidx.compose)
-        }
-        commonMain.dependencies {
 
-            implementation(projects.core.common)
-            implementation(projects.core.ui)
+        commonMain.dependencies {
             implementation(projects.core.designsystem)
-            implementation(projects.core.network)
-            implementation(projects.domain.movie)
-            implementation(projects.domain.tv)
+            implementation(projects.core.common)
 
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -71,21 +59,22 @@ kotlin {
             implementation(libs.navigation.compose)
             implementation(libs.bundles.paging)
         }
+
         commonTest.dependencies {
+            implementation(libs.koin.test)
+            implementation(libs.bundles.paging)
             implementation(projects.core.testing)
             implementation(libs.kotlin.test)
             implementation(kotlin("test-annotations-common"))
             implementation(libs.assertk)
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.uiTest)
-            implementation(projects.domain.movie)
-            implementation(projects.data.movie)
         }
     }
 }
 
 android {
-    namespace = "com.dhkim.home"
+    namespace = "com.dhkim.core.ui"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
@@ -115,15 +104,4 @@ dependencies {
     debugImplementation(compose.uiTooling)
 }
 
-compose.desktop {
-    application {
-        mainClass = "com.dhkim.moviepick.MainKt"
-
-        nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.dhkim.moviepick"
-            packageVersion = "1.0.0"
-        }
-    }
-}
 

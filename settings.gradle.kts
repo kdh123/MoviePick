@@ -31,6 +31,7 @@ include(":core:common")
 include(":core:designsystem")
 include(":core:di")
 
+include(":core:ui")
 include(":core:network")
 include(":data")
 include(":data:movie")

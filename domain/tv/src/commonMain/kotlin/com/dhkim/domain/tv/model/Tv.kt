@@ -4,6 +4,7 @@ import com.dhkim.common.Series
 
 data class Tv(
     override val id: String,
+    override val imageUrl: String,
     val title: String,
     val adult: Boolean,
     val country: String,
@@ -12,5 +13,4 @@ data class Tv(
     val firstAirDate: String,
     val popularity: Double,
     val voteAverage: Double,
-    val imageUrl: String
 ) : Series
