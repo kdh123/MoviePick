@@ -12,4 +12,5 @@ data class Movie(
     val releasedDate: String,
     val popularity: Double,
     val voteAverage: Double,
+    val video: Boolean
 ) : Series

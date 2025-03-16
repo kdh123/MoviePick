@@ -3,22 +3,30 @@ package com.dhkim.home
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.cash.paging.compose.LazyPagingItems
 import app.cash.paging.compose.collectAsLazyPagingItems
 import app.cash.paging.compose.itemContentType
 import app.cash.paging.compose.itemKey
 import com.dhkim.common.Series
+import com.dhkim.core.designsystem.Black
+import com.dhkim.core.designsystem.DarkGray60
 import com.dhkim.core.designsystem.MoviePickTheme
+import com.dhkim.core.designsystem.White
+import com.dhkim.core.ui.MoviePickButton
 import com.dhkim.core.ui.RecommendationSeries
 import com.dhkim.core.ui.RecommendationSeriesScope
 import com.dhkim.core.ui.Resources
@@ -56,10 +64,9 @@ fun ContentsScreen(homeMovieItems: ImmutableList<HomeMovieItem>) {
             when (it.group) {
                 HomeMovieGroup.TODAY_RECOMMENDATION_MOVIE -> {
                     if (movies.itemCount > 0) {
-                        RecommendationSeries(
-                            series = movies[0] as Movie
-                        ) {
+                        RecommendationSeries(series = movies[0] as Movie) {
                             Genre()
+                            RecommendationButtons()
                         }
                     }
                 }
@@ -107,16 +114,79 @@ fun RecommendationSeriesScope.Genre() {
             .fillMaxWidth()
             .padding(bottom = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp)
+        contentPadding = PaddingValues(horizontal = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         items(items = movie.genre, key = { it }) {
             Text(
                 text = it,
                 style = MoviePickTheme.typography.labelMedium,
+                textAlign = TextAlign.Center,
             )
         }
     }
 }
+
+@Composable
+fun RecommendationSeriesScope.RecommendationButtons() {
+    val movie = series as Movie
+
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
+    ) {
+        if (movie.video) {
+            MoviePickButton(
+                color = White,
+                onClick = {},
+                modifier = Modifier
+                    .weight(1f)
+            ) {
+                Row {
+                    Icon(
+                        painter = painterResource(Resources.Icon.Play),
+                        contentDescription = null,
+                        tint = Black,
+                        modifier = Modifier
+                            .padding(end = 4.dp)
+                            .size(24.dp)
+                    )
+                    Text(
+                        text = "티저",
+                        style = MoviePickTheme.typography.labelLarge,
+                        color = Black,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            }
+        }
+
+        MoviePickButton(
+            color = DarkGray60,
+            onClick = {},
+            modifier = Modifier
+                .weight(1f)
+        ) {
+            Row {
+                Icon(
+                    painter = painterResource(Resources.Icon.Add),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(end = 4.dp)
+                        .size(24.dp)
+                )
+                Text(
+                    text = "찜",
+                    style = MoviePickTheme.typography.labelLarge,
+                    textAlign = TextAlign.Center,
+                )
+            }
+        }
+    }
+}
+
 
 @Composable
 fun SeriesList(title: String, series: LazyPagingItems<Series>, seriesItem: @Composable (Series) -> Unit) {

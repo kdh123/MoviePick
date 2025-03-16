@@ -60,7 +60,8 @@ data class NowPlayingMovieResult(
             genre = genreIds.map { Genre.movieGenre(it).genre },
             voteAverage = voteAverage,
             releasedDate = releaseDate,
-            popularity = popularity
+            popularity = popularity,
+            video = video
         )
     }
 }

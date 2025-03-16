@@ -25,11 +25,12 @@ val todayRecommendationMovie = mutableListOf<Series>().apply {
             title = "recommendation title",
             adult = false,
             overview = "overview",
-            genre = listOf(Genre.ACTION.genre, Genre.DRAMA.genre),
+            genre = listOf(Genre.SCIENCE_FICTION.genre, Genre.ACTION.genre, Genre.DRAMA.genre),
             imageUrl = "imageUrl",
             releasedDate = "2025-03-13",
             voteAverage = 5.5,
-            popularity = 45.38
+            popularity = 45.38,
+            video = true
         )
     )
 }
@@ -46,7 +47,8 @@ val topRatedMovies = mutableListOf<Series>().apply {
                 imageUrl = "imageUrl$it",
                 releasedDate = "2025-03-13",
                 voteAverage = 5.5 + it.toDouble(),
-                popularity = 45.38 + it.toDouble()
+                popularity = 45.38 + it.toDouble(),
+                video = true
             )
         )
     }
@@ -64,7 +66,8 @@ val nowPlayingMovies = mutableListOf<Series>().apply {
                 imageUrl = "imageUrl$it",
                 releasedDate = "2025-02-05",
                 voteAverage = 5.5 + it.toDouble(),
-                popularity = 45.38 + it.toDouble()
+                popularity = 45.38 + it.toDouble(),
+                video = true
             )
         )
     }

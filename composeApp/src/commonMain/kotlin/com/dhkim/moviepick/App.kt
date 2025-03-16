@@ -67,24 +67,11 @@ fun App() {
                 navController = appState.navController,
                 startDestination = Screen.Home.route,
                 modifier = Modifier
-                    .padding(bottom = padding.calculateBottomPadding())
+                    .padding(top = padding.calculateTopPadding(), bottom = padding.calculateBottomPadding())
             ) {
                 home()
                 upcoming()
             }
         }
-
-
-        /*Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Button(onClick = {
-
-            }) {
-                Text("Click me!", style = MoviePickTheme.typography.headlineLarge)
-            }
-            HomeScreen(uiState)
-        }*/
     }
 }
