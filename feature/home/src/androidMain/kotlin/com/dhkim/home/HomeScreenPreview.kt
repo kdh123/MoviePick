@@ -176,6 +176,7 @@ private fun HomeScreenDarkPreview() {
 @Composable
 private fun HomeScreenPreview() {
     val series = persistentListOf(
+        todayRecommendationMovieItem,
         topRatedMoviesItem,
         nowPlayingMoviesItem,
         airingTodayTvsItem,

@@ -42,6 +42,7 @@ kotlin {
         }
         commonMain.dependencies {
             implementation(projects.core.designsystem)
+            implementation(projects.core.ui)
             implementation(projects.core.di)
             implementation(projects.feature.home)
             implementation(projects.feature.upcoming)

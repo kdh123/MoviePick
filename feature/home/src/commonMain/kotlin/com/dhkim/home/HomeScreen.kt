@@ -1,20 +1,34 @@
 package com.dhkim.home
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.cash.paging.compose.LazyPagingItems
@@ -26,10 +40,12 @@ import com.dhkim.core.designsystem.Black
 import com.dhkim.core.designsystem.DarkGray60
 import com.dhkim.core.designsystem.MoviePickTheme
 import com.dhkim.core.designsystem.White
+import com.dhkim.core.ui.Chip
 import com.dhkim.core.ui.MoviePickButton
 import com.dhkim.core.ui.RecommendationSeries
 import com.dhkim.core.ui.RecommendationSeriesScope
 import com.dhkim.core.ui.Resources
+import com.dhkim.core.ui.noRippleClick
 import com.dhkim.domain.movie.model.Movie
 import com.dhkim.domain.tv.model.Tv
 import com.skydoves.landscapist.coil3.CoilImage
@@ -40,25 +56,104 @@ import org.jetbrains.compose.resources.painterResource
 fun HomeScreen(
     uiState: HomeUiState
 ) {
-    when (uiState.displayState) {
-        HomeDisplayState.Loading -> {
+    var showCategory by rememberSaveable { mutableStateOf(true) }
 
-        }
+    Column {
+        AppBar(showCategory)
+        when (uiState.displayState) {
+            HomeDisplayState.Loading -> {
 
-        is HomeDisplayState.Contents -> {
-            val movies = uiState.displayState.movies
-            ContentsScreen(movies)
-        }
+            }
 
-        is HomeDisplayState.Error -> {
+            is HomeDisplayState.Contents -> {
+                val movies = uiState.displayState.movies
+                ContentsScreen(
+                    homeMovieItems = movies,
+                    onUpdateShowCategory = { show ->
+                        showCategory = show
+                    }
+                )
+            }
 
+            is HomeDisplayState.Error -> {
+
+            }
         }
     }
 }
 
 @Composable
-fun ContentsScreen(homeMovieItems: ImmutableList<HomeMovieItem>) {
-    LazyColumn {
+fun AppBar(showCategory: Boolean) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier
+            .padding(horizontal = 8.dp, vertical = 8.dp)
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Icon(
+                painter = painterResource(Resources.Icon.Search),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(32.dp)
+                    .noRippleClick { }
+            )
+        }
+        AnimatedVisibility(showCategory) {
+            CategoryChips()
+        }
+    }
+}
+
+@Composable
+fun CategoryChips() {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = Modifier
+            //.padding(horizontal = 8.dp)
+            .fillMaxWidth()
+    ) {
+        Chip(onClick = {}) {
+            Text(
+                text = "시리즈",
+                style = MoviePickTheme.typography.labelMedium,
+                textAlign = TextAlign.Center,
+            )
+        }
+        Chip(onClick = {}) {
+            Text(
+                text = "영화",
+                style = MoviePickTheme.typography.labelMedium,
+                textAlign = TextAlign.Center,
+            )
+        }
+    }
+}
+
+@Composable
+fun ContentsScreen(
+    homeMovieItems: ImmutableList<HomeMovieItem>,
+    onUpdateShowCategory: (Boolean) -> Unit
+) {
+    val nestedScrollConnection = remember {
+        object : NestedScrollConnection {
+            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                when {
+                    available.y > 0 -> onUpdateShowCategory(true)
+                    available.y <= 0 -> onUpdateShowCategory(false)
+                }
+                return Offset.Zero
+            }
+        }
+    }
+
+    LazyColumn(
+        modifier = Modifier
+            .nestedScroll(nestedScrollConnection)
+    ) {
         items(items = homeMovieItems, key = { item -> item.group }) {
             val movies = it.series.collectAsLazyPagingItems()
             when (it.group) {
@@ -121,6 +216,7 @@ fun RecommendationSeriesScope.Genre() {
             Text(
                 text = it,
                 style = MoviePickTheme.typography.labelMedium,
+                color = White,
                 textAlign = TextAlign.Center,
             )
         }
@@ -172,6 +268,7 @@ fun RecommendationSeriesScope.RecommendationButtons() {
             Row {
                 Icon(
                     painter = painterResource(Resources.Icon.Add),
+                    tint = White,
                     contentDescription = null,
                     modifier = Modifier
                         .padding(end = 4.dp)
@@ -180,6 +277,7 @@ fun RecommendationSeriesScope.RecommendationButtons() {
                 Text(
                     text = "찜",
                     style = MoviePickTheme.typography.labelLarge,
+                    color = White,
                     textAlign = TextAlign.Center,
                 )
             }
@@ -191,15 +289,19 @@ fun RecommendationSeriesScope.RecommendationButtons() {
 @Composable
 fun SeriesList(title: String, series: LazyPagingItems<Series>, seriesItem: @Composable (Series) -> Unit) {
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
     ) {
         Text(
             text = title,
-            style = MoviePickTheme.typography.titleMedium
+            style = MoviePickTheme.typography.titleMedium,
+            modifier = Modifier
+                .padding(8.dp)
         )
         LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(horizontal = 8.dp)
         ) {
             items(
                 count = series.itemCount,
@@ -221,7 +323,9 @@ fun SeriesList(title: String, series: LazyPagingItems<Series>, seriesItem: @Comp
 fun MovieItem(movie: Movie) {
     CoilImage(
         modifier = Modifier
-            .size(250.dp),
+            .clip(RoundedCornerShape(12f))
+            .width(108.dp)
+            .aspectRatio(7f / 10f),
         imageModel = { movie.imageUrl },
         failure = {},
         previewPlaceholder = painterResource(Resources.Icon.MoviePosterSample)
@@ -232,7 +336,9 @@ fun MovieItem(movie: Movie) {
 fun TvItem(tv: Tv) {
     CoilImage(
         modifier = Modifier
-            .size(250.dp),
+            .clip(RoundedCornerShape(12f))
+            .width(108.dp)
+            .aspectRatio(7f / 10f),
         imageModel = { tv.imageUrl },
         failure = {},
         previewPlaceholder = painterResource(Resources.Icon.TvPosterSample)

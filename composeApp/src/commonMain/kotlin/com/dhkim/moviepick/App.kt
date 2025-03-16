@@ -34,33 +34,7 @@ fun App() {
     ) {
         Scaffold(
             bottomBar = {
-                NavigationBar(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight(align = Alignment.Bottom)
-                ) {
-                    appState.bottomNavItems.forEach { screen ->
-                        val isSelected = screen.route == appState.currentDestination
-                        val onBottomClick = remember {
-                            {
-                                appState.navigateToTopLevelDestination(screen.route)
-                            }
-                        }
-
-                        NavigationBarItem(
-                            icon = {
-                                Icon(
-                                    painter = painterResource(screen.res),
-                                    contentDescription = screen.route,
-                                    tint = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
-                                )
-                            },
-                            selected = isSelected,
-                            onClick = onBottomClick
-                        )
-                    }
-                }
+                BottomBar(appState)
             }
         ) { padding ->
             NavHost(
@@ -72,6 +46,37 @@ fun App() {
                 home()
                 upcoming()
             }
+        }
+    }
+}
+
+@Composable
+fun BottomBar(appState: AppState) {
+    NavigationBar(
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight(align = Alignment.Bottom)
+    ) {
+        appState.bottomNavItems.forEach { screen ->
+            val isSelected = screen.route == appState.currentDestination
+            val onBottomClick = remember {
+                {
+                    appState.navigateToTopLevelDestination(screen.route)
+                }
+            }
+
+            NavigationBarItem(
+                icon = {
+                    Icon(
+                        painter = painterResource(screen.res),
+                        contentDescription = screen.route,
+                        tint = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+                    )
+                },
+                selected = isSelected,
+                onClick = onBottomClick
+            )
         }
     }
 }

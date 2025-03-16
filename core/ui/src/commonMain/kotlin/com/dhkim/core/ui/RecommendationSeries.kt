@@ -40,7 +40,7 @@ fun RecommendationSeries(
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(7f / 10f)
-            .padding(16.dp)
+            .padding(horizontal = 24.dp, vertical = 16.dp)
             .clip(RoundedCornerShape(12.dp))
     ) {
         CoilImage(
