@@ -1,13 +1,14 @@
-package com.dhkim.core.testing.tv
+package com.dhkim.data.tv.repository
 
 import app.cash.paging.PagingData
+import com.dhkim.domain.tv.datasource.RemoteTvDataSource
 import com.dhkim.domain.tv.model.Tv
 import com.dhkim.domain.tv.repository.TvRepository
 import kotlinx.coroutines.flow.Flow
 
-class FakeTvRepository : TvRepository {
-
-    private val remoteTvDataSource = FakeRemoteTvDataSource()
+class TvRepositoryImpl(
+    private val remoteTvDataSource: RemoteTvDataSource
+) : TvRepository {
 
     override fun getAiringTodayTvs(language: String): Flow<PagingData<Tv>> {
         return remoteTvDataSource.getAiringTodayTvs(language)

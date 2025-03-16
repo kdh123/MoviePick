@@ -4,19 +4,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.paging.PagingData
 import app.cash.paging.cachedIn
+import app.cash.paging.filter
 import app.cash.paging.map
 import com.dhkim.common.Language
 import com.dhkim.common.Region
 import com.dhkim.common.Series
 import com.dhkim.common.handle
 import com.dhkim.common.onetimeStateIn
-import com.dhkim.core.tv.data.di.AIRING_TODAY_TVS_KEY
-import com.dhkim.core.tv.data.di.ON_THE_AIR_TVS_KEY
-import com.dhkim.core.tv.data.di.TOP_RATED_TVS_KEY
-import com.dhkim.core.tv.domain.usecase.GetTvsUseCase
 import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import com.dhkim.domain.movie.usecase.NOW_PLAYING_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TOP_RATED_MOVIES_KEY
+import com.dhkim.domain.tv.usecase.AIRING_TODAY_TVS_KEY
+import com.dhkim.domain.tv.usecase.GetTvsUseCase
+import com.dhkim.domain.tv.usecase.ON_THE_AIR_TVS_KEY
+import com.dhkim.domain.tv.usecase.TOP_RATED_TVS_KEY
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -77,7 +78,10 @@ class HomeViewModel(
     private suspend fun Flow<PagingData<out Series>>.toHomeMovieItem(group: HomeMovieGroup): HomeMovieItem {
         return HomeMovieItem(
             group = group,
-            series = map { pagingData -> pagingData.map { it as Series } }
+            series = map { pagingData ->
+                val seenIds = mutableSetOf<String>()
+                pagingData.filter { seenIds.add(it.id) }.map { it as Series }
+            }
                 .catch { error ->
                     _uiState.update {
                         HomeUiState(HomeDisplayState.Error(errorCode = "300", message = error.message ?: ""))

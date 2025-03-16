@@ -2,17 +2,14 @@ package com.dhkim.core.di
 
 import com.dhkim.core.network.di.networkModule
 import com.dhkim.core.network.di.platformModule
-import com.dhkim.core.tv.data.datasource.RemoteTvDataSourceImpl
-import com.dhkim.core.tv.data.di.AIRING_TODAY_TVS_KEY
-import com.dhkim.core.tv.data.di.ON_THE_AIR_TVS_KEY
-import com.dhkim.core.tv.data.di.TOP_RATED_TVS_KEY
-import com.dhkim.core.tv.data.repository.TvRepositoryImpl
-import com.dhkim.core.tv.data.usecase.GetAiringTodayTvsUseCase
-import com.dhkim.core.tv.data.usecase.GetOnTheAirTvsUseCase
-import com.dhkim.core.tv.data.usecase.GetTopRatedTvsUseCase
-import com.dhkim.core.tv.domain.datasource.RemoteTvDataSource
-import com.dhkim.core.tv.domain.repository.TvRepository
-import com.dhkim.core.tv.domain.usecase.GetTvsUseCase
+import com.dhkim.data.tv.datasource.RemoteTvDataSourceImpl
+import com.dhkim.data.tv.repository.TvRepositoryImpl
+import com.dhkim.data.tv.usecase.GetAiringTodayTvsUseCase
+import com.dhkim.data.tv.usecase.GetOnTheAirTvsUseCase
+import com.dhkim.data.tv.usecase.GetTopRatedTvsUseCase
+import com.dhkim.domain.tv.datasource.RemoteTvDataSource
+import com.dhkim.domain.tv.repository.TvRepository
+import com.dhkim.domain.tv.usecase.GetTvsUseCase
 import com.dhkim.data.usecase.GetNowPlayingMoviesUseCase
 import com.dhkim.data.usecase.GetTopRatedMoviesUseCase
 import com.dhkim.data.usecase.GetUpcomingMoviesUseCase
@@ -24,6 +21,9 @@ import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import com.dhkim.domain.movie.usecase.NOW_PLAYING_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TOP_RATED_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.UPCOMING_MOVIES_KEY
+import com.dhkim.domain.tv.usecase.AIRING_TODAY_TVS_KEY
+import com.dhkim.domain.tv.usecase.ON_THE_AIR_TVS_KEY
+import com.dhkim.domain.tv.usecase.TOP_RATED_TVS_KEY
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.bind

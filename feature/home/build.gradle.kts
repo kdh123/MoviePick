@@ -44,7 +44,7 @@ kotlin {
             implementation(projects.core.designsystem)
             implementation(projects.core.network)
             implementation(projects.domain.movie)
-            implementation(projects.core.tv)
+            implementation(projects.domain.tv)
 
             implementation(compose.runtime)
             implementation(compose.foundation)

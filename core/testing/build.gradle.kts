@@ -42,7 +42,8 @@ kotlin {
             implementation(projects.core.common)
             implementation(projects.domain.movie)
             implementation(projects.domain.movie)
-            implementation(projects.core.tv)
+            implementation(projects.domain.tv)
+            implementation(projects.data.tv)
 
             implementation(compose.runtime)
             implementation(compose.foundation)
