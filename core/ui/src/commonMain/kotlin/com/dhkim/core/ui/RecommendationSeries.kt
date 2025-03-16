@@ -1,5 +1,6 @@
 package com.dhkim.core.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.dhkim.common.Series
@@ -31,7 +33,8 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun RecommendationSeries(
     series: Series,
-    content: @Composable RecommendationSeriesScope.() -> Unit
+    onPosterImageLoadSuccess: ((Painter) -> Unit)? = null,
+    content: @Composable RecommendationSeriesScope.() -> Unit,
 ) {
     val colorStops = listOf(Black00, Black10, Black30, Black50, Black70, Black80)
     val scope = remember(series) { DefaultRecommendationSeriesScope(series) }
@@ -39,7 +42,7 @@ fun RecommendationSeries(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(7f / 10f)
+            .aspectRatio(7f / 9f)
             .padding(horizontal = 24.dp, vertical = 16.dp)
             .clip(RoundedCornerShape(12.dp))
     ) {
@@ -48,7 +51,16 @@ fun RecommendationSeries(
             imageModel = { series.imageUrl },
             failure = {},
             previewPlaceholder = painterResource(Resources.Icon.MoviePosterSample),
-            imageOptions = ImageOptions(contentScale = ContentScale.FillBounds)
+            imageOptions = ImageOptions(contentScale = ContentScale.FillBounds),
+            success = { _, painter ->
+                onPosterImageLoadSuccess?.invoke(painter)
+                Image(
+                    painter = painter,
+                    contentDescription = null,
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
         )
 
         Box(

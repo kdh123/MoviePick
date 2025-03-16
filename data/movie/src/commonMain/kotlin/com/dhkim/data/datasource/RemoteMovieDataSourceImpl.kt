@@ -31,7 +31,9 @@ class RemoteMovieDataSourceImpl(
                 }
 
                 val nowPlayingMovieDto = response.body<NowPlayingMovieDto>()
-                val recommendationMovie = nowPlayingMovieDto.results.maxBy { it.popularity }.toNowPlayingMovie()
+                val randomIndex = (0..10).random()
+                val recommendationMovie = nowPlayingMovieDto.results[randomIndex].toNowPlayingMovie()
+                //val recommendationMovie = nowPlayingMovieDto.results[2].toNowPlayingMovie()
                 emit(PagingData.from(listOf(recommendationMovie)))
             }
         }

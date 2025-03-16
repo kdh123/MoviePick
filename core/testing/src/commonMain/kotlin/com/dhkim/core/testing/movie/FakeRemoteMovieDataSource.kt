@@ -25,7 +25,8 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
                     imageUrl = "imageUrl$it",
                     releasedDate = "2025-03-13",
                     voteAverage = 5.5 + it.toDouble(),
-                    popularity = 45.38 + it.toDouble()
+                    popularity = 45.38 + it.toDouble(),
+                    video = true
                 )
             )
         }
@@ -43,7 +44,8 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
                     imageUrl = "imageUrl$it",
                     releasedDate = "2025-02-05",
                     voteAverage = 5.5 + it.toDouble(),
-                    popularity = 45.38 + it.toDouble()
+                    popularity = 45.38 + it.toDouble(),
+                    video = true
                 )
             )
         }
@@ -61,7 +63,8 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
                     imageUrl = "imageUrl$it",
                     releasedDate = "2025-05-12",
                     voteAverage = 4.3 + it.toDouble(),
-                    popularity = 45.38 + it.toDouble()
+                    popularity = 45.38 + it.toDouble(),
+                    video = true
                 )
             )
         }

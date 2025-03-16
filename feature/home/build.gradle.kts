@@ -70,6 +70,7 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.navigation.compose)
             implementation(libs.bundles.paging)
+            implementation(libs.bundles.kmpallete)
         }
         commonTest.dependencies {
             implementation(projects.core.testing)

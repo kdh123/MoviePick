@@ -12,13 +12,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun Chip(onClick: () -> Unit, content: @Composable () -> Unit) {
+fun Chip(
+    borderColor: Color = MaterialTheme.colorScheme.onBackground,
+    onClick: () -> Unit,
+    content: @Composable () -> Unit
+) {
     Box(
         modifier = Modifier
             .background(color = Color.Transparent)
             .border(
                 width = 1.dp,
-                color = MaterialTheme.colorScheme.onBackground,
+                color = borderColor,
                 shape = RoundedCornerShape(32.dp)
             )
             .padding(horizontal = 12.dp, vertical = 6.dp)
