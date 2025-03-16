@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.launch
 
-fun CoroutineScope.handle(block: suspend () -> Unit, error: ((Throwable) -> Unit)? = null) {
+fun CoroutineScope.handle(block: suspend CoroutineScope.() -> Unit, error: ((Throwable) -> Unit)? = null) {
     launch(CoroutineExceptionHandler { _, throwable ->
         error?.invoke(throwable)
     }) {

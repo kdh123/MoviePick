@@ -10,6 +10,10 @@ class FakeMovieRepository : MovieRepository {
 
     private val remoteMovieDataSource = FakeRemoteMovieDataSource()
 
+    override fun getTodayRecommendationMovie(language: String, region: String): Flow<PagingData<Movie>> {
+        return remoteMovieDataSource.getTodayRecommendationMovie(language, region)
+    }
+
     override fun getTopRatedMovies(language: String, region: String): Flow<PagingData<Movie>> {
         return remoteMovieDataSource.getTopRatedMovies(language, region)
     }

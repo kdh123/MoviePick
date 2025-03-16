@@ -13,13 +13,17 @@ import com.dhkim.common.handle
 import com.dhkim.common.onetimeStateIn
 import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import com.dhkim.domain.movie.usecase.NOW_PLAYING_MOVIES_KEY
+import com.dhkim.domain.movie.usecase.TODAY_RECOMMENDATION_MOVIE_KEY
 import com.dhkim.domain.movie.usecase.TOP_RATED_MOVIES_KEY
 import com.dhkim.domain.tv.usecase.AIRING_TODAY_TVS_KEY
 import com.dhkim.domain.tv.usecase.GetTvsUseCase
 import com.dhkim.domain.tv.usecase.ON_THE_AIR_TVS_KEY
 import com.dhkim.domain.tv.usecase.TOP_RATED_TVS_KEY
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -50,14 +54,42 @@ class HomeViewModel(
 
         viewModelScope.handle(
             block = {
-                val topRatedMovies = getMoviesUseCase[TOP_RATED_MOVIES_KEY]!!(language, region)
-                    .toHomeMovieItem(group = HomeMovieGroup.TOP_RATED_MOVIE)
-                val nowPlayingMovies = getMoviesUseCase[NOW_PLAYING_MOVIES_KEY]!!(language, region)
-                    .toHomeMovieItem(group = HomeMovieGroup.NOW_PLAYING_MOVIE_TOP_10)
-                val airingTodayTvs = getTvsUseCase[AIRING_TODAY_TVS_KEY]!!(language).toHomeMovieItem(group = HomeMovieGroup.AIRING_TODAY_TV)
-                val onTheAirTvs = getTvsUseCase[ON_THE_AIR_TVS_KEY]!!(language).toHomeMovieItem(group = HomeMovieGroup.ON_THE_AIR_TV)
-                val topRatedTvs = getTvsUseCase[TOP_RATED_TVS_KEY]!!(language).toHomeMovieItem(group = HomeMovieGroup.TOP_RATED_TV)
-                val series = persistentListOf(topRatedMovies, nowPlayingMovies, airingTodayTvs, onTheAirTvs, topRatedTvs)
+                val jobs = mutableListOf<Deferred<HomeMovieItem>>()
+                val todayRecommendationMovie = async {
+                    getMoviesUseCase[TODAY_RECOMMENDATION_MOVIE_KEY]!!(language, region)
+                        .toHomeMovieItem(group = HomeMovieGroup.TODAY_RECOMMENDATION_MOVIE)
+                }
+
+                val topRatedMovies = async {
+                    getMoviesUseCase[TOP_RATED_MOVIES_KEY]!!(language, region)
+                        .toHomeMovieItem(group = HomeMovieGroup.TOP_RATED_MOVIE)
+                }
+                val nowPlayingMovies = async {
+                    getMoviesUseCase[NOW_PLAYING_MOVIES_KEY]!!(language, region)
+                        .toHomeMovieItem(group = HomeMovieGroup.NOW_PLAYING_MOVIE_TOP_10)
+                }
+                val airingTodayTvs = async {
+                    getTvsUseCase[AIRING_TODAY_TVS_KEY]!!(language)
+                        .toHomeMovieItem(group = HomeMovieGroup.AIRING_TODAY_TV)
+                }
+                val onTheAirTvs = async {
+                    getTvsUseCase[ON_THE_AIR_TVS_KEY]!!(language)
+                        .toHomeMovieItem(group = HomeMovieGroup.ON_THE_AIR_TV)
+                }
+                val topRatedTvs = async {
+                    getTvsUseCase[TOP_RATED_TVS_KEY]!!(language)
+                        .toHomeMovieItem(group = HomeMovieGroup.TOP_RATED_TV)
+                }
+
+                jobs.add(todayRecommendationMovie)
+                jobs.add(topRatedMovies)
+                jobs.add(nowPlayingMovies)
+                jobs.add(airingTodayTvs)
+                jobs.add(onTheAirTvs)
+                jobs.add(topRatedTvs)
+
+                val series = jobs.awaitAll().toImmutableList()
+
                 _uiState.update { HomeUiState(HomeDisplayState.Contents(movies = series)) }
             },
             error = {
@@ -82,11 +114,7 @@ class HomeViewModel(
                 val seenIds = mutableSetOf<String>()
                 pagingData.filter { seenIds.add(it.id) }.map { it as Series }
             }
-                .catch { error ->
-                    _uiState.update {
-                        HomeUiState(HomeDisplayState.Error(errorCode = "300", message = error.message ?: ""))
-                    }
-                }
+                .catch { }
                 .cachedIn(viewModelScope)
                 .stateIn(viewModelScope)
         )

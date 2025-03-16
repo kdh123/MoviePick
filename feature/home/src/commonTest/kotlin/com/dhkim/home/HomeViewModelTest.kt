@@ -40,7 +40,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `영화 탑 순위 가져오기 성공`() = runTest {
+    fun `영화 가져오기 성공`() = runTest {
         getTopRatedMoviesUseCase = FakeGetTopRatedMoviesUseCase()
         getNowPlayingMoviesUseCase = FakeGetNowPlayingMoviesUseCase()
         getAiringTodayTvsUseCase = FakeGetAiringTodayTvsUseCase()
@@ -64,7 +64,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `영화 탑 순위 가져오기 실패`() = runTest {
+    fun `영화 가져오기 실패`() = runTest {
         getTopRatedMoviesUseCase = FakeGetTopRatedMoviesUseCase().apply {
             setStatus(MovieStatus.Error)
         }

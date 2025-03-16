@@ -1,6 +1,5 @@
 package com.dhkim.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,14 +16,13 @@ import app.cash.paging.compose.LazyPagingItems
 import app.cash.paging.compose.collectAsLazyPagingItems
 import app.cash.paging.compose.itemContentType
 import app.cash.paging.compose.itemKey
+import com.dhkim.common.Resources
 import com.dhkim.common.Series
 import com.dhkim.core.designsystem.MoviePickTheme
 import com.dhkim.domain.movie.model.Movie
 import com.dhkim.domain.tv.model.Tv
 import com.skydoves.landscapist.coil3.CoilImage
 import kotlinx.collections.immutable.ImmutableList
-import moviepick.feature.home.generated.resources.Res
-import moviepick.feature.home.generated.resources.ic_smile
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -53,6 +51,12 @@ fun ContentsScreen(homeMovieItems: ImmutableList<HomeMovieItem>) {
         items(items = homeMovieItems, key = { item -> item.group }) {
             val movies = it.series.collectAsLazyPagingItems()
             when (it.group) {
+                HomeMovieGroup.TODAY_RECOMMENDATION_MOVIE -> {
+                    if (movies.itemCount > 0) {
+                        TodayRecommendationMovieItem(movie = movies[0] as Movie)
+                    }
+                }
+
                 HomeMovieGroup.NOW_PLAYING_MOVIE_TOP_10 -> {
                     SeriesList(title = it.group.title, series = movies) { movie ->
                         MovieItem(movie = movie as Movie)
@@ -117,18 +121,13 @@ fun SeriesList(title: String, series: LazyPagingItems<Series>, seriesItem: @Comp
 }
 
 @Composable
-fun TvItem(tv: Tv) {
+fun TodayRecommendationMovieItem(movie: Movie) {
     CoilImage(
         modifier = Modifier
             .size(250.dp),
-        imageModel = { tv.imageUrl },
-        failure = {
-            Image(
-                painter = painterResource(Res.drawable.ic_smile),
-                contentDescription = null
-            )
-        },
-        previewPlaceholder = painterResource(Res.drawable.ic_smile)
+        imageModel = { movie.imageUrl },
+        failure = {},
+        previewPlaceholder = painterResource(Resources.Icon.MoviePosterSample)
     )
 }
 
@@ -138,12 +137,18 @@ fun MovieItem(movie: Movie) {
         modifier = Modifier
             .size(250.dp),
         imageModel = { movie.imageUrl },
-        failure = {
-            Image(
-                painter = painterResource(Res.drawable.ic_smile),
-                contentDescription = null
-            )
-        },
-        previewPlaceholder = painterResource(Res.drawable.ic_smile)
+        failure = {},
+        previewPlaceholder = painterResource(Resources.Icon.MoviePosterSample)
+    )
+}
+
+@Composable
+fun TvItem(tv: Tv) {
+    CoilImage(
+        modifier = Modifier
+            .size(250.dp),
+        imageModel = { tv.imageUrl },
+        failure = {},
+        previewPlaceholder = painterResource(Resources.Icon.TvPosterSample)
     )
 }

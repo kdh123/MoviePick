@@ -71,6 +71,13 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
     private val nowPlayingPagingSource = nowPlayingMovies.asPagingSourceFactory().invoke()
     private val upcomingPagingSource = upcomingMovies.asPagingSourceFactory().invoke()
 
+    override fun getTodayRecommendationMovie(language: String, region: String): Flow<PagingData<Movie>> {
+        return flow {
+            val recommendationMovie = nowPlayingMovies.maxBy { it.popularity }
+            emit(PagingData.from(listOf(recommendationMovie)))
+        }
+    }
+
     override fun getTopRatedMovies(language: String, region: String): Flow<PagingData<Movie>> {
         return flow {
             val pager = TestPager(PagingConfig(pageSize = 15), topRatedPagingSource)
