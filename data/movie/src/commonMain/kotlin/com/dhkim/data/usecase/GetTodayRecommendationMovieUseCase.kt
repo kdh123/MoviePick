@@ -14,12 +14,16 @@ class GetTodayRecommendationMovieUseCase(
 
     override fun invoke(language: String, region: String): Flow<PagingData<Movie>> {
         return flow {
-            val index = (0..10).random()
+            val index = (0 until 20).random()
             val nowPlayingMovies = movieRepository.getNowPlayingMovies(language, region)
                 .asSnapshot()
-                .take(10)[index]
+                .take(10)
+            val topRatedMovies = movieRepository.getTopRatedMovies(language, region)
+                .asSnapshot()
+                .take(10)
+            val movie = (nowPlayingMovies + topRatedMovies)[index]
 
-            emit(PagingData.from(listOf(nowPlayingMovies)))
+            emit(PagingData.from(listOf(movie)))
         }
     }
 }
