@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 
-class FakeTodayRecommendationMovieUseCase : GetMoviesUseCase {
+class FakeGetTodayRecommendationMovieUseCase : GetMoviesUseCase {
 
     private var currentStatus = MovieStatus.Success
 

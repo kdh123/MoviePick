@@ -1,11 +1,13 @@
 import com.dhkim.core.testing.movie.FakeGetNowPlayingMoviesUseCase
 import com.dhkim.core.testing.movie.FakeGetTopRatedMoviesUseCase
+import com.dhkim.core.testing.movie.FakeGetTodayRecommendationMovieUseCase
 import com.dhkim.core.testing.movie.MovieStatus
 import com.dhkim.core.testing.tv.FakeGetAiringTodayTvsUseCase
 import com.dhkim.core.testing.tv.FakeGetOnTheAirTvsUseCase
 import com.dhkim.core.testing.tv.FakeGetTopRatedTvsUseCase
 import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import com.dhkim.domain.movie.usecase.NOW_PLAYING_MOVIES_KEY
+import com.dhkim.domain.movie.usecase.TODAY_RECOMMENDATION_MOVIE_KEY
 import com.dhkim.domain.movie.usecase.TOP_RATED_MOVIES_KEY
 import com.dhkim.domain.tv.usecase.AIRING_TODAY_TVS_KEY
 import com.dhkim.domain.tv.usecase.GetTvsUseCase
@@ -27,6 +29,7 @@ import kotlin.test.Test
 class HomeViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
+    private lateinit var getTodayRecommendationMovieUseCase: GetMoviesUseCase
     private lateinit var getTopRatedMoviesUseCase: GetMoviesUseCase
     private lateinit var getNowPlayingMoviesUseCase: GetMoviesUseCase
     private lateinit var getAiringTodayTvsUseCase: GetTvsUseCase
@@ -41,6 +44,7 @@ class HomeViewModelTest {
 
     @Test
     fun `영화 가져오기 성공`() = runTest {
+        getTodayRecommendationMovieUseCase = FakeGetTodayRecommendationMovieUseCase()
         getTopRatedMoviesUseCase = FakeGetTopRatedMoviesUseCase()
         getNowPlayingMoviesUseCase = FakeGetNowPlayingMoviesUseCase()
         getAiringTodayTvsUseCase = FakeGetAiringTodayTvsUseCase()
@@ -49,6 +53,7 @@ class HomeViewModelTest {
 
         viewModel = HomeViewModel(
             mapOf(
+                TODAY_RECOMMENDATION_MOVIE_KEY to getTodayRecommendationMovieUseCase,
                 TOP_RATED_MOVIES_KEY to getTopRatedMoviesUseCase,
                 NOW_PLAYING_MOVIES_KEY to getNowPlayingMoviesUseCase
             ),
@@ -75,6 +80,7 @@ class HomeViewModelTest {
 
         viewModel = HomeViewModel(
             mapOf(
+                TODAY_RECOMMENDATION_MOVIE_KEY to getTodayRecommendationMovieUseCase,
                 TOP_RATED_MOVIES_KEY to getTopRatedMoviesUseCase,
                 NOW_PLAYING_MOVIES_KEY to getNowPlayingMoviesUseCase
             ),

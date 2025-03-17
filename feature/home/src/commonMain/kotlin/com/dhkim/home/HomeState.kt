@@ -24,8 +24,8 @@ import kotlinx.collections.immutable.ImmutableList
 
 @Stable
 class HomeState(
-    private val series: ImmutableList<HomeMovieItem>,
-    private val listState: LazyListState
+    private val series: ImmutableList<HomeItem>,
+    val listState: LazyListState
 ) {
     var showCategory by mutableStateOf(true)
         private set
@@ -55,7 +55,7 @@ class HomeState(
     companion object {
 
         fun Saver(
-            series: ImmutableList<HomeMovieItem>,
+            series: ImmutableList<HomeItem>,
             listState: LazyListState,
         ): Saver<HomeState, *> = Saver(
             save = { listOf(it.showCategory, it.backgroundColors.map { color -> color.value }) },
@@ -71,27 +71,24 @@ class HomeState(
 
 @Composable
 fun rememberHomeState(
-    homeMovieItems: ImmutableList<HomeMovieItem>,
+    homeMovieItems: ImmutableList<HomeItem>,
     listState: LazyListState = rememberLazyListState()
 ): HomeState {
+    val state = rememberSaveable(homeMovieItems, listState, saver = HomeState.Saver(series = homeMovieItems, listState = listState)) {
+        HomeState(series = homeMovieItems, listState = listState)
+    }
     val recommendationSeries = homeMovieItems
         .firstOrNull { it.group == HomeMovieGroup.TODAY_RECOMMENDATION_MOVIE }
-        ?.series
-        ?.collectAsLazyPagingItems()
-
+        ?.run {
+            (this as HomeItem.HomeMovieItem).series
+        }?.collectAsLazyPagingItems()
     val recommendationSeriesPosterUrl = if (!recommendationSeries?.itemSnapshotList.isNullOrEmpty()) {
         recommendationSeries?.itemSnapshotList?.firstOrNull()?.imageUrl ?: ""
     } else {
         ""
     }
-
-    val state = rememberSaveable(homeMovieItems, listState, saver = HomeState.Saver(series = homeMovieItems, listState = listState)) {
-        HomeState(series = homeMovieItems, listState = listState)
-    }
-
     val networkLoader = rememberNetworkLoader()
     val dominantColorState = rememberDominantColorState(loader = networkLoader, defaultColor = MaterialTheme.colorScheme.background)
-
     val vibrantColor = dominantColorState.result
         ?.paletteOrNull
         ?.getVibrantColor(Black50.toArgb())

@@ -54,7 +54,7 @@ class HomeViewModel(
 
         viewModelScope.handle(
             block = {
-                val jobs = mutableListOf<Deferred<HomeMovieItem>>()
+                val jobs = mutableListOf<Deferred<HomeItem.HomeMovieItem>>()
                 val todayRecommendationMovie = async {
                     getMoviesUseCase[TODAY_RECOMMENDATION_MOVIE_KEY]!!(language, region)
                         .toHomeMovieItem(group = HomeMovieGroup.TODAY_RECOMMENDATION_MOVIE)
@@ -88,9 +88,10 @@ class HomeViewModel(
                 jobs.add(onTheAirTvs)
                 jobs.add(topRatedTvs)
 
-                val series = jobs.awaitAll().toImmutableList()
+                val series = listOf(HomeItem.AppBar(), HomeItem.Category()) + jobs.awaitAll()
+                    .map { HomeItem.HomeMovieItem(it.group, it.series) }
 
-                _uiState.update { HomeUiState(HomeDisplayState.Contents(movies = series)) }
+                _uiState.update { HomeUiState(HomeDisplayState.Contents(movies = series.toImmutableList())) }
             },
             error = {
                 val errorMessage = it.message ?: ""
@@ -107,8 +108,8 @@ class HomeViewModel(
         }
     }
 
-    private suspend fun Flow<PagingData<out Series>>.toHomeMovieItem(group: HomeMovieGroup): HomeMovieItem {
-        return HomeMovieItem(
+    private suspend fun Flow<PagingData<out Series>>.toHomeMovieItem(group: HomeMovieGroup): HomeItem.HomeMovieItem {
+        return HomeItem.HomeMovieItem(
             group = group,
             series = map { pagingData ->
                 val seenIds = mutableSetOf<String>()

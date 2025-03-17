@@ -5,7 +5,7 @@ import com.dhkim.common.Language
 import com.dhkim.common.Region
 import com.dhkim.core.testing.movie.FakeGetTopRatedMoviesUseCase
 import com.dhkim.core.testing.movie.FakeGetUpcomingMoviesUseCase
-import com.dhkim.core.testing.movie.FakeTodayRecommendationMovieUseCase
+import com.dhkim.core.testing.movie.FakeGetTodayRecommendationMovieUseCase
 import com.dhkim.data.di.movieModule
 import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import com.dhkim.domain.movie.usecase.NOW_PLAYING_MOVIES_KEY
@@ -48,7 +48,7 @@ class MovieUseCaseTest : KoinTest {
 
     @Test
     fun `오늘의 추천 영화  가져오기 성공_Fake`() = runTest {
-        FakeTodayRecommendationMovieUseCase().invoke(Language.Korea.code, Region.Korea.code).asSnapshot().forEach {
+        FakeGetTodayRecommendationMovieUseCase().invoke(Language.Korea.code, Region.Korea.code).asSnapshot().forEach {
             println(it)
         }
     }

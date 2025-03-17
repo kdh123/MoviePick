@@ -131,27 +131,29 @@ val topRatedTvs = mutableListOf<Series>().apply {
 }
 
 val todayRecommendationMovieStateFlow = MutableStateFlow(PagingData.from(todayRecommendationMovie)).asStateFlow()
-val todayRecommendationMovieItem = HomeMovieItem(HomeMovieGroup.TODAY_RECOMMENDATION_MOVIE, todayRecommendationMovieStateFlow)
+val todayRecommendationMovieItem = HomeItem.HomeMovieItem(HomeMovieGroup.TODAY_RECOMMENDATION_MOVIE, todayRecommendationMovieStateFlow)
 
 val topRatedMoviesStateFlow = MutableStateFlow(PagingData.from(topRatedMovies)).asStateFlow()
-val topRatedMoviesItem = HomeMovieItem(HomeMovieGroup.TOP_RATED_MOVIE, topRatedMoviesStateFlow)
+val topRatedMoviesItem = HomeItem.HomeMovieItem(HomeMovieGroup.TOP_RATED_MOVIE, topRatedMoviesStateFlow)
 
 val nowPlayingMoviesStateFlow = MutableStateFlow(PagingData.from(nowPlayingMovies)).asStateFlow()
-val nowPlayingMoviesItem = HomeMovieItem(HomeMovieGroup.NOW_PLAYING_MOVIE_TOP_10, nowPlayingMoviesStateFlow)
+val nowPlayingMoviesItem = HomeItem.HomeMovieItem(HomeMovieGroup.NOW_PLAYING_MOVIE_TOP_10, nowPlayingMoviesStateFlow)
 
 val airingTodayTvsStateFlow = MutableStateFlow(PagingData.from(airingTodayTvs)).asStateFlow()
-val airingTodayTvsItem = HomeMovieItem(HomeMovieGroup.AIRING_TODAY_TV, airingTodayTvsStateFlow)
+val airingTodayTvsItem = HomeItem.HomeMovieItem(HomeMovieGroup.AIRING_TODAY_TV, airingTodayTvsStateFlow)
 
 val onTheAirTvsStateFlow = MutableStateFlow(PagingData.from(onTheAirTvs)).asStateFlow()
-val onTheAirTvsItem = HomeMovieItem(HomeMovieGroup.ON_THE_AIR_TV, onTheAirTvsStateFlow)
+val onTheAirTvsItem = HomeItem.HomeMovieItem(HomeMovieGroup.ON_THE_AIR_TV, onTheAirTvsStateFlow)
 
 val topRatedTvsStateFlow = MutableStateFlow(PagingData.from(topRatedTvs)).asStateFlow()
-val topRatedTvsItem = HomeMovieItem(HomeMovieGroup.ON_THE_AIR_TV, topRatedTvsStateFlow)
+val topRatedTvsItem = HomeItem.HomeMovieItem(HomeMovieGroup.ON_THE_AIR_TV, topRatedTvsStateFlow)
 
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun HomeScreenDarkPreview() {
     val series = persistentListOf(
+        HomeItem.AppBar(),
+        HomeItem.Category(),
         todayRecommendationMovieItem,
         topRatedMoviesItem,
         nowPlayingMoviesItem,

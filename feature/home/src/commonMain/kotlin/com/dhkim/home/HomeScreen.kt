@@ -1,6 +1,5 @@
 package com.dhkim.home
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,22 +12,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.cash.paging.compose.LazyPagingItems
@@ -66,7 +61,6 @@ fun HomeScreen(
             .background(Brush.verticalGradient(homeState.backgroundColors))
             .fillMaxSize()
     ) {
-        AppBar(homeState.showCategory, homeState.onBackgroundColor)
         when (uiState.displayState) {
             HomeDisplayState.Loading -> {
 
@@ -75,8 +69,9 @@ fun HomeScreen(
             is HomeDisplayState.Contents -> {
                 val movies = uiState.displayState.movies
                 ContentsScreen(
+                    homeState = homeState,
                     homeMovieItems = movies,
-                    onUpdateShowCategory = { homeState.updateShowCategory(showCategory = it) }
+                    listState = homeState.listState,
                 )
             }
 
@@ -88,7 +83,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun AppBar(showCategory: Boolean, onBackgroundColor: Color) {
+fun AppBar(showCategory: Boolean) {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
@@ -107,9 +102,6 @@ fun AppBar(showCategory: Boolean, onBackgroundColor: Color) {
                     .noRippleClick { }
             )
         }
-        AnimatedVisibility(showCategory) {
-            CategoryChips(chipColor = onBackgroundColor)
-        }
     }
 }
 
@@ -118,6 +110,7 @@ fun CategoryChips(chipColor: Color) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier
+            .padding(horizontal = 8.dp)
             .fillMaxWidth()
     ) {
         Chip(
@@ -147,29 +140,25 @@ fun CategoryChips(chipColor: Color) {
 
 @Composable
 fun ContentsScreen(
-    homeMovieItems: ImmutableList<HomeMovieItem>,
-    onUpdateShowCategory: (Boolean) -> Unit,
+    homeState: HomeState,
+    listState: LazyListState,
+    homeMovieItems: ImmutableList<HomeItem>,
 ) {
-    val nestedScrollConnection = remember {
-        object : NestedScrollConnection {
-            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                when {
-                    available.y >= 0 -> onUpdateShowCategory(true)
-                    available.y < 0 -> onUpdateShowCategory(false)
-                }
-                return Offset.Zero
-            }
-        }
-    }
-
     LazyColumn(
-        modifier = Modifier
-            .nestedScroll(nestedScrollConnection)
+        state = listState
     ) {
-        items(items = homeMovieItems, key = { item -> item.group }) {
-            val movies = it.series.collectAsLazyPagingItems()
-            when (it.group) {
+        items(items = homeMovieItems, key = { item -> item.group }) { item ->
+            when (item.group) {
+                HomeMovieGroup.APP_BAR -> {
+                    AppBar(homeState.showCategory)
+                }
+
+                HomeMovieGroup.CATEGORY -> {
+                    CategoryChips(chipColor = homeState.onBackgroundColor)
+                }
+
                 HomeMovieGroup.TODAY_RECOMMENDATION_MOVIE -> {
+                    val movies = (item as HomeItem.HomeMovieItem).series.collectAsLazyPagingItems()
                     if (movies.itemCount > 0) {
                         val series = movies[0] as Movie
                         RecommendationSeries(series = series) {
@@ -180,31 +169,36 @@ fun ContentsScreen(
                 }
 
                 HomeMovieGroup.NOW_PLAYING_MOVIE_TOP_10 -> {
-                    SeriesList(title = it.group.title, series = movies) { movie ->
+                    val movies = (item as HomeItem.HomeMovieItem).series.collectAsLazyPagingItems()
+                    SeriesList(title = item.group.title, series = movies) { movie ->
                         MovieItem(movie = movie as Movie)
                     }
                 }
 
                 HomeMovieGroup.TOP_RATED_MOVIE -> {
-                    SeriesList(title = it.group.title, series = movies) { movie ->
+                    val movies = (item as HomeItem.HomeMovieItem).series.collectAsLazyPagingItems()
+                    SeriesList(title = item.group.title, series = movies) { movie ->
                         MovieItem(movie = movie as Movie)
                     }
                 }
 
                 HomeMovieGroup.AIRING_TODAY_TV -> {
-                    SeriesList(title = it.group.title, series = movies) { tv ->
+                    val movies = (item as HomeItem.HomeMovieItem).series.collectAsLazyPagingItems()
+                    SeriesList(title = item.group.title, series = movies) { tv ->
                         TvItem(tv = tv as Tv)
                     }
                 }
 
                 HomeMovieGroup.ON_THE_AIR_TV -> {
-                    SeriesList(title = it.group.title, series = movies) { tv ->
+                    val movies = (item as HomeItem.HomeMovieItem).series.collectAsLazyPagingItems()
+                    SeriesList(title = item.group.title, series = movies) { tv ->
                         TvItem(tv = tv as Tv)
                     }
                 }
 
                 HomeMovieGroup.TOP_RATED_TV -> {
-                    SeriesList(title = it.group.title, series = movies) { tv ->
+                    val movies = (item as HomeItem.HomeMovieItem).series.collectAsLazyPagingItems()
+                    SeriesList(title = item.group.title, series = movies) { tv ->
                         TvItem(tv = tv as Tv)
                     }
                 }

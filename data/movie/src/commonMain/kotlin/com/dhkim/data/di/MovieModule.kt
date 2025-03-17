@@ -30,6 +30,7 @@ val movieModule = module {
     single<GetMoviesUseCase>(named(UPCOMING_MOVIES_KEY)) { GetUpcomingMoviesUseCase(get()) }
     single {
         mapOf(
+            TODAY_RECOMMENDATION_MOVIE_KEY to get<GetMoviesUseCase>(named(TODAY_RECOMMENDATION_MOVIE_KEY)),
             TOP_RATED_MOVIES_KEY to get<GetMoviesUseCase>(named(TOP_RATED_MOVIES_KEY)),
             NOW_PLAYING_MOVIES_KEY to get<GetMoviesUseCase>(named(NOW_PLAYING_MOVIES_KEY)),
             UPCOMING_MOVIES_KEY to get<GetMoviesUseCase>(named(UPCOMING_MOVIES_KEY))
