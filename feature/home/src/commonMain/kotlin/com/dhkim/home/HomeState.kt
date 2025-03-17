@@ -27,11 +27,8 @@ class HomeState(
     private val series: ImmutableList<HomeItem>,
     val listState: LazyListState
 ) {
-    var showCategory by mutableStateOf(true)
-        private set
-
-    val isAtTop by derivedStateOf {
-        listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0
+    val showCategory by derivedStateOf {
+        listState.firstVisibleItemIndex >= 2
     }
 
     var onBackgroundColor by mutableStateOf(Color.LightGray)
@@ -46,10 +43,6 @@ class HomeState(
 
     fun updateBackgroundColors(colors: List<Color>) {
         this.backgroundColors = colors
-    }
-
-    fun updateShowCategory(showCategory: Boolean) {
-        this.showCategory = showCategory
     }
 
     companion object {
@@ -103,7 +96,7 @@ fun rememberHomeState(
         )
 
         state.updateBackgroundColors(colors)
-        state.updateOnBackgroundColor(dominantColorState.onColor.copy(alpha = 0.65f))
+        state.updateOnBackgroundColor(dominantColorState.onColor.copy(alpha = 0.8f))
     }
 
     return state

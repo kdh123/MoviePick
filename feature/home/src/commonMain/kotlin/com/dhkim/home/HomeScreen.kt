@@ -1,7 +1,11 @@
 package com.dhkim.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -56,7 +60,7 @@ fun HomeScreen(
         rememberHomeState(homeMovieItems = homeMovieItems)
     } ?: rememberHomeState(homeMovieItems = persistentListOf())
 
-    Column(
+    Box(
         modifier = Modifier
             .background(Brush.verticalGradient(homeState.backgroundColors))
             .fillMaxSize()
@@ -79,11 +83,28 @@ fun HomeScreen(
 
             }
         }
+
+        AnimatedVisibility(
+            visible = homeState.showCategory,
+            enter = fadeIn(),
+            exit = fadeOut(),
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Brush.verticalGradient(homeState.backgroundColors))
+                    .padding(vertical = 8.dp)
+            ) {
+                CategoryChips(chipColor = homeState.onBackgroundColor)
+            }
+        }
     }
 }
 
 @Composable
-fun AppBar(showCategory: Boolean) {
+fun AppBar() {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
@@ -150,7 +171,7 @@ fun ContentsScreen(
         items(items = homeMovieItems, key = { item -> item.group }) { item ->
             when (item.group) {
                 HomeMovieGroup.APP_BAR -> {
-                    AppBar(homeState.showCategory)
+                    AppBar()
                 }
 
                 HomeMovieGroup.CATEGORY -> {
