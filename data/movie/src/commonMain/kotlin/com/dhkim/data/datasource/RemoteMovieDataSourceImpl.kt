@@ -3,41 +3,14 @@ package com.dhkim.data.datasource
 import app.cash.paging.Pager
 import app.cash.paging.PagingConfig
 import app.cash.paging.PagingData
-import com.dhkim.data.model.NowPlayingMovieDto
 import com.dhkim.domain.movie.datasource.RemoteMovieDataSource
 import com.dhkim.domain.movie.model.Movie
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.get
-import io.ktor.client.request.parameter
-import io.ktor.http.path
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 class RemoteMovieDataSourceImpl(
     private val apiService: HttpClient
 ) : RemoteMovieDataSource {
-
-    override fun getTodayRecommendationMovie(language: String, region: String): Flow<PagingData<Movie>> {
-        return flow {
-            apiService.get {
-                val response = apiService.get {
-                    url {
-                        path("/3/movie/now_playing")
-                    }
-                    parameter("language", language)
-                    parameter("region", region)
-                    parameter("page", 1)
-                }
-
-                val nowPlayingMovieDto = response.body<NowPlayingMovieDto>()
-                val randomIndex = (0..10).random()
-                val recommendationMovie = nowPlayingMovieDto.results[randomIndex].toNowPlayingMovie()
-                //val recommendationMovie = nowPlayingMovieDto.results[2].toNowPlayingMovie()
-                emit(PagingData.from(listOf(recommendationMovie)))
-            }
-        }
-    }
 
     override fun getTopRatedMovies(language: String, region: String): Flow<PagingData<Movie>> {
         return Pager(PagingConfig(pageSize = 15)) {

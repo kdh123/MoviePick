@@ -6,6 +6,7 @@ import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.take
 
 class FakeGetTodayRecommendationMovieUseCase : GetMoviesUseCase {
 
@@ -20,7 +21,9 @@ class FakeGetTodayRecommendationMovieUseCase : GetMoviesUseCase {
     override operator fun invoke(language: String, region: String): Flow<PagingData<Movie>> {
         return flow {
             if (currentStatus == MovieStatus.Success) {
-                val movies = movieRepository.getTodayRecommendationMovie(language, region).first()
+                val movies = movieRepository.getNowPlayingMovies(language, region)
+                    .take(1)
+                    .first()
                 emit(movies)
             } else {
                 throw Exception("today recommendation movie error")
