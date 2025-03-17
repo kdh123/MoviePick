@@ -17,22 +17,15 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -44,9 +37,6 @@ import app.cash.paging.compose.itemContentType
 import app.cash.paging.compose.itemKey
 import com.dhkim.common.Series
 import com.dhkim.core.designsystem.Black
-import com.dhkim.core.designsystem.Black00
-import com.dhkim.core.designsystem.Black10
-import com.dhkim.core.designsystem.Black80
 import com.dhkim.core.designsystem.DarkGray60
 import com.dhkim.core.designsystem.MoviePickTheme
 import com.dhkim.core.designsystem.White
@@ -58,41 +48,25 @@ import com.dhkim.core.ui.Resources
 import com.dhkim.core.ui.noRippleClick
 import com.dhkim.domain.movie.model.Movie
 import com.dhkim.domain.tv.model.Tv
-import com.kmpalette.loader.rememberNetworkLoader
-import com.kmpalette.rememberDominantColorState
 import com.skydoves.landscapist.coil3.CoilImage
-import io.ktor.http.Url
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun HomeScreen(
     uiState: HomeUiState
 ) {
-    var showCategory by rememberSaveable { mutableStateOf(true) }
-    val networkLoader = rememberNetworkLoader()
-    val dominantColorState = rememberDominantColorState(loader = networkLoader, defaultColor = MaterialTheme.colorScheme.background)
-    var recommendationSeriesPosterUrl by rememberSaveable { mutableStateOf("") }
-    var colors by remember { mutableStateOf(listOf(Black00, Black10)) }
-    val lightVibrantColor = dominantColorState.result
-        ?.paletteOrNull
-        ?.getLightVibrantColor(Black80.toArgb())
-        ?: MaterialTheme.colorScheme.background.toArgb()
-
-    LaunchedEffect(recommendationSeriesPosterUrl) {
-        dominantColorState.updateFrom(Url(recommendationSeriesPosterUrl))
-        colors = listOf(
-            dominantColorState.color.copy(alpha = 0.65f),
-            Color(lightVibrantColor).copy(alpha = 0.65f),
-        )
-    }
+    val homeState = (uiState.displayState as? HomeDisplayState.Contents)?.movies?.let { homeMovieItems ->
+        rememberHomeState(homeMovieItems = homeMovieItems)
+    } ?: rememberHomeState(homeMovieItems = persistentListOf())
 
     Column(
         modifier = Modifier
-            .background(Brush.verticalGradient(colors))
+            .background(Brush.verticalGradient(homeState.backgroundColors))
             .fillMaxSize()
     ) {
-        AppBar(showCategory)
+        AppBar(homeState.showCategory, homeState.onBackgroundColor)
         when (uiState.displayState) {
             HomeDisplayState.Loading -> {
 
@@ -102,8 +76,7 @@ fun HomeScreen(
                 val movies = uiState.displayState.movies
                 ContentsScreen(
                     homeMovieItems = movies,
-                    onUpdateRecommendationSeriesPosterUrl = { recommendationSeriesPosterUrl = it },
-                    onUpdateShowCategory = { showCategory = it }
+                    onUpdateShowCategory = { homeState.updateShowCategory(showCategory = it) }
                 )
             }
 
@@ -115,7 +88,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun AppBar(showCategory: Boolean) {
+fun AppBar(showCategory: Boolean, onBackgroundColor: Color) {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
@@ -135,36 +108,36 @@ fun AppBar(showCategory: Boolean) {
             )
         }
         AnimatedVisibility(showCategory) {
-            CategoryChips()
+            CategoryChips(chipColor = onBackgroundColor)
         }
     }
 }
 
 @Composable
-fun CategoryChips() {
+fun CategoryChips(chipColor: Color) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier
             .fillMaxWidth()
     ) {
         Chip(
-            borderColor = Color.LightGray,
+            borderColor = chipColor,
             onClick = {}
         ) {
             Text(
                 text = "시리즈",
-                color = Color.LightGray,
+                color = chipColor,
                 style = MoviePickTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
             )
         }
         Chip(
-            borderColor = Color.LightGray,
+            borderColor = chipColor,
             onClick = {}
         ) {
             Text(
                 text = "영화",
-                color = Color.LightGray,
+                color = chipColor,
                 style = MoviePickTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
             )
@@ -176,7 +149,6 @@ fun CategoryChips() {
 fun ContentsScreen(
     homeMovieItems: ImmutableList<HomeMovieItem>,
     onUpdateShowCategory: (Boolean) -> Unit,
-    onUpdateRecommendationSeriesPosterUrl: (String) -> Unit
 ) {
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
@@ -200,11 +172,7 @@ fun ContentsScreen(
                 HomeMovieGroup.TODAY_RECOMMENDATION_MOVIE -> {
                     if (movies.itemCount > 0) {
                         val series = movies[0] as Movie
-                        onUpdateRecommendationSeriesPosterUrl(series.imageUrl)
-
-                        RecommendationSeries(
-                            series = series
-                        ) {
+                        RecommendationSeries(series = series) {
                             Genre()
                             RecommendationButtons()
                         }
