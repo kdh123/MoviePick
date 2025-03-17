@@ -14,6 +14,7 @@ import com.dhkim.common.onetimeStateIn
 import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import com.dhkim.domain.movie.usecase.NOW_PLAYING_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TODAY_RECOMMENDATION_MOVIE_KEY
+import com.dhkim.domain.movie.usecase.TODAY_TOP_10_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TOP_RATED_MOVIES_KEY
 import com.dhkim.domain.tv.usecase.AIRING_TODAY_TVS_KEY
 import com.dhkim.domain.tv.usecase.GetTvsUseCase
@@ -59,14 +60,17 @@ class HomeViewModel(
                     getMoviesUseCase[TODAY_RECOMMENDATION_MOVIE_KEY]!!(language, region)
                         .toHomeMovieItem(group = HomeMovieGroup.TODAY_RECOMMENDATION_MOVIE)
                 }
-
+                val todayTop10Movies = async {
+                    getMoviesUseCase[TODAY_TOP_10_MOVIES_KEY]!!(language, region)
+                        .toHomeMovieItem(group = HomeMovieGroup.TODAY_TOP_10_MOVIES)
+                }
                 val topRatedMovies = async {
                     getMoviesUseCase[TOP_RATED_MOVIES_KEY]!!(language, region)
                         .toHomeMovieItem(group = HomeMovieGroup.TOP_RATED_MOVIE)
                 }
                 val nowPlayingMovies = async {
                     getMoviesUseCase[NOW_PLAYING_MOVIES_KEY]!!(language, region)
-                        .toHomeMovieItem(group = HomeMovieGroup.NOW_PLAYING_MOVIE_TOP_10)
+                        .toHomeMovieItem(group = HomeMovieGroup.NOW_PLAYING_MOVIE)
                 }
                 val airingTodayTvs = async {
                     getTvsUseCase[AIRING_TODAY_TVS_KEY]!!(language)
@@ -82,6 +86,7 @@ class HomeViewModel(
                 }
 
                 jobs.add(todayRecommendationMovie)
+                jobs.add(todayTop10Movies)
                 jobs.add(topRatedMovies)
                 jobs.add(nowPlayingMovies)
                 jobs.add(airingTodayTvs)

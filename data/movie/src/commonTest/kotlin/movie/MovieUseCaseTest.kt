@@ -10,6 +10,7 @@ import com.dhkim.data.di.movieModule
 import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import com.dhkim.domain.movie.usecase.NOW_PLAYING_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TODAY_RECOMMENDATION_MOVIE_KEY
+import com.dhkim.domain.movie.usecase.TODAY_TOP_10_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TOP_RATED_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.UPCOMING_MOVIES_KEY
 import kotlinx.coroutines.Dispatchers
@@ -47,7 +48,22 @@ class MovieUseCaseTest : KoinTest {
     }
 
     @Test
-    fun `오늘의 추천 영화  가져오기 성공_Fake`() = runTest {
+    fun `오늘의 추천 영화 가져오기 성공_Fake`() = runTest {
+        FakeGetTodayRecommendationMovieUseCase().invoke(Language.Korea.code, Region.Korea.code).asSnapshot().forEach {
+            println(it)
+        }
+    }
+
+    @Test
+    fun `오늘의 TOP 10 영화 가져오기_Real - Only Android`() = runTest {
+        val moviesUseCase = get<GetMoviesUseCase>(named(TODAY_TOP_10_MOVIES_KEY))
+        moviesUseCase(Language.Korea.code, Region.Korea.code).asSnapshot().forEach {
+            println(it)
+        }
+    }
+
+    @Test
+    fun `오늘의 TOP 10 영화 가져오기 성공_Fake`() = runTest {
         FakeGetTodayRecommendationMovieUseCase().invoke(Language.Korea.code, Region.Korea.code).asSnapshot().forEach {
             println(it)
         }

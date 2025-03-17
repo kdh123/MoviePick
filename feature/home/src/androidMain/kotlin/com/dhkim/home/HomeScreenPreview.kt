@@ -15,6 +15,7 @@ import com.dhkim.core.designsystem.MoviePickTheme
 import com.dhkim.domain.movie.model.Movie
 import com.dhkim.domain.tv.model.Tv
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -133,11 +134,14 @@ val topRatedTvs = mutableListOf<Series>().apply {
 val todayRecommendationMovieStateFlow = MutableStateFlow(PagingData.from(todayRecommendationMovie)).asStateFlow()
 val todayRecommendationMovieItem = HomeItem.HomeMovieItem(HomeMovieGroup.TODAY_RECOMMENDATION_MOVIE, todayRecommendationMovieStateFlow)
 
+val todayTop10MovieStateFlow = MutableStateFlow(PagingData.from(nowPlayingMovies)).asStateFlow()
+val todayTop10MovieItem = HomeItem.HomeMovieItem(HomeMovieGroup.TODAY_TOP_10_MOVIES, todayTop10MovieStateFlow)
+
 val topRatedMoviesStateFlow = MutableStateFlow(PagingData.from(topRatedMovies)).asStateFlow()
 val topRatedMoviesItem = HomeItem.HomeMovieItem(HomeMovieGroup.TOP_RATED_MOVIE, topRatedMoviesStateFlow)
 
 val nowPlayingMoviesStateFlow = MutableStateFlow(PagingData.from(nowPlayingMovies)).asStateFlow()
-val nowPlayingMoviesItem = HomeItem.HomeMovieItem(HomeMovieGroup.NOW_PLAYING_MOVIE_TOP_10, nowPlayingMoviesStateFlow)
+val nowPlayingMoviesItem = HomeItem.HomeMovieItem(HomeMovieGroup.NOW_PLAYING_MOVIE, nowPlayingMoviesStateFlow)
 
 val airingTodayTvsStateFlow = MutableStateFlow(PagingData.from(airingTodayTvs)).asStateFlow()
 val airingTodayTvsItem = HomeItem.HomeMovieItem(HomeMovieGroup.AIRING_TODAY_TV, airingTodayTvsStateFlow)
@@ -155,6 +159,7 @@ private fun HomeScreenDarkPreview() {
         HomeItem.AppBar(),
         HomeItem.Category(),
         todayRecommendationMovieItem,
+        todayTop10MovieItem,
         topRatedMoviesItem,
         nowPlayingMoviesItem,
         airingTodayTvsItem,

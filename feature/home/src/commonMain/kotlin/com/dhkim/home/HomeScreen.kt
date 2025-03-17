@@ -205,7 +205,14 @@ fun ContentsScreen(
                     }
                 }
 
-                HomeMovieGroup.NOW_PLAYING_MOVIE_TOP_10 -> {
+                HomeMovieGroup.TODAY_TOP_10_MOVIES -> {
+                    val movies = (item as HomeItem.HomeMovieItem).series.collectAsLazyPagingItems()
+                    SeriesList(title = item.group.title, series = movies) { movie ->
+                        MovieItem(movie = movie as Movie)
+                    }
+                }
+
+                HomeMovieGroup.NOW_PLAYING_MOVIE -> {
                     val movies = (item as HomeItem.HomeMovieItem).series.collectAsLazyPagingItems()
                     SeriesList(title = item.group.title, series = movies) { movie ->
                         MovieItem(movie = movie as Movie)
