@@ -1,6 +1,8 @@
 package com.dhkim.home
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
@@ -23,6 +25,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +39,7 @@ import app.cash.paging.compose.itemContentType
 import app.cash.paging.compose.itemKey
 import com.dhkim.common.Series
 import com.dhkim.core.designsystem.Black
+import com.dhkim.core.designsystem.Black50
 import com.dhkim.core.designsystem.DarkGray60
 import com.dhkim.core.designsystem.MoviePickTheme
 import com.dhkim.core.designsystem.White
@@ -60,9 +64,21 @@ fun HomeScreen(
         rememberHomeState(homeMovieItems = homeMovieItems)
     } ?: rememberHomeState(homeMovieItems = persistentListOf())
 
+    val backgroundColor by animateColorAsState(
+        targetValue = if (homeState.isNotRecommendationSeriesShowing) Black50 else homeState.backgroundColor,
+        animationSpec = tween(1_000),
+        label = "backgroundColor"
+    )
+
+    val backgroundGradientColors = listOf(
+        backgroundColor.copy(alpha = 0.85f),
+        backgroundColor.copy(alpha = 0.65f),
+        Black50
+    )
+
     Box(
         modifier = Modifier
-            .background(Brush.verticalGradient(homeState.backgroundColors))
+            .background(Brush.verticalGradient(backgroundGradientColors))
             .fillMaxSize()
     ) {
         when (uiState.displayState) {
@@ -94,10 +110,10 @@ fun HomeScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Brush.verticalGradient(homeState.backgroundColors))
+                    .background(Black50)
                     .padding(vertical = 8.dp)
             ) {
-                CategoryChips(chipColor = homeState.onBackgroundColor)
+                CategoryChips(chipColor = Color.LightGray)
             }
         }
     }

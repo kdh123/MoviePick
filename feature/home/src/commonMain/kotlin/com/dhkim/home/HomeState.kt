@@ -27,9 +27,16 @@ class HomeState(
     private val series: ImmutableList<HomeItem>,
     val listState: LazyListState
 ) {
+    val isNotRecommendationSeriesShowing by derivedStateOf {
+        listState.firstVisibleItemIndex >= 3
+    }
+
     val showCategory by derivedStateOf {
         listState.firstVisibleItemIndex >= 2
     }
+
+    var backgroundColor by mutableStateOf(Black50)
+        private set
 
     var onBackgroundColor by mutableStateOf(Color.LightGray)
         private set
@@ -37,12 +44,12 @@ class HomeState(
     var backgroundColors by mutableStateOf(listOf(Black50, Black80))
         private set
 
-    fun updateOnBackgroundColor(color: Color) {
-        this.onBackgroundColor = color
+    fun updateBackgroundColor(color: Color) {
+        this.backgroundColor = color
     }
 
-    fun updateBackgroundColors(colors: List<Color>) {
-        this.backgroundColors = colors
+    fun updateOnBackgroundColor(color: Color) {
+        this.onBackgroundColor = color
     }
 
     companion object {
@@ -72,9 +79,8 @@ fun rememberHomeState(
     }
     val recommendationSeries = homeMovieItems
         .firstOrNull { it.group == HomeMovieGroup.TODAY_RECOMMENDATION_MOVIE }
-        ?.run {
-            (this as HomeItem.HomeMovieItem).series
-        }?.collectAsLazyPagingItems()
+        ?.run { (this as HomeItem.HomeMovieItem).series }
+        ?.collectAsLazyPagingItems()
     val recommendationSeriesPosterUrl = if (!recommendationSeries?.itemSnapshotList.isNullOrEmpty()) {
         recommendationSeries?.itemSnapshotList?.firstOrNull()?.imageUrl ?: ""
     } else {
@@ -87,15 +93,9 @@ fun rememberHomeState(
         ?.getVibrantColor(Black50.toArgb())
         ?: MaterialTheme.colorScheme.background.toArgb()
 
-    LaunchedEffect(recommendationSeriesPosterUrl) {
+    LaunchedEffect(recommendationSeriesPosterUrl, listState) {
         dominantColorState.updateFrom(Url(recommendationSeriesPosterUrl))
-        val colors = listOf(
-            dominantColorState.color.copy(alpha = 0.85f),
-            dominantColorState.color.copy(alpha = 0.65f),
-            Color(vibrantColor).copy(alpha = 0.65f)
-        )
-
-        state.updateBackgroundColors(colors)
+        state.updateBackgroundColor(dominantColorState.color.copy(alpha = 0.8f))
         state.updateOnBackgroundColor(dominantColorState.onColor.copy(alpha = 0.8f))
     }
 
