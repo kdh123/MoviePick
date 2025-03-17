@@ -58,7 +58,7 @@ class HomeState(
             series: ImmutableList<HomeItem>,
             listState: LazyListState,
         ): Saver<HomeState, *> = Saver(
-            save = { listOf(it.showCategory, it.backgroundColors.map { color -> color.value }) },
+            save = { listOf(it.showCategory) },
             restore = {
                 HomeState(
                     series = series,
