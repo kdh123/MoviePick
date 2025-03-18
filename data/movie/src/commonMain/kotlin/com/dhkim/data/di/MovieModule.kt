@@ -7,10 +7,12 @@ import com.dhkim.data.usecase.GetUpcomingMoviesUseCase
 import com.dhkim.core.network.di.networkModule
 import com.dhkim.core.network.di.platformModule
 import com.dhkim.data.datasource.RemoteMovieDataSourceImpl
+import com.dhkim.data.usecase.GetMovieVideoUseCaseImpl
 import com.dhkim.data.usecase.GetTodayRecommendationMovieUseCase
 import com.dhkim.data.usecase.GetTodayTop10MoviesUseCase
 import com.dhkim.domain.movie.datasource.RemoteMovieDataSource
 import com.dhkim.domain.movie.repository.MovieRepository
+import com.dhkim.domain.movie.usecase.GetMovieVideoUseCase
 import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import com.dhkim.domain.movie.usecase.NOW_PLAYING_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TODAY_RECOMMENDATION_MOVIE_KEY
@@ -26,7 +28,8 @@ val movieModule = module {
     includes(platformModule, networkModule)
     singleOf(::RemoteMovieDataSourceImpl).bind<RemoteMovieDataSource>()
     singleOf(::MovieRepositoryImpl).bind<MovieRepository>()
-    single<GetMoviesUseCase>(named(TODAY_RECOMMENDATION_MOVIE_KEY)) { GetTodayRecommendationMovieUseCase(get()) }
+    factory<GetMovieVideoUseCase> { GetMovieVideoUseCaseImpl(get()) }
+    single<GetMoviesUseCase>(named(TODAY_RECOMMENDATION_MOVIE_KEY)) { GetTodayRecommendationMovieUseCase(get(), get()) }
     single<GetMoviesUseCase>(named(TODAY_TOP_10_MOVIES_KEY)) { GetTodayTop10MoviesUseCase(get()) }
     single<GetMoviesUseCase>(named(TOP_RATED_MOVIES_KEY)) { GetTopRatedMoviesUseCase(get()) }
     single<GetMoviesUseCase>(named(NOW_PLAYING_MOVIES_KEY)) { GetNowPlayingMoviesUseCase(get()) }

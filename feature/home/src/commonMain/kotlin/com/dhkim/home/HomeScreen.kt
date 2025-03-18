@@ -50,6 +50,7 @@ import com.dhkim.core.ui.RecommendationSeriesScope
 import com.dhkim.core.ui.Resources
 import com.dhkim.core.ui.noRippleClick
 import com.dhkim.domain.movie.model.Movie
+import com.dhkim.domain.movie.model.MovieVideoType
 import com.dhkim.domain.tv.model.Tv
 import com.skydoves.landscapist.coil3.CoilImage
 import kotlinx.collections.immutable.ImmutableList
@@ -284,7 +285,7 @@ fun RecommendationSeriesScope.RecommendationButtons() {
             .fillMaxWidth()
             .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
     ) {
-        if (movie.video) {
+        if (movie.video != null) {
             MoviePickButton(
                 color = White,
                 onClick = {},
@@ -301,7 +302,7 @@ fun RecommendationSeriesScope.RecommendationButtons() {
                             .size(24.dp)
                     )
                     Text(
-                        text = "티저",
+                        text = movie.video?.type?.type ?: MovieVideoType.Teaser.type,
                         style = MoviePickTheme.typography.labelLarge,
                         color = Black,
                         textAlign = TextAlign.Center,

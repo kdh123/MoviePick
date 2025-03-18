@@ -61,7 +61,6 @@ data class NowPlayingMovieResult(
             voteAverage = voteAverage,
             releasedDate = releaseDate,
             popularity = popularity,
-            video = video
         )
     }
 }

@@ -8,10 +8,25 @@ import app.cash.paging.testing.asPagingSourceFactory
 import com.dhkim.common.Genre
 import com.dhkim.domain.movie.datasource.RemoteMovieDataSource
 import com.dhkim.domain.movie.model.Movie
+import com.dhkim.domain.movie.model.MovieVideo
+import com.dhkim.domain.movie.model.MovieVideoType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class FakeRemoteMovieDataSource : RemoteMovieDataSource {
+
+    private val movieVideos = mutableListOf<MovieVideo>().apply {
+        repeat(10) {
+            add(
+                MovieVideo(
+                    id = "videoId$it",
+                    videoUrl = "videoUrl$it",
+                    name = "name$it",
+                    type = MovieVideoType.Teaser
+                )
+            )
+        }
+    }
 
     private val topRatedMovies = mutableListOf<Movie>().apply {
         repeat(50) {
@@ -26,7 +41,7 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
                     releasedDate = "2025-03-13",
                     voteAverage = 5.5 + it.toDouble(),
                     popularity = 45.38 + it.toDouble(),
-                    video = true
+                    video = movieVideos[0]
                 )
             )
         }
@@ -45,7 +60,7 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
                     releasedDate = "2025-02-05",
                     voteAverage = 5.5 + it.toDouble(),
                     popularity = 45.38 + it.toDouble(),
-                    video = true
+                    video = movieVideos[0]
                 )
             )
         }
@@ -64,7 +79,7 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
                     releasedDate = "2025-05-12",
                     voteAverage = 4.3 + it.toDouble(),
                     popularity = 45.38 + it.toDouble(),
-                    video = true
+                    video = movieVideos[0]
                 )
             )
         }
@@ -104,6 +119,12 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
                 append()
             } as PagingSource.LoadResult.Page
             emit(PagingData.from(page.data))
+        }
+    }
+
+    override fun getMovieVideos(id: String, language: String): Flow<List<MovieVideo>> {
+        return flow {
+            emit(movieVideos)
         }
     }
 }

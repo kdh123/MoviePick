@@ -31,7 +31,6 @@ val todayRecommendationMovie = mutableListOf<Series>().apply {
             releasedDate = "2025-03-13",
             voteAverage = 5.5,
             popularity = 45.38,
-            video = true
         )
     )
 }
@@ -49,7 +48,6 @@ val topRatedMovies = mutableListOf<Series>().apply {
                 releasedDate = "2025-03-13",
                 voteAverage = 5.5 + it.toDouble(),
                 popularity = 45.38 + it.toDouble(),
-                video = true
             )
         )
     }
@@ -68,7 +66,6 @@ val nowPlayingMovies = mutableListOf<Series>().apply {
                 releasedDate = "2025-02-05",
                 voteAverage = 5.5 + it.toDouble(),
                 popularity = 45.38 + it.toDouble(),
-                video = true
             )
         )
     }

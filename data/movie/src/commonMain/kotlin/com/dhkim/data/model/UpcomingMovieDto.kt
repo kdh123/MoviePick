@@ -52,7 +52,6 @@ data class UpcomingMovieResults(
             voteAverage = voteAverage,
             releasedDate = releaseDate,
             popularity = popularity,
-            video = video
         )
     }
 }

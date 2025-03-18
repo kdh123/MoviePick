@@ -51,7 +51,6 @@ data class TopRatedMovieResult(
             voteAverage = voteAverage,
             releasedDate = releaseDate,
             popularity = popularity,
-            video = video
         )
     }
 }
