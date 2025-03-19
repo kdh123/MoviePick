@@ -20,6 +20,7 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
             add(
                 MovieVideo(
                     id = "videoId$it",
+                    key = "videoKey$it",
                     videoUrl = "videoUrl$it",
                     name = "name$it",
                     type = MovieVideoType.Teaser

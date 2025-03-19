@@ -31,6 +31,7 @@ data class MovieVideoResult(
         return if (site == "YouTube") {
             MovieVideo(
                 id = id,
+                key = key,
                 videoUrl = "https://www.youtube.com/watch?v=$key",
                 name = name,
                 type = MovieVideoType.entries.find { it.name == type } ?: MovieVideoType.Teaser

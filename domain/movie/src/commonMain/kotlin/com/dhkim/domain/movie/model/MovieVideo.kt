@@ -2,6 +2,7 @@ package com.dhkim.domain.movie.model
 
 data class MovieVideo(
     val id: String,
+    val key: String,
     val videoUrl: String,
     val name: String,
     val type: MovieVideoType,

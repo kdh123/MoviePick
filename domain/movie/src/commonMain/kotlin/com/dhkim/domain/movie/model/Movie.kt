@@ -13,4 +13,7 @@ data class Movie(
     val popularity: Double,
     val voteAverage: Double,
     val video: MovieVideo? = null
-) : Series
+) : Series {
+
+    fun hasVideo() = video != null
+}

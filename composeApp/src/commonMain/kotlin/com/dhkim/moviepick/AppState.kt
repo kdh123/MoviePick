@@ -9,6 +9,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.dhkim.home.navigation.HOME_ROUTE
 import com.dhkim.upcoming.navigation.UPCOMING_ROUTE
+import com.dhkim.video.navigation.navigateToVideo
 import moviepick.composeapp.generated.resources.Res
 import moviepick.composeapp.generated.resources.ic_home
 import moviepick.composeapp.generated.resources.ic_upcoming
@@ -36,6 +37,8 @@ class AppState(val navController: NavHostController) {
             restoreState = true
         }
     }
+
+    fun navigateToVideo(videoUrl: String) = navController.navigateToVideo(videoUrl)
 }
 
 @Composable

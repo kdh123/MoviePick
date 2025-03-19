@@ -15,7 +15,6 @@ import com.dhkim.core.designsystem.MoviePickTheme
 import com.dhkim.domain.movie.model.Movie
 import com.dhkim.domain.tv.model.Tv
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -170,7 +169,8 @@ private fun HomeScreenDarkPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             HomeScreen(
-                uiState = HomeUiState(displayState = HomeDisplayState.Contents(series))
+                uiState = HomeUiState(displayState = HomeDisplayState.Contents(series)),
+                navigateToVideo = {}
             )
         }
     }
@@ -194,7 +194,8 @@ private fun HomeScreenPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             HomeScreen(
-                uiState = HomeUiState(displayState = HomeDisplayState.Contents(series))
+                uiState = HomeUiState(displayState = HomeDisplayState.Contents(series)),
+                navigateToVideo = {}
             )
         }
     }

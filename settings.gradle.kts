@@ -25,6 +25,7 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
+        maven("https://jogamp.org/deployment/maven")
     }
 }
 include(":core:common")
@@ -41,6 +42,7 @@ include(":domain:movie")
 include(":domain:tv")
 include(":core:testing")
 include(":feature:upcoming")
+include(":feature:video")
 include(":composeApp")
 include(":network")
 include(":feature:home")

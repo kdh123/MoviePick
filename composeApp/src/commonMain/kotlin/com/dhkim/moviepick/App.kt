@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.dhkim.home.navigation.home
 import com.dhkim.upcoming.navigation.upcoming
+import com.dhkim.video.navigation.video
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -43,8 +44,13 @@ fun App() {
                 modifier = Modifier
                     .padding(top = padding.calculateTopPadding(), bottom = padding.calculateBottomPadding())
             ) {
-                home()
+                home(
+                    navigateToVideo = {
+                        appState.navigateToVideo(it)
+                    }
+                )
                 upcoming()
+                video()
             }
         }
     }

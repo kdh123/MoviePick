@@ -1,6 +1,6 @@
 [versions]
 agp = "8.5.2"
-android-compileSdk = "34"
+android-compileSdk = "35"
 android-minSdk = "24"
 android-targetSdk = "34"
 androidx-activityCompose = "1.9.3"
@@ -26,12 +26,13 @@ jetbrainsKotlinJvm = "1.9.0"
 assertk = "0.28.1"
 coreKtx = "1.6.1"
 composeTest = "1.6.8"
-coil = "2.4.0"
+coil = "2.4.7"
 paging3 = "3.3.0"
 paging = "3.3.0-alpha02-0.4.0"
 buildConfig= "5.5.2"
 kotlinx-coroutines = "1.10.1"
 kmpalette = "3.1.0"
+mediaPlayerKMP = "1.0.34"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -85,6 +86,7 @@ kmpalette-extensions-bytearray = { module = "com.kmpalette:extensions-bytearray"
 kmpalette-extensions-network = { module = "com.kmpalette:extensions-network", version.ref = "kmpalette" }
 kmpalette-extensions-file = { module = "com.kmpalette:extensions-file", version.ref = "kmpalette" }
 
+media-player-kmp = { module = "network.chaintech:compose-multiplatform-media-player", version.ref = "mediaPlayerKMP" }
 
 [bundles]
 kmpallete = [

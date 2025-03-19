@@ -1,10 +1,11 @@
+
+import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.androidLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlin.serialization)
@@ -12,25 +13,24 @@ plugins {
 
 kotlin {
     androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "ComposeApp"
+            baseName = "video"
             isStatic = true
         }
     }
 
     jvm("desktop")
-    
+
     sourceSets {
         val desktopMain by getting
 
@@ -41,12 +41,13 @@ kotlin {
             implementation(libs.koin.androidx.compose)
         }
         commonMain.dependencies {
-            implementation(projects.core.designsystem)
+
+            implementation(projects.core.common)
             implementation(projects.core.ui)
-            implementation(projects.core.di)
-            implementation(projects.feature.home)
-            implementation(projects.feature.upcoming)
-            implementation(projects.feature.video)
+            implementation(projects.core.designsystem)
+            implementation(projects.core.network)
+            implementation(projects.domain.movie)
+            implementation(projects.domain.tv)
 
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -64,29 +65,43 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
 
             implementation(libs.bundles.ktor)
+            implementation(libs.coil)
 
             api(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.navigation.compose)
+            implementation(libs.bundles.paging)
+            implementation(libs.bundles.kmpallete)
+
+            implementation(libs.media.player.kmp)
         }
+
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+        }
+
+        commonTest.dependencies {
+            implementation(projects.core.testing)
+            implementation(libs.kotlin.test)
+            implementation(kotlin("test-annotations-common"))
+            implementation(libs.assertk)
+            @OptIn(ExperimentalComposeLibrary::class)
+            implementation(compose.uiTest)
+            implementation(projects.domain.movie)
+            implementation(projects.data.movie)
         }
     }
 }
 
 android {
-    namespace = "com.dhkim.moviepick"
+    namespace = "com.dhkim.video"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.dhkim.moviepick"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
     }
     packaging {
         resources {
@@ -96,17 +111,18 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
-            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {
-    implementation(project(":feature:home"))
     debugImplementation(compose.uiTooling)
 }
 
@@ -116,7 +132,7 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.dhkim.moviepick"
+            packageName = "com.dhkim.video"
             packageVersion = "1.0.0"
         }
     }

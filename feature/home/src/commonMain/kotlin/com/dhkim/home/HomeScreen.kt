@@ -59,7 +59,8 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun HomeScreen(
-    uiState: HomeUiState
+    uiState: HomeUiState,
+    navigateToVideo: (String) -> Unit,
 ) {
     val homeState = (uiState.displayState as? HomeDisplayState.Contents)?.movies?.let { homeMovieItems ->
         rememberHomeState(homeMovieItems = homeMovieItems)
@@ -93,6 +94,7 @@ fun HomeScreen(
                     homeState = homeState,
                     homeMovieItems = movies,
                     listState = homeState.listState,
+                    navigateToVideo = navigateToVideo
                 )
             }
 
@@ -181,6 +183,7 @@ fun ContentsScreen(
     homeState: HomeState,
     listState: LazyListState,
     homeMovieItems: ImmutableList<HomeItem>,
+    navigateToVideo: (String) -> Unit
 ) {
     LazyColumn(
         state = listState
@@ -201,7 +204,7 @@ fun ContentsScreen(
                         val series = movies[0] as Movie
                         RecommendationSeries(series = series) {
                             Genre()
-                            RecommendationButtons()
+                            RecommendationButtons(navigateToVideo = navigateToVideo)
                         }
                     }
                 }
@@ -276,7 +279,7 @@ fun RecommendationSeriesScope.Genre() {
 }
 
 @Composable
-fun RecommendationSeriesScope.RecommendationButtons() {
+fun RecommendationSeriesScope.RecommendationButtons(navigateToVideo: (String) -> Unit) {
     val movie = series as Movie
 
     Row(
@@ -285,14 +288,20 @@ fun RecommendationSeriesScope.RecommendationButtons() {
             .fillMaxWidth()
             .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
     ) {
-        if (movie.video != null) {
+        if (movie.hasVideo()) {
             MoviePickButton(
                 color = White,
                 onClick = {},
                 modifier = Modifier
                     .weight(1f)
             ) {
-                Row {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .noRippleClick {
+                            navigateToVideo(movie.video!!.key)
+                        }
+                ) {
                     Icon(
                         painter = painterResource(Resources.Icon.Play),
                         contentDescription = null,

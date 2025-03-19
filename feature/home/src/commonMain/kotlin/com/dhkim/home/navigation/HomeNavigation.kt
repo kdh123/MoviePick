@@ -18,10 +18,15 @@ fun NavController.navigateToHome() = navigate(HOME_ROUTE)
 
 @ExperimentalCoroutinesApi
 @KoinExperimentalAPI
-fun NavGraphBuilder.home() {
+fun NavGraphBuilder.home(
+    navigateToVideo: (String) -> Unit
+) {
     composable(HOME_ROUTE) {
         val viewModel = koinViewModel<HomeViewModel>()
         val uiState: HomeUiState by viewModel.uiState.collectAsStateWithLifecycle()
-        HomeScreen(uiState = uiState)
+        HomeScreen(
+            uiState = uiState,
+            navigateToVideo = navigateToVideo
+        )
     }
 }
