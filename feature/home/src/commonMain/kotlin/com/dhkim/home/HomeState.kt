@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import app.cash.paging.compose.collectAsLazyPagingItems
 import com.dhkim.core.designsystem.Black50
-import com.dhkim.core.designsystem.Black80
 import com.kmpalette.loader.rememberNetworkLoader
 import com.kmpalette.rememberDominantColorState
 import io.ktor.http.Url
@@ -104,6 +103,7 @@ fun rememberHomeState(
     LaunchedEffect(recommendationSeriesPosterUrl) {
         dominantColorState.updateFrom(Url(recommendationSeriesPosterUrl))
         state.updateBackgroundColor(dominantColorState.color)
+        state.updateOnBackgroundColor(dominantColorState.onColor)
     }
 
     LaunchedEffect(listState) {

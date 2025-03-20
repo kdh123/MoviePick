@@ -1,5 +1,7 @@
 package com.dhkim.home
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -66,6 +69,12 @@ fun HomeScreen(
         Black50
     )
 
+    val onBackgroundColor by animateColorAsState(
+        targetValue = if (homeState.showCategory) White else homeState.onBackgroundColor,
+        animationSpec = tween(1_500),
+        label = ""
+    )
+
     Box(
         modifier = Modifier
             .background(Brush.verticalGradient(backgroundGradientColors))
@@ -102,7 +111,7 @@ fun HomeScreen(
                         .fillMaxWidth()
                         .background(color = homeState.backgroundColor)
                 ) {
-                    CategoryChips(chipColor = Color.LightGray)
+                    CategoryChips(chipColor = onBackgroundColor)
                 }
             }
         }
