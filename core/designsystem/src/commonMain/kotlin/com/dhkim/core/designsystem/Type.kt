@@ -85,6 +85,12 @@ internal val Typography = MoviePickTypography(
         lineHeight = 28.sp,
         letterSpacing = 0.sp,
     ),
+    titleLargeBold = SansSerifStyle.copy(
+        fontSize = 22.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.sp,
+        fontWeight = FontWeight.Bold
+    ),
     titleMedium = SansSerifStyle.copy(
         fontSize = 18.sp,
         lineHeight = 24.sp,
@@ -241,6 +247,7 @@ val LocalTypography = staticCompositionLocalOf {
         headlineSmall = SansSerifStyle,
         headlineSmallBold = SansSerifStyle,
         titleLarge = SansSerifStyle,
+        titleLargeBold = SansSerifStyle,
         titleMedium = SansSerifStyle,
         titleMediumBold = SansSerifStyle,
         titleSmall = SansSerifStyle,
@@ -283,6 +290,7 @@ data class MoviePickTypography(
     val headlineSmall: TextStyle,
     val headlineSmallBold: TextStyle,
     val titleLarge: TextStyle,
+    val titleLargeBold: TextStyle,
     val titleMedium: TextStyle,
     val titleMediumBold: TextStyle,
     val titleSmall: TextStyle,

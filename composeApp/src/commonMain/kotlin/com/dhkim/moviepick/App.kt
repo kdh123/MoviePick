@@ -1,5 +1,10 @@
 package com.dhkim.moviepick
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideIn
+import androidx.compose.animation.slideOut
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.IntOffset
 import androidx.navigation.compose.NavHost
 import com.dhkim.home.navigation.home
 import com.dhkim.upcoming.navigation.upcoming
@@ -35,7 +41,13 @@ fun App() {
     ) {
         Scaffold(
             bottomBar = {
-                BottomBar(appState)
+                AnimatedVisibility(
+                    visible = appState.showBottomNavigation,
+                    enter = fadeIn() + slideIn { IntOffset(0, it.height) },
+                    exit = fadeOut() + slideOut { IntOffset(0, it.height) }
+                ) {
+                    BottomBar(appState)
+                }
             }
         ) { padding ->
             NavHost(
@@ -45,9 +57,7 @@ fun App() {
                     .padding(top = padding.calculateTopPadding(), bottom = padding.calculateBottomPadding())
             ) {
                 home(
-                    navigateToVideo = {
-                        appState.navigateToVideo(it)
-                    }
+                    navigateToVideo = { appState.navigateToVideo(it) }
                 )
                 upcoming()
                 video()

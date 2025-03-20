@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import app.cash.paging.compose.collectAsLazyPagingItems
@@ -27,10 +28,6 @@ class HomeState(
     private val series: ImmutableList<HomeItem>,
     val listState: LazyListState
 ) {
-    val isNotRecommendationSeriesShowing by derivedStateOf {
-        listState.firstVisibleItemIndex >= 3
-    }
-
     val showCategory by derivedStateOf {
         listState.firstVisibleItemIndex >= 2
     }
@@ -41,15 +38,26 @@ class HomeState(
     var onBackgroundColor by mutableStateOf(Color.LightGray)
         private set
 
-    var backgroundColors by mutableStateOf(listOf(Black50, Black80))
-        private set
-
-    fun updateBackgroundColor(color: Color) {
-        this.backgroundColor = color
-    }
+    var showTab by mutableStateOf(false)
 
     fun updateOnBackgroundColor(color: Color) {
         this.onBackgroundColor = color
+    }
+
+    var height by mutableStateOf(0)
+
+    fun updateShowTab(show: Boolean) {
+        showTab = show
+    }
+
+    fun updateHeight(height: Int) {
+        this.height = height
+    }
+
+    fun updateBackgroundColor(backgroundColor: Color) {
+        if (this.backgroundColor != backgroundColor) {
+            this.backgroundColor = backgroundColor
+        }
     }
 
     companion object {
@@ -93,10 +101,19 @@ fun rememberHomeState(
         ?.getVibrantColor(Black50.toArgb())
         ?: MaterialTheme.colorScheme.background.toArgb()
 
-    LaunchedEffect(recommendationSeriesPosterUrl, listState) {
+    LaunchedEffect(recommendationSeriesPosterUrl) {
         dominantColorState.updateFrom(Url(recommendationSeriesPosterUrl))
-        state.updateBackgroundColor(dominantColorState.color.copy(alpha = 0.8f))
-        state.updateOnBackgroundColor(dominantColorState.onColor.copy(alpha = 0.8f))
+        state.updateBackgroundColor(dominantColorState.color)
+    }
+
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.firstVisibleItemScrollOffset }.collect { offset ->
+            state.updateShowTab(show = listState.firstVisibleItemIndex >= 1)
+            if (listState.firstVisibleItemIndex == 2) {
+                val alpha = ((state.height.toFloat() - offset) / state.height).coerceIn(0f, 1f)
+                state.updateBackgroundColor(backgroundColor = state.backgroundColor.copy(alpha = alpha))
+            }
+        }
     }
 
     return state

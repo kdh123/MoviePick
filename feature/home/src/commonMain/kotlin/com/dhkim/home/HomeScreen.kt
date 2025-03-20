@@ -1,10 +1,5 @@
 package com.dhkim.home
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,7 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,6 +34,7 @@ import app.cash.paging.compose.itemKey
 import com.dhkim.common.Series
 import com.dhkim.core.designsystem.Black
 import com.dhkim.core.designsystem.Black50
+import com.dhkim.core.designsystem.Black70
 import com.dhkim.core.designsystem.DarkGray60
 import com.dhkim.core.designsystem.MoviePickTheme
 import com.dhkim.core.designsystem.White
@@ -66,15 +61,8 @@ fun HomeScreen(
         rememberHomeState(homeMovieItems = homeMovieItems)
     } ?: rememberHomeState(homeMovieItems = persistentListOf())
 
-    val backgroundColor by animateColorAsState(
-        targetValue = if (homeState.isNotRecommendationSeriesShowing) Black50 else homeState.backgroundColor,
-        animationSpec = tween(1_000),
-        label = "backgroundColor"
-    )
-
     val backgroundGradientColors = listOf(
-        backgroundColor.copy(alpha = 0.85f),
-        backgroundColor.copy(alpha = 0.65f),
+        homeState.backgroundColor,
         Black50
     )
 
@@ -94,6 +82,7 @@ fun HomeScreen(
                     homeState = homeState,
                     homeMovieItems = movies,
                     listState = homeState.listState,
+                    onUpdateRecommendationSeriesHeight = homeState::updateHeight,
                     navigateToVideo = navigateToVideo
                 )
             }
@@ -103,20 +92,18 @@ fun HomeScreen(
             }
         }
 
-        AnimatedVisibility(
-            visible = homeState.showCategory,
-            enter = fadeIn(),
-            exit = fadeOut(),
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-        ) {
+        if (homeState.showTab) {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Black50)
-                    .padding(vertical = 8.dp)
+                    .background(color = Black70)
             ) {
-                CategoryChips(chipColor = Color.LightGray)
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(color = homeState.backgroundColor)
+                ) {
+                    CategoryChips(chipColor = Color.LightGray)
+                }
             }
         }
     }
@@ -124,24 +111,15 @@ fun HomeScreen(
 
 @Composable
 fun AppBar() {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier
-            .padding(horizontal = 8.dp, vertical = 8.dp)
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.End,
+    Row {
+        Text(
+            text = "MOVIC",
+            style = MoviePickTheme.typography.headlineLargeBold,
+            color = Color.Red,
+            textAlign = TextAlign.Center,
             modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            Icon(
-                painter = painterResource(Resources.Icon.Search),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(32.dp)
-                    .noRippleClick { }
-            )
-        }
+                .padding(start = 8.dp, top = 8.dp)
+        )
     }
 }
 
@@ -150,7 +128,7 @@ fun CategoryChips(chipColor: Color) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier
-            .padding(horizontal = 8.dp)
+            .padding(8.dp)
             .fillMaxWidth()
     ) {
         Chip(
@@ -183,10 +161,11 @@ fun ContentsScreen(
     homeState: HomeState,
     listState: LazyListState,
     homeMovieItems: ImmutableList<HomeItem>,
+    onUpdateRecommendationSeriesHeight: (Int) -> Unit,
     navigateToVideo: (String) -> Unit
 ) {
     LazyColumn(
-        state = listState
+        state = listState,
     ) {
         items(items = homeMovieItems, key = { item -> item.group }) { item ->
             when (item.group) {
@@ -202,7 +181,10 @@ fun ContentsScreen(
                     val movies = (item as HomeItem.HomeMovieItem).series.collectAsLazyPagingItems()
                     if (movies.itemCount > 0) {
                         val series = movies[0] as Movie
-                        RecommendationSeries(series = series) {
+                        RecommendationSeries(
+                            series = series,
+                            onUpdateRecommendationSeriesHeight = onUpdateRecommendationSeriesHeight
+                        ) {
                             Genre()
                             RecommendationButtons(navigateToVideo = navigateToVideo)
                         }
@@ -326,7 +308,9 @@ fun RecommendationSeriesScope.RecommendationButtons(navigateToVideo: (String) ->
             modifier = Modifier
                 .weight(1f)
         ) {
-            Row {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 Icon(
                     painter = painterResource(Resources.Icon.Add),
                     tint = White,

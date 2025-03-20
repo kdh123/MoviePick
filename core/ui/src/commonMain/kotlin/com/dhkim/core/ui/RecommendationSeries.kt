@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import com.dhkim.common.Series
 import com.dhkim.core.designsystem.Black00
@@ -34,17 +35,21 @@ import org.jetbrains.compose.resources.painterResource
 fun RecommendationSeries(
     series: Series,
     onPosterImageLoadSuccess: ((Painter) -> Unit)? = null,
+    onUpdateRecommendationSeriesHeight: ((Int) -> Unit)? = null,
     content: @Composable RecommendationSeriesScope.() -> Unit,
 ) {
-    val colorStops = listOf(Black00, Black10, Black30, Black50, Black70, Black80)
+    val bottomBackgroundColors = listOf(Black00, Black10, Black30, Black50, Black70, Black80)
     val scope = remember(series) { DefaultRecommendationSeriesScope(series) }
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(7f / 9f)
-            .padding(horizontal = 24.dp, vertical = 16.dp)
+            .padding(horizontal = 24.dp, vertical = 8.dp)
             .clip(RoundedCornerShape(12.dp))
+            .onGloballyPositioned {
+                onUpdateRecommendationSeriesHeight?.invoke(it.size.height)
+            }
     ) {
         CoilImage(
             modifier = Modifier.fillMaxSize(),
@@ -67,7 +72,7 @@ fun RecommendationSeries(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(120.dp)
-                .background(Brush.verticalGradient(colors = colorStops))
+                .background(Brush.verticalGradient(colors = bottomBackgroundColors))
                 .align(Alignment.BottomCenter)
         )
 

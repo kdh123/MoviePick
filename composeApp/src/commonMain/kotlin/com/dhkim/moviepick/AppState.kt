@@ -20,6 +20,14 @@ class AppState(val navController: NavHostController) {
     val bottomNavItems = listOf(Screen.Home, Screen.Upcoming)
     private val routes = listOf(HOME_ROUTE, UPCOMING_ROUTE)
 
+    val showBottomNavigation: Boolean
+        @Composable get() {
+            val entry = navController.currentBackStackEntryAsState().value
+            val route = entry?.destination?.route ?: return true
+
+            return route in routes
+        }
+
     val currentDestination: String
         @Composable get() {
             val entry = navController.currentBackStackEntryAsState().value
