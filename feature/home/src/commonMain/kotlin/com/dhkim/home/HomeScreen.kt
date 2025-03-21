@@ -28,8 +28,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import app.cash.paging.compose.LazyPagingItems
 import app.cash.paging.compose.collectAsLazyPagingItems
 import app.cash.paging.compose.itemContentType
@@ -71,7 +74,7 @@ fun HomeScreen(
 
     val onBackgroundColor by animateColorAsState(
         targetValue = if (homeState.showCategory) White else homeState.onBackgroundColor,
-        animationSpec = tween(1_500),
+        animationSpec = tween(500),
         label = ""
     )
 
@@ -122,7 +125,7 @@ fun HomeScreen(
 fun AppBar() {
     Row {
         Text(
-            text = "MOVIC",
+            text = "MOVIK",
             style = MoviePickTheme.typography.headlineLargeBold,
             color = Color.Red,
             textAlign = TextAlign.Center,
@@ -135,6 +138,7 @@ fun AppBar() {
 @Composable
 fun CategoryChips(chipColor: Color) {
     Row(
+        verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier
             .padding(8.dp)
@@ -145,7 +149,19 @@ fun CategoryChips(chipColor: Color) {
             onClick = {}
         ) {
             Text(
-                text = "시리즈",
+                text = "영화",
+                color = chipColor,
+                style = MoviePickTheme.typography.labelMedium,
+                textAlign = TextAlign.Center,
+            )
+        }
+
+        Chip(
+            borderColor = chipColor,
+            onClick = {}
+        ) {
+            Text(
+                text = "TV 프로그램",
                 color = chipColor,
                 style = MoviePickTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
@@ -155,12 +171,22 @@ fun CategoryChips(chipColor: Color) {
             borderColor = chipColor,
             onClick = {}
         ) {
-            Text(
-                text = "영화",
-                color = chipColor,
-                style = MoviePickTheme.typography.labelMedium,
-                textAlign = TextAlign.Center,
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "카테고리",
+                    color = chipColor,
+                    style = MoviePickTheme.typography.labelMedium,
+                    textAlign = TextAlign.Center,
+                )
+
+                Icon(
+                    painter = painterResource(Resources.Icon.DropDown),
+                    contentDescription = null,
+                    tint = chipColor
+                )
+            }
         }
     }
 }
@@ -202,42 +228,42 @@ fun ContentsScreen(
 
                 HomeMovieGroup.TODAY_TOP_10_MOVIES -> {
                     val movies = (item as HomeItem.HomeMovieItem).series.collectAsLazyPagingItems()
-                    SeriesList(title = item.group.title, series = movies) { movie ->
-                        MovieItem(movie = movie as Movie)
+                    SeriesList(title = item.group.title, series = movies) { index, movie ->
+                        Top10MovieItem(index = index, movie = movie as Movie)
                     }
                 }
 
                 HomeMovieGroup.NOW_PLAYING_MOVIE -> {
                     val movies = (item as HomeItem.HomeMovieItem).series.collectAsLazyPagingItems()
-                    SeriesList(title = item.group.title, series = movies) { movie ->
+                    SeriesList(title = item.group.title, series = movies) { _, movie ->
                         MovieItem(movie = movie as Movie)
                     }
                 }
 
                 HomeMovieGroup.TOP_RATED_MOVIE -> {
                     val movies = (item as HomeItem.HomeMovieItem).series.collectAsLazyPagingItems()
-                    SeriesList(title = item.group.title, series = movies) { movie ->
+                    SeriesList(title = item.group.title, series = movies) { _, movie ->
                         MovieItem(movie = movie as Movie)
                     }
                 }
 
                 HomeMovieGroup.AIRING_TODAY_TV -> {
                     val movies = (item as HomeItem.HomeMovieItem).series.collectAsLazyPagingItems()
-                    SeriesList(title = item.group.title, series = movies) { tv ->
+                    SeriesList(title = item.group.title, series = movies) { _, tv ->
                         TvItem(tv = tv as Tv)
                     }
                 }
 
                 HomeMovieGroup.ON_THE_AIR_TV -> {
                     val movies = (item as HomeItem.HomeMovieItem).series.collectAsLazyPagingItems()
-                    SeriesList(title = item.group.title, series = movies) { tv ->
+                    SeriesList(title = item.group.title, series = movies) { _, tv ->
                         TvItem(tv = tv as Tv)
                     }
                 }
 
                 HomeMovieGroup.TOP_RATED_TV -> {
                     val movies = (item as HomeItem.HomeMovieItem).series.collectAsLazyPagingItems()
-                    SeriesList(title = item.group.title, series = movies) { tv ->
+                    SeriesList(title = item.group.title, series = movies) { _, tv ->
                         TvItem(tv = tv as Tv)
                     }
                 }
@@ -341,7 +367,7 @@ fun RecommendationSeriesScope.RecommendationButtons(navigateToVideo: (String) ->
 
 
 @Composable
-fun SeriesList(title: String, series: LazyPagingItems<Series>, seriesItem: @Composable (Series) -> Unit) {
+fun SeriesList(title: String, series: LazyPagingItems<Series>, seriesItem: @Composable (Int, Series) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -349,7 +375,7 @@ fun SeriesList(title: String, series: LazyPagingItems<Series>, seriesItem: @Comp
     ) {
         Text(
             text = title,
-            style = MoviePickTheme.typography.titleMedium,
+            style = MoviePickTheme.typography.titleMediumBold,
             modifier = Modifier
                 .padding(8.dp)
         )
@@ -366,7 +392,7 @@ fun SeriesList(title: String, series: LazyPagingItems<Series>, seriesItem: @Comp
             ) { index ->
                 val item = series[index]
                 if (item != null) {
-                    seriesItem(item)
+                    seriesItem(index, item)
                 }
             }
         }
@@ -384,6 +410,30 @@ fun MovieItem(movie: Movie) {
         failure = {},
         previewPlaceholder = painterResource(Resources.Icon.MoviePosterSample)
     )
+}
+
+@Composable
+fun Top10MovieItem(index: Int, movie: Movie) {
+    Row {
+        Text(
+            text = "${index + 1}",
+            fontWeight = FontWeight.Bold,
+            fontSize = 72.sp,
+            fontStyle = FontStyle.Italic,
+            color = White,
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+        )
+        CoilImage(
+            modifier = Modifier
+                .clip(RoundedCornerShape(12f))
+                .width(108.dp)
+                .aspectRatio(7f / 10f),
+            imageModel = { movie.imageUrl },
+            failure = {},
+            previewPlaceholder = painterResource(Resources.Icon.MoviePosterSample)
+        )
+    }
 }
 
 @Composable

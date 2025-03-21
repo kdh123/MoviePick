@@ -33,6 +33,7 @@ buildConfig= "5.5.2"
 kotlinx-coroutines = "1.10.1"
 kmpalette = "3.1.0"
 mediaPlayerKMP = "1.0.34"
+logging = "2.0.3"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -87,6 +88,7 @@ kmpalette-extensions-network = { module = "com.kmpalette:extensions-network", ve
 kmpalette-extensions-file = { module = "com.kmpalette:extensions-file", version.ref = "kmpalette" }
 
 media-player-kmp = { module = "network.chaintech:compose-multiplatform-media-player", version.ref = "mediaPlayerKMP" }
+logging-kmp = { module = "com.diamondedge:logging", version.ref = "logging" }
 
 [bundles]
 kmpallete = [

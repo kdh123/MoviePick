@@ -71,6 +71,7 @@ kotlin {
             implementation(libs.navigation.compose)
             implementation(libs.bundles.paging)
             implementation(libs.bundles.kmpallete)
+            api(libs.logging.kmp)
         }
         commonTest.dependencies {
             implementation(projects.core.testing)

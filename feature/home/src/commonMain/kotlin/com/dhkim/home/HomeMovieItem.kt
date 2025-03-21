@@ -2,7 +2,6 @@ package com.dhkim.home
 
 import app.cash.paging.PagingData
 import com.dhkim.common.Series
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.StateFlow
 
 sealed class HomeItem(open val group: HomeMovieGroup) {
@@ -13,11 +12,6 @@ sealed class HomeItem(open val group: HomeMovieGroup) {
 
     data class Category(
         override val group: HomeMovieGroup = HomeMovieGroup.CATEGORY
-    ) : HomeItem(group)
-
-    data class TodayTop10Movies(
-        override val group: HomeMovieGroup = HomeMovieGroup.TODAY_TOP_10_MOVIES,
-        val series: ImmutableList<Series>,
     ) : HomeItem(group)
 
     data class HomeMovieItem(
@@ -31,10 +25,10 @@ enum class HomeMovieGroup(val title: String) {
     APP_BAR(title = "앱바"),
     CATEGORY(title = "카테고리"),
     TODAY_RECOMMENDATION_MOVIE(title = "오늘 대표 추천 영화"),
-    TODAY_TOP_10_MOVIES(title = "TOP 10 영화"),
+    TODAY_TOP_10_MOVIES(title = "오늘의 TOP 10 영화"),
     NOW_PLAYING_MOVIE(title = "상영 중인 영화"),
     TOP_RATED_MOVIE(title = "평단의 극찬을 받은 영화 명작"),
-    AIRING_TODAY_TV(title = "오늘 방영하는 TV 시리즈"),
-    ON_THE_AIR_TV(title = "지금 방송 중인 TV 시리즈"),
-    TOP_RATED_TV(title = "평단의 극찬을 받은 TV 시리즈"),
+    AIRING_TODAY_TV(title = "오늘 방영하는 TV 프로그램"),
+    ON_THE_AIR_TV(title = "지금 방송 중인 TV 프로그램"),
+    TOP_RATED_TV(title = "인기 많은 TV 프로그램"),
 }
