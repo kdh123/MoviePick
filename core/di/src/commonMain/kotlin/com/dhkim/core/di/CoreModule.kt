@@ -21,6 +21,8 @@ import com.dhkim.domain.movie.usecase.GetMovieVideoUseCaseImpl
 import com.dhkim.domain.movie.usecase.GetTodayTop10MoviesUseCase
 import com.dhkim.domain.movie.repository.MovieRepository
 import com.dhkim.domain.movie.usecase.GetMovieVideoUseCase
+import com.dhkim.domain.movie.usecase.GetMovieWithCategoryUseCase
+import com.dhkim.domain.movie.usecase.GetMovieWithCategoryUseCaseImpl
 import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import com.dhkim.domain.movie.usecase.NOW_PLAYING_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TODAY_RECOMMENDATION_MOVIE_KEY
@@ -30,6 +32,7 @@ import com.dhkim.domain.movie.usecase.UPCOMING_MOVIES_KEY
 import com.dhkim.domain.tv.usecase.AIRING_TODAY_TVS_KEY
 import com.dhkim.domain.tv.usecase.ON_THE_AIR_TVS_KEY
 import com.dhkim.domain.tv.usecase.TOP_RATED_TVS_KEY
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.bind
@@ -45,7 +48,8 @@ val coreModule = module {
     factory<GetMoviesUseCase>(named(TOP_RATED_MOVIES_KEY)) { GetTopRatedMoviesUseCase(get()) }
     factory<GetMoviesUseCase>(named(NOW_PLAYING_MOVIES_KEY)) { GetNowPlayingMoviesUseCase(get()) }
     factory<GetMoviesUseCase>(named(UPCOMING_MOVIES_KEY)) { GetUpcomingMoviesUseCase(get()) }
-    factory<GetMovieVideoUseCase> { GetMovieVideoUseCaseImpl(get()) }
+    factoryOf(::GetMovieVideoUseCaseImpl).bind<GetMovieVideoUseCase>()
+    factoryOf(::GetMovieWithCategoryUseCaseImpl).bind<GetMovieWithCategoryUseCase>()
 
     singleOf(::RemoteTvDataSourceImpl).bind<RemoteTvDataSource>()
     singleOf(::TvRepositoryImpl).bind<TvRepository>()

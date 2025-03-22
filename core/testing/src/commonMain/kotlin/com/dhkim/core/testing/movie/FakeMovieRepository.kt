@@ -2,6 +2,8 @@ package com.dhkim.core.testing.movie
 
 
 import app.cash.paging.PagingData
+import com.dhkim.common.Genre
+import com.dhkim.common.Region
 import com.dhkim.domain.movie.model.Movie
 import com.dhkim.domain.movie.model.MovieVideo
 import com.dhkim.domain.movie.repository.MovieRepository
@@ -25,5 +27,9 @@ class FakeMovieRepository : MovieRepository {
 
     override fun getMovieVideos(id: String, language: String): Flow<List<MovieVideo>> {
         return remoteMovieDataSource.getMovieVideos(id, language)
+    }
+
+    override fun getMovieWithCategory(language: String, genre: Genre?, region: Region?): Flow<PagingData<Movie>> {
+        return remoteMovieDataSource.getMovieWithCategory(language, genre, region)
     }
 }

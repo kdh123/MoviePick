@@ -3,6 +3,8 @@ package com.dhkim.data.datasource
 import app.cash.paging.Pager
 import app.cash.paging.PagingConfig
 import app.cash.paging.PagingData
+import com.dhkim.common.Genre
+import com.dhkim.common.Region
 import com.dhkim.data.model.MovieVideoDto
 import com.dhkim.domain.movie.model.Movie
 import com.dhkim.domain.movie.model.MovieVideo
@@ -47,5 +49,11 @@ class RemoteMovieDataSourceImpl(
             val results = response.body<MovieVideoDto>().results
             emit(results.mapNotNull { it.toMovieVideo() })
         }
+    }
+
+    override fun getMovieWithCategory(language: String, genre: Genre?, region: Region?): Flow<PagingData<Movie>> {
+        return Pager(PagingConfig(pageSize = 15)) {
+            MovieWithCategoryPagingSource(apiService, language, "${genre?.id}", region?.code)
+        }.flow
     }
 }

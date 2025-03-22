@@ -3,7 +3,7 @@ package com.dhkim.data.datasource
 
 import app.cash.paging.PagingSource
 import app.cash.paging.PagingState
-import com.dhkim.data.model.TopRatedMovieDto
+import com.dhkim.data.model.MovieDto
 import com.dhkim.core.network.AppException
 import com.dhkim.domain.movie.model.Movie
 import io.ktor.client.HttpClient
@@ -33,12 +33,12 @@ internal class TopRatedMoviePagingSource(
                 parameter("page", nextPageNumber)
             }
 
-            val topRatedMovieDto = response.body<TopRatedMovieDto>()
+            val movieDto = response.body<MovieDto>()
 
             return LoadResult.Page(
-                data = topRatedMovieDto.results.map { it.toTopRatedMovie() },
+                data = movieDto.results.map { it.toMovie() },
                 prevKey = if (nextPageNumber == 1) null else nextPageNumber - 1,
-                nextKey = if (topRatedMovieDto.results.isNotEmpty()) {
+                nextKey = if (movieDto.results.isNotEmpty()) {
                     nextPageNumber + 1
                 } else null
             )

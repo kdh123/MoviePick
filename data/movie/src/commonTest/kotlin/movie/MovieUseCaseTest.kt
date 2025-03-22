@@ -1,14 +1,17 @@
 package movie
 
 import app.cash.paging.testing.asSnapshot
+import com.dhkim.common.Genre
 import com.dhkim.common.Language
 import com.dhkim.common.Region
 import com.dhkim.core.testing.movie.FakeGetMovieVideoUseCase
+import com.dhkim.core.testing.movie.FakeGetMovieWithCategoryUseCase
 import com.dhkim.core.testing.movie.FakeGetTopRatedMoviesUseCase
 import com.dhkim.core.testing.movie.FakeGetUpcomingMoviesUseCase
 import com.dhkim.core.testing.movie.FakeGetTodayRecommendationMovieUseCase
 import com.dhkim.data.di.movieModule
 import com.dhkim.domain.movie.usecase.GetMovieVideoUseCase
+import com.dhkim.domain.movie.usecase.GetMovieWithCategoryUseCase
 import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import com.dhkim.domain.movie.usecase.NOW_PLAYING_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TODAY_RECOMMENDATION_MOVIE_KEY
@@ -127,5 +130,20 @@ class MovieUseCaseTest : KoinTest {
         val movieId = "447273"
         val video = FakeGetMovieVideoUseCase().invoke(movieId, Language.Korea.code).first()
         println(video)
+    }
+
+    @Test
+    fun `카테고리에 해당하는 영화 가져오기_Real - Only Android`() = runTest {
+        val getMovieWithCategoryUseCase = get<GetMovieWithCategoryUseCase>()
+        getMovieWithCategoryUseCase(language = Language.Korea.code, genre = Genre.ROMANCE).asSnapshot().forEach {
+            println(it)
+        }
+    }
+
+    @Test
+    fun `카테고리에 해당하는 영화 가져오기_Fake - Only Android`() = runTest {
+        FakeGetMovieWithCategoryUseCase().invoke(language = Language.Korea.code, genre = Genre.ROMANCE).asSnapshot().forEach {
+            println(it)
+        }
     }
 }

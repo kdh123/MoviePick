@@ -3,8 +3,8 @@ package com.dhkim.data.datasource
 
 import app.cash.paging.PagingSource
 import app.cash.paging.PagingState
-import com.dhkim.data.model.UpcomingMovieDto
 import com.dhkim.core.network.AppException
+import com.dhkim.data.model.MovieDto
 import com.dhkim.domain.movie.model.Movie
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -33,10 +33,10 @@ internal class UpcomingMoviePagingSource(
                 parameter("page", nextPageNumber)
             }
 
-            val upcomingMovieDto = response.body<UpcomingMovieDto>()
+            val upcomingMovieDto = response.body<MovieDto>()
 
             return LoadResult.Page(
-                data = upcomingMovieDto.results.map { it.toUpcomingMovie() },
+                data = upcomingMovieDto.results.map { it.toMovie() },
                 prevKey = if (nextPageNumber == 1) null else nextPageNumber - 1,
                 nextKey = if (upcomingMovieDto.results.isNotEmpty()) {
                     nextPageNumber + 1

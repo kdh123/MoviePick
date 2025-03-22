@@ -6,6 +6,7 @@ import app.cash.paging.PagingData
 import app.cash.paging.testing.TestPager
 import app.cash.paging.testing.asPagingSourceFactory
 import com.dhkim.common.Genre
+import com.dhkim.common.Region
 import com.dhkim.data.datasource.RemoteMovieDataSource
 import com.dhkim.domain.movie.model.Movie
 import com.dhkim.domain.movie.model.MovieVideo
@@ -37,7 +38,7 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
                     title = "top rated title$it",
                     adult = false,
                     overview = "overview $it",
-                    genre = listOf(Genre.ACTION.genre, Genre.DRAMA.genre),
+                    genre = listOf(Genre.ACTION.genre, Genre.HORROR.genre),
                     imageUrl = "imageUrl$it",
                     releasedDate = "2025-03-13",
                     voteAverage = 5.5 + it.toDouble(),
@@ -56,7 +57,7 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
                     title = "now playing title$it",
                     adult = false,
                     overview = "overview $it",
-                    genre = listOf(Genre.ACTION.genre, Genre.DRAMA.genre),
+                    genre = listOf(Genre.ROMANCE.genre, Genre.DRAMA.genre),
                     imageUrl = "imageUrl$it",
                     releasedDate = "2025-02-05",
                     voteAverage = 5.5 + it.toDouble(),
@@ -75,7 +76,7 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
                     title = "upcoming title$it",
                     adult = false,
                     overview = "overview $it",
-                    genre = listOf(Genre.ACTION.genre, Genre.DRAMA.genre),
+                    genre = listOf(Genre.ACTION.genre, Genre.MYSTERY.genre),
                     imageUrl = "imageUrl$it",
                     releasedDate = "2025-05-12",
                     voteAverage = 4.3 + it.toDouble(),
@@ -126,6 +127,22 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
     override fun getMovieVideos(id: String, language: String): Flow<List<MovieVideo>> {
         return flow {
             emit(movieVideos)
+        }
+    }
+
+    override fun getMovieWithCategory(language: String, genre: Genre?, region: Region?): Flow<PagingData<Movie>> {
+        return flow {
+            val moviePagingSource = (topRatedMovies + upcomingMovies + nowPlayingMovies)
+                .filter { it.genre.contains(genre?.genre ?: "")}
+                .asPagingSourceFactory()
+                .invoke()
+
+            val pager = TestPager(PagingConfig(pageSize = 15), moviePagingSource)
+            val page = with(pager) {
+                refresh()
+                append()
+            } as PagingSource.LoadResult.Page
+            emit(PagingData.from(page.data))
         }
     }
 }

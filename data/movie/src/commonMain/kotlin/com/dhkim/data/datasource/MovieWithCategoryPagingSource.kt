@@ -1,6 +1,5 @@
 package com.dhkim.data.datasource
 
-
 import app.cash.paging.PagingSource
 import app.cash.paging.PagingState
 import com.dhkim.core.network.AppException
@@ -15,10 +14,11 @@ import io.ktor.util.network.UnresolvedAddressException
 import io.ktor.utils.io.errors.IOException
 import kotlinx.serialization.SerializationException
 
-internal class NowPlayingMoviePagingSource(
+internal class MovieWithCategoryPagingSource(
     private val apiService: HttpClient,
     private val language: String,
-    private val region: String
+    private val genre: String?,
+    private val region: String?
 ) : PagingSource<Int, Movie>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Movie> {
@@ -26,11 +26,11 @@ internal class NowPlayingMoviePagingSource(
             val nextPageNumber = params.key ?: 1
             val response = apiService.get {
                 url {
-                    path("/3/movie/now_playing")
+                    path("/3/discover/movie")
                 }
                 parameter("language", language)
                 parameter("region", region)
-                parameter("page", nextPageNumber)
+                parameter("with_genres", genre)
             }
 
             val nowPlayingMovieDto = response.body<MovieDto>()

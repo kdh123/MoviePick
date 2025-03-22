@@ -24,7 +24,7 @@ import kotlinx.collections.immutable.ImmutableList
 
 @Stable
 class HomeState(
-    private val series: ImmutableList<HomeItem>,
+    private val series: ImmutableList<SeriesItem>,
     val listState: LazyListState
 ) {
     val showCategory by derivedStateOf {
@@ -62,7 +62,7 @@ class HomeState(
     companion object {
 
         fun Saver(
-            series: ImmutableList<HomeItem>,
+            series: ImmutableList<SeriesItem>,
             listState: LazyListState,
         ): Saver<HomeState, *> = Saver(
             save = { listOf(it.showCategory) },
@@ -78,15 +78,16 @@ class HomeState(
 
 @Composable
 fun rememberHomeState(
-    homeMovieItems: ImmutableList<HomeItem>,
+    seriesItems: ImmutableList<SeriesItem>,
+    mainRecommendationMovieGroup: Group,
     listState: LazyListState = rememberLazyListState()
 ): HomeState {
-    val state = rememberSaveable(homeMovieItems, listState, saver = HomeState.Saver(series = homeMovieItems, listState = listState)) {
-        HomeState(series = homeMovieItems, listState = listState)
+    val state = rememberSaveable(seriesItems, listState, saver = HomeState.Saver(series = seriesItems, listState = listState)) {
+        HomeState(series = seriesItems, listState = listState)
     }
-    val recommendationSeries = homeMovieItems
-        .firstOrNull { it.group == HomeMovieGroup.TODAY_RECOMMENDATION_MOVIE }
-        ?.run { (this as HomeItem.HomeMovieItem).series }
+    val recommendationSeries = seriesItems
+        .firstOrNull { it.group == mainRecommendationMovieGroup }
+        ?.run { (this as SeriesItem.MovieSeriesItem).series }
         ?.collectAsLazyPagingItems()
     val recommendationSeriesPosterUrl = if (!recommendationSeries?.itemSnapshotList.isNullOrEmpty()) {
         recommendationSeries?.itemSnapshotList?.firstOrNull()?.imageUrl ?: ""
