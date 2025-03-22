@@ -170,7 +170,8 @@ private fun HomeScreenDarkPreview() {
         ) {
             HomeScreen(
                 uiState = HomeUiState(displayState = HomeDisplayState.Contents(series)),
-                navigateToVideo = {}
+                navigateToVideo = {},
+                navigateToMovie = {}
             )
         }
     }
@@ -195,7 +196,8 @@ private fun HomeScreenPreview() {
         ) {
             HomeScreen(
                 uiState = HomeUiState(displayState = HomeDisplayState.Contents(series)),
-                navigateToVideo = {}
+                navigateToVideo = {},
+                navigateToMovie = {}
             )
         }
     }

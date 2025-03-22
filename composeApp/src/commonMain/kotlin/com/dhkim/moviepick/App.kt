@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
 import androidx.navigation.compose.NavHost
 import com.dhkim.home.navigation.home
+import com.dhkim.home.navigation.movie
 import com.dhkim.upcoming.navigation.upcoming
 import com.dhkim.video.navigation.video
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -57,8 +58,10 @@ fun App() {
                     .padding(top = padding.calculateTopPadding(), bottom = padding.calculateBottomPadding())
             ) {
                 home(
-                    navigateToVideo = { appState.navigateToVideo(it) }
+                    navigateToVideo = appState::navigateToVideo,
+                    navigateToMovie = appState::navigateToMovie
                 )
+                movie(navigateToVideo = appState::navigateToVideo)
                 upcoming()
                 video()
             }

@@ -52,7 +52,7 @@ class MovieViewModel(
                 for (genre in genres) {
                     val movieSeriesItem = async {
                         getMovieWithCategoryUseCase(language, genre, region)
-                            .toMovieItem(group = Group.MovieGroup.valueOf(genre.genre), viewModelScope)
+                            .toMovieItem(group = Group.MovieGroup.entries.first { it.genre == genre }, viewModelScope)
                     }
                     jobs.add(movieSeriesItem)
                 }
@@ -64,7 +64,6 @@ class MovieViewModel(
                 _uiState.update { MovieUiState(MovieDisplayState.Contents(series.toImmutableList())) }
             },
             error = {
-
             }
         )
     }

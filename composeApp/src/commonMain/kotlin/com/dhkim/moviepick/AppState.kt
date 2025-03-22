@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.dhkim.home.navigation.HOME_ROUTE
+import com.dhkim.home.navigation.MOVIE_ROUTE
 import com.dhkim.upcoming.navigation.UPCOMING_ROUTE
 import com.dhkim.video.navigation.navigateToVideo
 import moviepick.composeapp.generated.resources.Res
@@ -47,6 +48,7 @@ class AppState(val navController: NavHostController) {
     }
 
     fun navigateToVideo(videoUrl: String) = navController.navigateToVideo(videoUrl)
+    fun navigateToMovie() = navController.navigate(MOVIE_ROUTE)
 }
 
 @Composable

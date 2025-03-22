@@ -1,5 +1,7 @@
 package com.dhkim.home
 
+import com.dhkim.common.Genre
+
 sealed interface Group {
 
     enum class HomeGroup(val title: String): Group {
@@ -13,15 +15,15 @@ sealed interface Group {
         ON_THE_AIR_TV(title = "지금 방송 중인 TV 프로그램"),
         TOP_RATED_TV(title = "인기 많은 TV 프로그램"),
     }
-    enum class MovieGroup(val title: String) : Group {
+    enum class MovieGroup(val title: String, val genre: Genre? = null) : Group {
         APP_BAR(title = "앱바"),
         CATEGORY(title = "카테고리"),
         MAIN_RECOMMENDATION_MOVIE(title = "오늘 대표 추천 영화"),
-        ACTION_MOVIE(title = "액션 영화"),
-        ROMANCE_MOVIE(title = "로맨스 영화"),
-        COMEDY_MOVIE(title = "코미디 영화"),
-        THRILLER_MOVIE(title = "스릴러 영화"),
-        ADVENTURE_MOVIE(title = "모험 영화"),
-        ANIMATION_MOVIE(title = "애니메이션"),
+        ACTION_MOVIE(title = "액션 영화", genre = Genre.ACTION),
+        ROMANCE_MOVIE(title = "로맨스 영화", genre = Genre.ROMANCE),
+        COMEDY_MOVIE(title = "코미디 영화", genre = Genre.COMEDY),
+        THRILLER_MOVIE(title = "스릴러 영화", genre = Genre.THRILLER),
+        ADVENTURE_MOVIE(title = "모험 영화", genre = Genre.ADVENTURE),
+        ANIMATION_MOVIE(title = "애니메이션", genre = Genre.ANIMATION),
     }
 }

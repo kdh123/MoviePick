@@ -50,6 +50,7 @@ import org.jetbrains.compose.resources.painterResource
 fun HomeScreen(
     uiState: HomeUiState,
     navigateToVideo: (String) -> Unit,
+    navigateToMovie: () -> Unit
 ) {
     val homeState = (uiState.displayState as? HomeDisplayState.Contents)?.movies?.let { homeMovieItems ->
         rememberHomeState(seriesItems = homeMovieItems, mainRecommendationMovieGroup = Group.HomeGroup.MAIN_RECOMMENDATION_MOVIE)
@@ -83,7 +84,8 @@ fun HomeScreen(
                     homeSeriesItems = movies,
                     listState = homeState.listState,
                     onUpdateRecommendationSeriesHeight = homeState::updateHeight,
-                    navigateToVideo = navigateToVideo
+                    navigateToVideo = navigateToVideo,
+                    navigateToMovie = navigateToMovie
                 )
             }
 
@@ -102,7 +104,10 @@ fun HomeScreen(
                         .fillMaxWidth()
                         .background(color = homeState.backgroundColor)
                 ) {
-                    CategoryChips(chipColor = onBackgroundColor)
+                    CategoryChips(
+                        chipColor = onBackgroundColor,
+                        navigateToMovie = navigateToMovie
+                    )
                 }
             }
         }
@@ -124,7 +129,10 @@ private fun AppBar() {
 }
 
 @Composable
-private fun CategoryChips(chipColor: Color) {
+private fun CategoryChips(
+    chipColor: Color,
+    navigateToMovie: () -> Unit
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -134,7 +142,7 @@ private fun CategoryChips(chipColor: Color) {
     ) {
         Chip(
             borderColor = chipColor,
-            onClick = {}
+            onClick = navigateToMovie
         ) {
             Text(
                 text = "영화",
@@ -185,7 +193,8 @@ private fun ContentsScreen(
     listState: LazyListState,
     homeSeriesItems: ImmutableList<SeriesItem>,
     onUpdateRecommendationSeriesHeight: (Int) -> Unit,
-    navigateToVideo: (String) -> Unit
+    navigateToVideo: (String) -> Unit,
+    navigateToMovie: () -> Unit
 ) {
     LazyColumn(
         state = listState,
@@ -197,7 +206,10 @@ private fun ContentsScreen(
                 }
 
                 Group.HomeGroup.CATEGORY -> {
-                    CategoryChips(chipColor = homeState.onBackgroundColor)
+                    CategoryChips(
+                        chipColor = homeState.onBackgroundColor,
+                        navigateToMovie = navigateToMovie
+                    )
                 }
 
                 Group.HomeGroup.MAIN_RECOMMENDATION_MOVIE -> {
