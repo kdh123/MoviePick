@@ -41,8 +41,8 @@ class HomeViewModel(
     )
 
     private fun init() {
-        val language = Language.Korea.code
-        val region = Region.Korea.code
+        val language = Language.Korea
+        val region = Region.Korea
 
         viewModelScope.handle(
             block = {

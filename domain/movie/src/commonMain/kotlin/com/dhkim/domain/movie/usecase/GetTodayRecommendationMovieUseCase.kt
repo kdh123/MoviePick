@@ -2,6 +2,8 @@ package com.dhkim.domain.movie.usecase
 
 import androidx.paging.testing.asSnapshot
 import app.cash.paging.PagingData
+import com.dhkim.common.Language
+import com.dhkim.common.Region
 import com.dhkim.domain.movie.model.Movie
 import com.dhkim.domain.movie.repository.MovieRepository
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +15,7 @@ class GetTodayRecommendationMovieUseCase(
     private val getMovieVideoUseCase: GetMovieVideoUseCase
 ) : GetMoviesUseCase {
 
-    override fun invoke(language: String, region: String): Flow<PagingData<Movie>> {
+    override fun invoke(language: Language, region: Region): Flow<PagingData<Movie>> {
         return flow {
             val index = (0 until 10).random()
             val nowPlayingMovies = movieRepository.getNowPlayingMovies(language, region)

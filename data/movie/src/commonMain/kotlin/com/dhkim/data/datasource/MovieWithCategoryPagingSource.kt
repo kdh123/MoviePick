@@ -2,6 +2,9 @@ package com.dhkim.data.datasource
 
 import app.cash.paging.PagingSource
 import app.cash.paging.PagingState
+import com.dhkim.common.Genre
+import com.dhkim.common.Language
+import com.dhkim.common.Region
 import com.dhkim.core.network.AppException
 import com.dhkim.data.model.MovieDto
 import com.dhkim.domain.movie.model.Movie
@@ -16,9 +19,9 @@ import kotlinx.serialization.SerializationException
 
 internal class MovieWithCategoryPagingSource(
     private val apiService: HttpClient,
-    private val language: String,
-    private val genre: String?,
-    private val region: String?
+    private val language: Language,
+    private val genre: Genre?,
+    private val region: Region?
 ) : PagingSource<Int, Movie>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Movie> {
@@ -29,8 +32,8 @@ internal class MovieWithCategoryPagingSource(
                     path("/3/discover/movie")
                 }
                 parameter("language", language)
-                parameter("region", region)
-                parameter("with_genres", genre)
+                parameter("with_genres", genre?.id)
+                parameter("region", region?.code)
             }
 
             val nowPlayingMovieDto = response.body<MovieDto>()

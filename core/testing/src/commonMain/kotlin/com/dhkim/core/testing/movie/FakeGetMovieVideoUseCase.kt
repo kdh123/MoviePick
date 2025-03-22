@@ -1,5 +1,6 @@
 package com.dhkim.core.testing.movie
 
+import com.dhkim.common.Language
 import com.dhkim.domain.movie.model.MovieVideo
 import com.dhkim.domain.movie.usecase.GetMovieVideoUseCase
 import kotlinx.coroutines.flow.Flow
@@ -16,7 +17,7 @@ class FakeGetMovieVideoUseCase : GetMovieVideoUseCase {
         currentStatus = status
     }
 
-    override fun invoke(id: String, language: String): Flow<MovieVideo?> {
+    override fun invoke(id: String, language: Language): Flow<MovieVideo?> {
         return flow {
             emit(movieRepository.getMovieVideos(id, language).first().shuffled().firstOrNull())
         }

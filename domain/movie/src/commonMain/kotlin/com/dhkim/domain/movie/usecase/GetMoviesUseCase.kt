@@ -1,6 +1,8 @@
 package com.dhkim.domain.movie.usecase
 
 import app.cash.paging.PagingData
+import com.dhkim.common.Language
+import com.dhkim.common.Region
 import com.dhkim.domain.movie.model.Movie
 import kotlinx.coroutines.flow.Flow
 
@@ -12,5 +14,5 @@ const val UPCOMING_MOVIES_KEY = "upcomingMovie"
 
 interface GetMoviesUseCase {
 
-    operator fun invoke(language: String, region: String): Flow<PagingData<Movie>>
+    operator fun invoke(language: Language, region: Region): Flow<PagingData<Movie>>
 }

@@ -44,7 +44,7 @@ class MovieViewModel(
                     Genre.ADVENTURE,
                     Genre.ANIMATION
                 ).map { it.genre }
-                val language = Language.Korea.code
+                val language = Language.Korea
                 val region = Region.Korea
                 val jobs = mutableListOf<Deferred<SeriesItem.MovieSeriesItem>>()
                 val genres = Genre.entries.filter { shouldShowMovieGenres.contains(it.genre) }

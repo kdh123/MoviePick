@@ -3,6 +3,7 @@ package com.dhkim.core.testing.movie
 
 import app.cash.paging.PagingData
 import com.dhkim.common.Genre
+import com.dhkim.common.Language
 import com.dhkim.common.Region
 import com.dhkim.domain.movie.model.Movie
 import com.dhkim.domain.movie.model.MovieVideo
@@ -13,23 +14,23 @@ class FakeMovieRepository : MovieRepository {
 
     private val remoteMovieDataSource = FakeRemoteMovieDataSource()
 
-    override fun getTopRatedMovies(language: String, region: String): Flow<PagingData<Movie>> {
+    override fun getTopRatedMovies(language: Language, region: Region): Flow<PagingData<Movie>> {
         return remoteMovieDataSource.getTopRatedMovies(language, region)
     }
 
-    override fun getNowPlayingMovies(language: String, region: String): Flow<PagingData<Movie>> {
+    override fun getNowPlayingMovies(language: Language, region: Region): Flow<PagingData<Movie>> {
         return remoteMovieDataSource.getNowPlayingMovies(language, region)
     }
 
-    override fun getUpcomingMovies(language: String, region: String): Flow<PagingData<Movie>> {
+    override fun getUpcomingMovies(language: Language, region: Region): Flow<PagingData<Movie>> {
         return remoteMovieDataSource.getUpcomingMovies(language, region)
     }
 
-    override fun getMovieVideos(id: String, language: String): Flow<List<MovieVideo>> {
+    override fun getMovieVideos(id: String, language: Language): Flow<List<MovieVideo>> {
         return remoteMovieDataSource.getMovieVideos(id, language)
     }
 
-    override fun getMovieWithCategory(language: String, genre: Genre?, region: Region?): Flow<PagingData<Movie>> {
+    override fun getMovieWithCategory(language: Language, genre: Genre?, region: Region?): Flow<PagingData<Movie>> {
         return remoteMovieDataSource.getMovieWithCategory(language, genre, region)
     }
 }

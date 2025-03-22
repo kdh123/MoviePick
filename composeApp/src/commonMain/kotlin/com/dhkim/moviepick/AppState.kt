@@ -19,7 +19,7 @@ import org.jetbrains.compose.resources.DrawableResource
 @Stable
 class AppState(val navController: NavHostController) {
     val bottomNavItems = listOf(Screen.Home, Screen.Upcoming)
-    private val routes = listOf(HOME_ROUTE, UPCOMING_ROUTE)
+    private val routes = listOf(HOME_ROUTE, MOVIE_ROUTE, UPCOMING_ROUTE)
 
     val showBottomNavigation: Boolean
         @Composable get() {

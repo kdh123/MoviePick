@@ -4,6 +4,7 @@ import app.cash.paging.Pager
 import app.cash.paging.PagingConfig
 import app.cash.paging.PagingData
 import com.dhkim.common.Genre
+import com.dhkim.common.Language
 import com.dhkim.common.Region
 import com.dhkim.data.model.MovieVideoDto
 import com.dhkim.domain.movie.model.Movie
@@ -20,25 +21,25 @@ class RemoteMovieDataSourceImpl(
     private val apiService: HttpClient
 ) : RemoteMovieDataSource {
 
-    override fun getTopRatedMovies(language: String, region: String): Flow<PagingData<Movie>> {
+    override fun getTopRatedMovies(language: Language, region: Region): Flow<PagingData<Movie>> {
         return Pager(PagingConfig(pageSize = 15)) {
             TopRatedMoviePagingSource(apiService, language, region)
         }.flow
     }
 
-    override fun getNowPlayingMovies(language: String, region: String): Flow<PagingData<Movie>> {
+    override fun getNowPlayingMovies(language: Language, region: Region): Flow<PagingData<Movie>> {
         return Pager(PagingConfig(pageSize = 15)) {
             NowPlayingMoviePagingSource(apiService, language, region)
         }.flow
     }
 
-    override fun getUpcomingMovies(language: String, region: String): Flow<PagingData<Movie>> {
+    override fun getUpcomingMovies(language: Language, region: Region): Flow<PagingData<Movie>> {
         return Pager(PagingConfig(pageSize = 15)) {
             UpcomingMoviePagingSource(apiService, language, region)
         }.flow
     }
 
-    override fun getMovieVideos(id: String, language: String): Flow<List<MovieVideo>> {
+    override fun getMovieVideos(id: String, language: Language): Flow<List<MovieVideo>> {
         return flow {
             val response = apiService.get {
                 url {
@@ -51,9 +52,9 @@ class RemoteMovieDataSourceImpl(
         }
     }
 
-    override fun getMovieWithCategory(language: String, genre: Genre?, region: Region?): Flow<PagingData<Movie>> {
+    override fun getMovieWithCategory(language: Language, genre: Genre?, region: Region?): Flow<PagingData<Movie>> {
         return Pager(PagingConfig(pageSize = 15)) {
-            MovieWithCategoryPagingSource(apiService, language, "${genre?.id}", region?.code)
+            MovieWithCategoryPagingSource(apiService, language, genre, region)
         }.flow
     }
 }

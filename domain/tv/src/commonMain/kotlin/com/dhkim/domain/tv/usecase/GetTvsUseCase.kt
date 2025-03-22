@@ -1,6 +1,7 @@
 package com.dhkim.domain.tv.usecase
 
 import app.cash.paging.PagingData
+import com.dhkim.common.Language
 import com.dhkim.domain.tv.model.Tv
 import kotlinx.coroutines.flow.Flow
 
@@ -10,5 +11,5 @@ const val TOP_RATED_TVS_KEY = "topRatedTv"
 
 interface GetTvsUseCase {
 
-    operator fun invoke(language: String): Flow<PagingData<Tv>>
+    operator fun invoke(language: Language): Flow<PagingData<Tv>>
 }

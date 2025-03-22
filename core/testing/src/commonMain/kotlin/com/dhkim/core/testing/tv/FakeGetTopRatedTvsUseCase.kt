@@ -1,6 +1,7 @@
 package com.dhkim.core.testing.tv
 
 import app.cash.paging.PagingData
+import com.dhkim.common.Language
 import com.dhkim.domain.tv.model.Tv
 import com.dhkim.domain.tv.usecase.GetTvsUseCase
 import kotlinx.coroutines.flow.Flow
@@ -17,7 +18,7 @@ class FakeGetTopRatedTvsUseCase : GetTvsUseCase {
         currentStatus = status
     }
 
-    override operator fun invoke(language: String): Flow<PagingData<Tv>> {
+    override operator fun invoke(language: Language): Flow<PagingData<Tv>> {
         return flow {
             if (currentStatus == TvStatus.Success) {
                 emit(movieRepository.getTopRatedTvs(language).first())

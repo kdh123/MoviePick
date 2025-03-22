@@ -3,6 +3,8 @@ package com.dhkim.data.datasource
 
 import app.cash.paging.PagingSource
 import app.cash.paging.PagingState
+import com.dhkim.common.Language
+import com.dhkim.common.Region
 import com.dhkim.core.network.AppException
 import com.dhkim.data.model.MovieDto
 import com.dhkim.domain.movie.model.Movie
@@ -17,8 +19,8 @@ import kotlinx.serialization.SerializationException
 
 internal class UpcomingMoviePagingSource(
     private val apiService: HttpClient,
-    private val language: String,
-    private val region: String
+    private val language: Language,
+    private val region: Region
 ) : PagingSource<Int, Movie>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Movie> {
@@ -28,8 +30,8 @@ internal class UpcomingMoviePagingSource(
                 url {
                     path("/3/movie/upcoming")
                 }
-                parameter("language", language)
-                parameter("region", region)
+                parameter("language", language.code)
+                parameter("region", region.code)
                 parameter("page", nextPageNumber)
             }
 

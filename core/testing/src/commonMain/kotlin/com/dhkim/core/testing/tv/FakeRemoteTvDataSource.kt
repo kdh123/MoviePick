@@ -6,6 +6,7 @@ import app.cash.paging.PagingData
 import app.cash.paging.testing.TestPager
 import app.cash.paging.testing.asPagingSourceFactory
 import com.dhkim.common.Genre
+import com.dhkim.common.Language
 import com.dhkim.common.Region
 import com.dhkim.data.tv.datasource.RemoteTvDataSource
 import com.dhkim.domain.tv.model.Tv
@@ -77,7 +78,7 @@ class FakeRemoteTvDataSource : RemoteTvDataSource {
 
 
 
-    override fun getAiringTodayTvs(language: String): Flow<PagingData<Tv>> {
+    override fun getAiringTodayTvs(language: Language): Flow<PagingData<Tv>> {
         return flow {
             val pager = TestPager(PagingConfig(pageSize = 15), airingTodayPagingSource)
             val page = with(pager) {
@@ -88,7 +89,7 @@ class FakeRemoteTvDataSource : RemoteTvDataSource {
         }
     }
 
-    override fun getOnTheAirTvs(language: String): Flow<PagingData<Tv>> {
+    override fun getOnTheAirTvs(language: Language): Flow<PagingData<Tv>> {
         return flow {
             val pager = TestPager(PagingConfig(pageSize = 15), onTheAirPagingSource)
             val page = with(pager) {
@@ -99,7 +100,7 @@ class FakeRemoteTvDataSource : RemoteTvDataSource {
         }
     }
 
-    override fun getTopRatedTvs(language: String): Flow<PagingData<Tv>> {
+    override fun getTopRatedTvs(language: Language): Flow<PagingData<Tv>> {
         return flow {
             val pager = TestPager(PagingConfig(pageSize = 15), topRatedPagingSource)
             val page = with(pager) {

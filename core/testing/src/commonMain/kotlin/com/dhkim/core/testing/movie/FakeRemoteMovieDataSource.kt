@@ -6,6 +6,7 @@ import app.cash.paging.PagingData
 import app.cash.paging.testing.TestPager
 import app.cash.paging.testing.asPagingSourceFactory
 import com.dhkim.common.Genre
+import com.dhkim.common.Language
 import com.dhkim.common.Region
 import com.dhkim.data.datasource.RemoteMovieDataSource
 import com.dhkim.domain.movie.model.Movie
@@ -94,7 +95,7 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
         .filter { it.genre.contains(Genre.ROMANCE.genre) || it.genre.contains(Genre.DRAMA.genre)}
         .asPagingSourceFactory().invoke()
 
-    override fun getTopRatedMovies(language: String, region: String): Flow<PagingData<Movie>> {
+    override fun getTopRatedMovies(language: Language, region: Region): Flow<PagingData<Movie>> {
         return flow {
             val pager = TestPager(PagingConfig(pageSize = 15), topRatedPagingSource)
             val page = with(pager) {
@@ -105,7 +106,7 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
         }
     }
 
-    override fun getNowPlayingMovies(language: String, region: String): Flow<PagingData<Movie>> {
+    override fun getNowPlayingMovies(language: Language, region: Region): Flow<PagingData<Movie>> {
         return flow {
             val pager = TestPager(PagingConfig(pageSize = 15), nowPlayingPagingSource)
             val page = with(pager) {
@@ -116,7 +117,7 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
         }
     }
 
-    override fun getUpcomingMovies(language: String, region: String): Flow<PagingData<Movie>> {
+    override fun getUpcomingMovies(language: Language, region: Region): Flow<PagingData<Movie>> {
         return flow {
             val pager = TestPager(PagingConfig(pageSize = 15), upcomingPagingSource)
             val page = with(pager) {
@@ -127,13 +128,13 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
         }
     }
 
-    override fun getMovieVideos(id: String, language: String): Flow<List<MovieVideo>> {
+    override fun getMovieVideos(id: String, language: Language): Flow<List<MovieVideo>> {
         return flow {
             emit(movieVideos)
         }
     }
 
-    override fun getMovieWithCategory(language: String, genre: Genre?, region: Region?): Flow<PagingData<Movie>> {
+    override fun getMovieWithCategory(language: Language, genre: Genre?, region: Region?): Flow<PagingData<Movie>> {
         return flow {
             val pager = TestPager(PagingConfig(pageSize = 15), movieWithCategoryPagingSource)
             val page = with(pager) {

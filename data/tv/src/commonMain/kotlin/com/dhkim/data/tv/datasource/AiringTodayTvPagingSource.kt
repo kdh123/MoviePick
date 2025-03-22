@@ -2,6 +2,7 @@ package com.dhkim.data.tv.datasource
 
 import app.cash.paging.PagingSource
 import app.cash.paging.PagingState
+import com.dhkim.common.Language
 import com.dhkim.core.network.AppException
 import com.dhkim.data.tv.model.AiringTodayTvDto
 import com.dhkim.domain.tv.model.Tv
@@ -16,7 +17,7 @@ import kotlinx.serialization.SerializationException
 
 internal class AiringTodayTvPagingSource(
     private val apiService: HttpClient,
-    private val language: String,
+    private val language: Language,
 ) : PagingSource<Int, Tv>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Tv> {
@@ -26,7 +27,7 @@ internal class AiringTodayTvPagingSource(
                 url {
                     path("/3/tv/airing_today")
                 }
-                parameter("language", language)
+                parameter("language", language.code)
                 parameter("page", nextPageNumber)
             }
 
