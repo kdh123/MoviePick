@@ -31,9 +31,10 @@ internal class MovieWithCategoryPagingSource(
                 url {
                     path("/3/discover/movie")
                 }
-                parameter("language", language)
+                parameter("language", language.code)
                 parameter("with_genres", genre?.id)
                 parameter("region", region?.code)
+                parameter("page", nextPageNumber)
             }
 
             val nowPlayingMovieDto = response.body<MovieDto>()

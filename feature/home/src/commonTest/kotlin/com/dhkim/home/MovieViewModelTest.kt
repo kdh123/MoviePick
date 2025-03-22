@@ -1,7 +1,9 @@
 package com.dhkim.home
 
 import com.dhkim.core.testing.movie.FakeGetMovieWithCategoryUseCase
+import com.dhkim.core.testing.movie.FakeGetTodayRecommendationMovieUseCase
 import com.dhkim.domain.movie.usecase.GetMovieWithCategoryUseCase
+import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import com.dhkim.home.movie.MovieViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,13 +20,15 @@ class MovieViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
     private lateinit var viewModel: MovieViewModel
     private lateinit var getMovieWithCategoryUseCase: GetMovieWithCategoryUseCase
+    private lateinit var getTodayRecommendationMovieUseCase: GetMoviesUseCase
 
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(testDispatcher)
 
+        getTodayRecommendationMovieUseCase = FakeGetTodayRecommendationMovieUseCase()
         getMovieWithCategoryUseCase = FakeGetMovieWithCategoryUseCase()
-        viewModel = MovieViewModel(getMovieWithCategoryUseCase)
+        viewModel = MovieViewModel(getTodayRecommendationMovieUseCase, getMovieWithCategoryUseCase)
     }
 
     @Test

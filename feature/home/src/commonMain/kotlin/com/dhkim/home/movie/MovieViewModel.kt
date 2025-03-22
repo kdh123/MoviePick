@@ -7,6 +7,7 @@ import com.dhkim.common.Language
 import com.dhkim.common.Region
 import com.dhkim.common.handle
 import com.dhkim.domain.movie.usecase.GetMovieWithCategoryUseCase
+import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import com.dhkim.home.Group
 import com.dhkim.home.SeriesItem
 import com.dhkim.home.toMovieItem
@@ -21,6 +22,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
 class MovieViewModel(
+    private val getMainRecommendationMoviesUseCase: GetMoviesUseCase,
     private val getMovieWithCategoryUseCase: GetMovieWithCategoryUseCase
 ) : ViewModel() {
 
@@ -48,7 +50,11 @@ class MovieViewModel(
                 val region = Region.Korea
                 val jobs = mutableListOf<Deferred<SeriesItem.MovieSeriesItem>>()
                 val genres = Genre.entries.filter { shouldShowMovieGenres.contains(it.genre) }
-
+                val mainRecommendationMovie = async {
+                    getMainRecommendationMoviesUseCase(language, region)
+                        .toMovieItem(group = Group.MovieGroup.MAIN_RECOMMENDATION_MOVIE, viewModelScope)
+                }
+                jobs.add(mainRecommendationMovie)
                 for (genre in genres) {
                     val movieSeriesItem = async {
                         getMovieWithCategoryUseCase(language, genre, region)
@@ -59,7 +65,7 @@ class MovieViewModel(
 
                 val series = listOf(
                     SeriesItem.AppBar(group = Group.MovieGroup.APP_BAR),
-                    SeriesItem.Category(group = Group.MovieGroup.CATEGORY)
+                    SeriesItem.Category(group = Group.MovieGroup.CATEGORY),
                 ) + jobs.awaitAll()
                 _uiState.update { MovieUiState(MovieDisplayState.Contents(series.toImmutableList())) }
             },
