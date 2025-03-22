@@ -1,8 +1,7 @@
-package com.dhkim.data.usecase
+package com.dhkim.domain.movie.usecase
 
 import com.dhkim.domain.movie.model.MovieVideo
 import com.dhkim.domain.movie.repository.MovieRepository
-import com.dhkim.domain.movie.usecase.GetMovieVideoUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow

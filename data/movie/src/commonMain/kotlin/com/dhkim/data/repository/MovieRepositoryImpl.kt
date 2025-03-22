@@ -1,7 +1,7 @@
 package com.dhkim.data.repository
 
 import app.cash.paging.PagingData
-import com.dhkim.domain.movie.datasource.RemoteMovieDataSource
+import com.dhkim.data.datasource.RemoteMovieDataSource
 import com.dhkim.domain.movie.model.Movie
 import com.dhkim.domain.movie.model.MovieVideo
 import com.dhkim.domain.movie.repository.MovieRepository

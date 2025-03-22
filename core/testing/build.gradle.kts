@@ -41,7 +41,7 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.core.common)
             implementation(projects.domain.movie)
-            implementation(projects.domain.movie)
+            implementation(projects.data.movie)
             implementation(projects.domain.tv)
             implementation(projects.data.tv)
 

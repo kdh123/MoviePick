@@ -1,16 +1,15 @@
-package com.dhkim.data.usecase
+package com.dhkim.domain.movie.usecase
 
 import app.cash.paging.PagingData
 import com.dhkim.domain.movie.model.Movie
 import com.dhkim.domain.movie.repository.MovieRepository
-import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import kotlinx.coroutines.flow.Flow
 
-class GetNowPlayingMoviesUseCase(
+class GetTopRatedMoviesUseCase(
     private val movieRepository: MovieRepository
 ) : GetMoviesUseCase {
 
     override fun invoke(language: String, region: String): Flow<PagingData<Movie>> {
-        return movieRepository.getNowPlayingMovies(language, region)
+        return movieRepository.getTopRatedMovies(language, region)
     }
 }

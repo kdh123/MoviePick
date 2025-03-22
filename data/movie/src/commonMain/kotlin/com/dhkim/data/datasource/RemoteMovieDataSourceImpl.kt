@@ -4,7 +4,6 @@ import app.cash.paging.Pager
 import app.cash.paging.PagingConfig
 import app.cash.paging.PagingData
 import com.dhkim.data.model.MovieVideoDto
-import com.dhkim.domain.movie.datasource.RemoteMovieDataSource
 import com.dhkim.domain.movie.model.Movie
 import com.dhkim.domain.movie.model.MovieVideo
 import io.ktor.client.HttpClient

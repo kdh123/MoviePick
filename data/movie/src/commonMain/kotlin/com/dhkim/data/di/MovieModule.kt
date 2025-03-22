@@ -1,16 +1,16 @@
 package com.dhkim.data.di
 
 import com.dhkim.data.repository.MovieRepositoryImpl
-import com.dhkim.data.usecase.GetNowPlayingMoviesUseCase
-import com.dhkim.data.usecase.GetTopRatedMoviesUseCase
-import com.dhkim.data.usecase.GetUpcomingMoviesUseCase
+import com.dhkim.domain.movie.usecase.GetNowPlayingMoviesUseCase
+import com.dhkim.domain.movie.usecase.GetTopRatedMoviesUseCase
+import com.dhkim.domain.movie.usecase.GetUpcomingMoviesUseCase
 import com.dhkim.core.network.di.networkModule
 import com.dhkim.core.network.di.platformModule
+import com.dhkim.data.datasource.RemoteMovieDataSource
 import com.dhkim.data.datasource.RemoteMovieDataSourceImpl
-import com.dhkim.data.usecase.GetMovieVideoUseCaseImpl
-import com.dhkim.data.usecase.GetTodayRecommendationMovieUseCase
-import com.dhkim.data.usecase.GetTodayTop10MoviesUseCase
-import com.dhkim.domain.movie.datasource.RemoteMovieDataSource
+import com.dhkim.domain.movie.usecase.GetMovieVideoUseCaseImpl
+import com.dhkim.domain.movie.usecase.GetTodayRecommendationMovieUseCase
+import com.dhkim.domain.movie.usecase.GetTodayTop10MoviesUseCase
 import com.dhkim.domain.movie.repository.MovieRepository
 import com.dhkim.domain.movie.usecase.GetMovieVideoUseCase
 import com.dhkim.domain.movie.usecase.GetMoviesUseCase

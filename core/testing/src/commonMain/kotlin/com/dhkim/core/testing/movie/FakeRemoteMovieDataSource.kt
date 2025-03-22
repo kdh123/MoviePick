@@ -6,7 +6,7 @@ import app.cash.paging.PagingData
 import app.cash.paging.testing.TestPager
 import app.cash.paging.testing.asPagingSourceFactory
 import com.dhkim.common.Genre
-import com.dhkim.domain.movie.datasource.RemoteMovieDataSource
+import com.dhkim.data.datasource.RemoteMovieDataSource
 import com.dhkim.domain.movie.model.Movie
 import com.dhkim.domain.movie.model.MovieVideo
 import com.dhkim.domain.movie.model.MovieVideoType

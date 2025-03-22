@@ -1,4 +1,4 @@
-package com.dhkim.domain.movie.datasource
+package com.dhkim.data.datasource
 
 import app.cash.paging.PagingData
 import com.dhkim.domain.movie.model.Movie

@@ -75,6 +75,7 @@ class HomeViewModelTest {
 
     @Test
     fun `영화 가져오기 실패`() = runTest {
+        getTodayRecommendationMovieUseCase = FakeGetTodayRecommendationMovieUseCase()
         getTopRatedMoviesUseCase = FakeGetTopRatedMoviesUseCase().apply {
             setStatus(MovieStatus.Error)
         }

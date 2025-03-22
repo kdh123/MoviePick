@@ -2,6 +2,7 @@ package com.dhkim.core.di
 
 import com.dhkim.core.network.di.networkModule
 import com.dhkim.core.network.di.platformModule
+import com.dhkim.data.datasource.RemoteMovieDataSource
 import com.dhkim.data.tv.datasource.RemoteTvDataSourceImpl
 import com.dhkim.data.tv.repository.TvRepositoryImpl
 import com.dhkim.data.tv.usecase.GetAiringTodayTvsUseCase
@@ -10,15 +11,14 @@ import com.dhkim.data.tv.usecase.GetTopRatedTvsUseCase
 import com.dhkim.domain.tv.datasource.RemoteTvDataSource
 import com.dhkim.domain.tv.repository.TvRepository
 import com.dhkim.domain.tv.usecase.GetTvsUseCase
-import com.dhkim.data.usecase.GetNowPlayingMoviesUseCase
-import com.dhkim.data.usecase.GetTopRatedMoviesUseCase
-import com.dhkim.data.usecase.GetUpcomingMoviesUseCase
+import com.dhkim.domain.movie.usecase.GetNowPlayingMoviesUseCase
+import com.dhkim.domain.movie.usecase.GetTopRatedMoviesUseCase
+import com.dhkim.domain.movie.usecase.GetUpcomingMoviesUseCase
 import com.dhkim.data.repository.MovieRepositoryImpl
 import com.dhkim.data.datasource.RemoteMovieDataSourceImpl
-import com.dhkim.data.usecase.GetTodayRecommendationMovieUseCase
-import com.dhkim.data.usecase.GetMovieVideoUseCaseImpl
-import com.dhkim.data.usecase.GetTodayTop10MoviesUseCase
-import com.dhkim.domain.movie.datasource.RemoteMovieDataSource
+import com.dhkim.domain.movie.usecase.GetTodayRecommendationMovieUseCase
+import com.dhkim.domain.movie.usecase.GetMovieVideoUseCaseImpl
+import com.dhkim.domain.movie.usecase.GetTodayTop10MoviesUseCase
 import com.dhkim.domain.movie.repository.MovieRepository
 import com.dhkim.domain.movie.usecase.GetMovieVideoUseCase
 import com.dhkim.domain.movie.usecase.GetMoviesUseCase

@@ -1,10 +1,9 @@
-package com.dhkim.data.usecase
+package com.dhkim.domain.movie.usecase
 
 import androidx.paging.testing.asSnapshot
 import app.cash.paging.PagingData
 import com.dhkim.domain.movie.model.Movie
 import com.dhkim.domain.movie.repository.MovieRepository
-import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
