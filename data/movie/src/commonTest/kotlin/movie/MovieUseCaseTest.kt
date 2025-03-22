@@ -48,14 +48,14 @@ class MovieUseCaseTest : KoinTest {
     @Test
     fun `오늘의 추천 영화 가져오기_Real - Only Android`() = runTest {
         val moviesUseCase = get<GetMoviesUseCase>(named(TODAY_RECOMMENDATION_MOVIE_KEY))
-        moviesUseCase(Language.Korea.code, Region.Korea.code).asSnapshot().forEach {
+        moviesUseCase(Language.Korea, Region.Korea).asSnapshot().forEach {
             println(it)
         }
     }
 
     @Test
     fun `오늘의 추천 영화 가져오기 성공_Fake`() = runTest {
-        FakeGetTodayRecommendationMovieUseCase().invoke(Language.Korea.code, Region.Korea.code).asSnapshot().forEach {
+        FakeGetTodayRecommendationMovieUseCase().invoke(Language.Korea, Region.Korea).asSnapshot().forEach {
             println(it)
         }
     }
@@ -63,14 +63,14 @@ class MovieUseCaseTest : KoinTest {
     @Test
     fun `오늘의 TOP 10 영화 가져오기_Real - Only Android`() = runTest {
         val moviesUseCase = get<GetMoviesUseCase>(named(TODAY_TOP_10_MOVIES_KEY))
-        moviesUseCase(Language.Korea.code, Region.Korea.code).asSnapshot().forEach {
+        moviesUseCase(Language.Korea, Region.Korea).asSnapshot().forEach {
             println(it)
         }
     }
 
     @Test
     fun `오늘의 TOP 10 영화 가져오기 성공_Fake`() = runTest {
-        FakeGetTodayRecommendationMovieUseCase().invoke(Language.Korea.code, Region.Korea.code).asSnapshot().forEach {
+        FakeGetTodayRecommendationMovieUseCase().invoke(Language.Korea, Region.Korea).asSnapshot().forEach {
             println(it)
         }
     }
@@ -78,42 +78,42 @@ class MovieUseCaseTest : KoinTest {
     @Test
     fun `Top Rated 영화 가져오기_Real - Only Android`() = runTest {
         val moviesUseCase = get<GetMoviesUseCase>(named(TOP_RATED_MOVIES_KEY))
-        moviesUseCase(Language.Korea.code, Region.Korea.code).asSnapshot().forEach {
+        moviesUseCase(Language.Korea, Region.Korea).asSnapshot().forEach {
             println(it)
         }
     }
 
     @Test
     fun `Top Rated 영화 가져오기 성공_Fake`() = runTest {
-        val data = FakeGetTopRatedMoviesUseCase().invoke(Language.Korea.code, Region.Korea.code).asSnapshot()
+        val data = FakeGetTopRatedMoviesUseCase().invoke(Language.Korea, Region.Korea).asSnapshot()
         println(data)
     }
 
     @Test
     fun `Now Playing 영화 가져오기_Real - Only Android`() = runTest {
         val moviesUseCase = get<GetMoviesUseCase>(named(NOW_PLAYING_MOVIES_KEY))
-        moviesUseCase(Language.Korea.code, Region.Korea.code).asSnapshot().forEach {
+        moviesUseCase(Language.Korea, Region.Korea).asSnapshot().forEach {
             println(it)
         }
     }
 
     @Test
     fun `Now Playing 영화 가져오기 성공_Fake`() = runTest {
-        val data = FakeGetTopRatedMoviesUseCase().invoke(Language.Korea.code, Region.Korea.code).asSnapshot()
+        val data = FakeGetTopRatedMoviesUseCase().invoke(Language.Korea, Region.Korea).asSnapshot()
         println(data)
     }
 
     @Test
     fun `Upcoming 영화 가져오기_Real - Only Android`() = runTest {
         val moviesUseCase = get<GetMoviesUseCase>(named(UPCOMING_MOVIES_KEY))
-        moviesUseCase(Language.Korea.code, Region.Korea.code).asSnapshot().forEach {
+        moviesUseCase(Language.Korea, Region.Korea).asSnapshot().forEach {
             println(it)
         }
     }
 
     @Test
     fun `Upcoming 영화 가져오기 성공_Fake`() = runTest {
-        val data = FakeGetUpcomingMoviesUseCase().invoke(Language.Korea.code, Region.Korea.code).asSnapshot()
+        val data = FakeGetUpcomingMoviesUseCase().invoke(Language.Korea, Region.Korea).asSnapshot()
         println(data)
     }
 
@@ -121,28 +121,28 @@ class MovieUseCaseTest : KoinTest {
     fun `양화 비디오 가져오기_Real - Only Android`() = runTest {
         val movieId = "447273"
         val getMovieVideoUseCase = get<GetMovieVideoUseCase>()
-        val video = getMovieVideoUseCase(movieId, Language.Korea.code).first()
+        val video = getMovieVideoUseCase(movieId, Language.Korea).first()
         println(video)
     }
 
     @Test
     fun `양화 비디오 가져오기_Fake - Only Android`() = runTest {
         val movieId = "447273"
-        val video = FakeGetMovieVideoUseCase().invoke(movieId, Language.Korea.code).first()
+        val video = FakeGetMovieVideoUseCase().invoke(movieId, Language.Korea).first()
         println(video)
     }
 
     @Test
     fun `카테고리에 해당하는 영화 가져오기_Real - Only Android`() = runTest {
         val getMovieWithCategoryUseCase = get<GetMovieWithCategoryUseCase>()
-        getMovieWithCategoryUseCase(language = Language.Korea.code, genre = Genre.ROMANCE).asSnapshot().forEach {
+        getMovieWithCategoryUseCase(language = Language.Korea, genre = Genre.ROMANCE).asSnapshot().forEach {
             println(it)
         }
     }
 
     @Test
     fun `카테고리에 해당하는 영화 가져오기_Fake - Only Android`() = runTest {
-        FakeGetMovieWithCategoryUseCase().invoke(language = Language.Korea.code, genre = Genre.ROMANCE).asSnapshot().forEach {
+        FakeGetMovieWithCategoryUseCase().invoke(language = Language.Korea, genre = Genre.ROMANCE).asSnapshot().forEach {
             println(it)
         }
     }

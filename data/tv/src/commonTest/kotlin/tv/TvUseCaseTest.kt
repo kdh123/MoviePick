@@ -39,42 +39,42 @@ class TvUseCaseTest : KoinTest {
     @Test
     fun `Airing Today TV 가져오기_Real - Only Android`() = runTest {
         val getTvsUseCase = get<GetTvsUseCase>(named(AIRING_TODAY_TVS_KEY))
-        getTvsUseCase(Language.Korea.code).asSnapshot().forEach {
+        getTvsUseCase(Language.Korea).asSnapshot().forEach {
             println(it)
         }
     }
 
     @Test
     fun `Airing Today TV 가져오기 성공_Fake`() = runTest {
-        val data = FakeGetAiringTodayTvsUseCase().invoke(Language.Korea.code).asSnapshot()
+        val data = FakeGetAiringTodayTvsUseCase().invoke(Language.Korea).asSnapshot()
         println(data)
     }
 
     @Test
     fun `On The Air TV 가져오기_Real - Only Android`() = runTest {
         val getTvsUseCase = get<GetTvsUseCase>(named(ON_THE_AIR_TVS_KEY))
-        getTvsUseCase(Language.Korea.code).asSnapshot().forEach {
+        getTvsUseCase(Language.Korea).asSnapshot().forEach {
             println(it)
         }
     }
 
     @Test
     fun `On The Air TV 가져오기 성공_Fake`() = runTest {
-        val data = FakeGetOnTheAirTvsUseCase().invoke(Language.Korea.code).asSnapshot()
+        val data = FakeGetOnTheAirTvsUseCase().invoke(Language.Korea).asSnapshot()
         println(data)
     }
 
     @Test
     fun `Top Rated TV 가져오기_Real - Only Android`() = runTest {
         val getTvsUseCase = get<GetTvsUseCase>(named(TOP_RATED_TVS_KEY))
-        getTvsUseCase(Language.Korea.code).asSnapshot().forEach {
+        getTvsUseCase(Language.Korea).asSnapshot().forEach {
             println(it)
         }
     }
 
     @Test
     fun `Top Rated TV 가져오기 성공_Fake`() = runTest {
-        val data = FakeGetTopRatedTvsUseCase().invoke(Language.Korea.code).asSnapshot()
+        val data = FakeGetTopRatedTvsUseCase().invoke(Language.Korea).asSnapshot()
         println(data)
     }
 }
