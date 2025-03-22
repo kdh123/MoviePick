@@ -5,10 +5,10 @@ import com.dhkim.core.network.di.platformModule
 import com.dhkim.data.datasource.RemoteMovieDataSource
 import com.dhkim.data.tv.datasource.RemoteTvDataSourceImpl
 import com.dhkim.data.tv.repository.TvRepositoryImpl
-import com.dhkim.data.tv.usecase.GetAiringTodayTvsUseCase
-import com.dhkim.data.tv.usecase.GetOnTheAirTvsUseCase
-import com.dhkim.data.tv.usecase.GetTopRatedTvsUseCase
-import com.dhkim.domain.tv.datasource.RemoteTvDataSource
+import com.dhkim.domain.tv.usecase.GetAiringTodayTvsUseCase
+import com.dhkim.domain.tv.usecase.GetOnTheAirTvsUseCase
+import com.dhkim.domain.tv.usecase.GetTopRatedTvsUseCase
+import com.dhkim.data.tv.datasource.RemoteTvDataSource
 import com.dhkim.domain.tv.repository.TvRepository
 import com.dhkim.domain.tv.usecase.GetTvsUseCase
 import com.dhkim.domain.movie.usecase.GetNowPlayingMoviesUseCase

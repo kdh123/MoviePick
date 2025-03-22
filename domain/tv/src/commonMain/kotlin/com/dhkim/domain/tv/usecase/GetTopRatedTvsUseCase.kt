@@ -1,16 +1,15 @@
-package com.dhkim.data.tv.usecase
+package com.dhkim.domain.tv.usecase
 
 import app.cash.paging.PagingData
 import com.dhkim.domain.tv.model.Tv
 import com.dhkim.domain.tv.repository.TvRepository
-import com.dhkim.domain.tv.usecase.GetTvsUseCase
 import kotlinx.coroutines.flow.Flow
 
-class GetAiringTodayTvsUseCase(
+class GetTopRatedTvsUseCase(
     private val tvRepository: TvRepository
 ) : GetTvsUseCase {
 
     override fun invoke(language: String): Flow<PagingData<Tv>> {
-        return tvRepository.getAiringTodayTvs(language)
+        return tvRepository.getTopRatedTvs(language)
     }
 }

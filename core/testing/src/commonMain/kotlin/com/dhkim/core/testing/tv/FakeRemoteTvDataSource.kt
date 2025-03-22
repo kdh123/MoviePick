@@ -7,7 +7,7 @@ import app.cash.paging.testing.TestPager
 import app.cash.paging.testing.asPagingSourceFactory
 import com.dhkim.common.Genre
 import com.dhkim.common.Region
-import com.dhkim.domain.tv.datasource.RemoteTvDataSource
+import com.dhkim.data.tv.datasource.RemoteTvDataSource
 import com.dhkim.domain.tv.model.Tv
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

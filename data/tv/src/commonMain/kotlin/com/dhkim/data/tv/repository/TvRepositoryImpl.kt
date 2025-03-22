@@ -1,7 +1,7 @@
 package com.dhkim.data.tv.repository
 
 import app.cash.paging.PagingData
-import com.dhkim.domain.tv.datasource.RemoteTvDataSource
+import com.dhkim.data.tv.datasource.RemoteTvDataSource
 import com.dhkim.domain.tv.model.Tv
 import com.dhkim.domain.tv.repository.TvRepository
 import kotlinx.coroutines.flow.Flow

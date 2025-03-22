@@ -1,4 +1,4 @@
-package com.dhkim.domain.tv.datasource
+package com.dhkim.data.tv.datasource
 
 import app.cash.paging.PagingData
 import com.dhkim.domain.tv.model.Tv
