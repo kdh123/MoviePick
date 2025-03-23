@@ -93,6 +93,7 @@ fun MovieScreen(
                 ContentsScreen(
                     homeState = homeState,
                     movieSeriesItems = movies,
+                    selectedChipTextColor = selectedChipTextColor,
                     sharedTransitionScope = sharedTransitionScope,
                     animatedContentScope = animatedVisibilityScope,
                     navigateToVideo = navigateToVideo,
@@ -134,6 +135,7 @@ fun MovieScreen(
 fun ContentsScreen(
     homeState: HomeState,
     movieSeriesItems: ImmutableList<SeriesItem>,
+    selectedChipTextColor: Color,
     sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope,
     navigateToVideo: (String) -> Unit,
@@ -152,7 +154,7 @@ fun ContentsScreen(
                     MovieCategoryChips(
                         chipKey = "movie-category",
                         chipColor = homeState.onBackgroundColor,
-                        selectedChipTextColor = homeState.backgroundColor,
+                        selectedChipTextColor = selectedChipTextColor,
                         sharedTransitionScope = sharedTransitionScope,
                         animatedVisibilityScope = animatedContentScope,
                         onBack = onBack
