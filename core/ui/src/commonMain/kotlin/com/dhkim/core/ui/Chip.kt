@@ -15,12 +15,12 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun Chip(
+    modifier: Modifier = Modifier,
     borderColor: Color = MaterialTheme.colorScheme.onBackground,
-    onClick: () -> Unit,
     content: @Composable () -> Unit
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .background(color = Color.Transparent)
             .border(
                 width = 1.dp,
@@ -29,7 +29,6 @@ fun Chip(
             )
             .padding(horizontal = 16.dp, vertical = 6.dp)
             .height(24.dp)
-            .noRippleClick(onClick)
     ) {
         Box(
             modifier = Modifier

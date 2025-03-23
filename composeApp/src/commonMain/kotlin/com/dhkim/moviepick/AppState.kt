@@ -49,6 +49,7 @@ class AppState(val navController: NavHostController) {
 
     fun navigateToVideo(videoUrl: String) = navController.navigateToVideo(videoUrl)
     fun navigateToMovie() = navController.navigate(MOVIE_ROUTE)
+    fun onBack() = navController.navigateUp()
 }
 
 @Composable

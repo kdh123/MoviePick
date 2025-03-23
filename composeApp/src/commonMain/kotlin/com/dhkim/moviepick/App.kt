@@ -1,6 +1,8 @@
 package com.dhkim.moviepick
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideIn
@@ -30,6 +32,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.core.annotation.KoinExperimentalAPI
 
+@ExperimentalSharedTransitionApi
 @ExperimentalCoroutinesApi
 @OptIn(KoinExperimentalAPI::class)
 @Composable
@@ -37,33 +40,40 @@ import org.koin.core.annotation.KoinExperimentalAPI
 fun App() {
     val appState = rememberAppState()
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-    ) {
-        Scaffold(
-            bottomBar = {
-                AnimatedVisibility(
-                    visible = appState.showBottomNavigation,
-                    enter = fadeIn() + slideIn { IntOffset(0, it.height) },
-                    exit = fadeOut() + slideOut { IntOffset(0, it.height) }
-                ) {
-                    BottomBar(appState)
+    SharedTransitionLayout {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            Scaffold(
+                bottomBar = {
+                    AnimatedVisibility(
+                        visible = appState.showBottomNavigation,
+                        enter = fadeIn() + slideIn { IntOffset(0, it.height) },
+                        exit = fadeOut() + slideOut { IntOffset(0, it.height) }
+                    ) {
+                        BottomBar(appState)
+                    }
                 }
-            }
-        ) { padding ->
-            NavHost(
-                navController = appState.navController,
-                startDestination = Screen.Home.route,
-                modifier = Modifier
-                    .padding(top = padding.calculateTopPadding(), bottom = padding.calculateBottomPadding())
-            ) {
-                home(
-                    navigateToVideo = appState::navigateToVideo,
-                    navigateToMovie = appState::navigateToMovie
-                )
-                movie(navigateToVideo = appState::navigateToVideo)
-                upcoming()
-                video()
+            ) { padding ->
+                NavHost(
+                    navController = appState.navController,
+                    startDestination = Screen.Home.route,
+                    modifier = Modifier
+                        .padding(top = padding.calculateTopPadding(), bottom = padding.calculateBottomPadding())
+                ) {
+                    home(
+                        sharedTransitionScope = this@SharedTransitionLayout,
+                        navigateToVideo = appState::navigateToVideo,
+                        navigateToMovie = appState::navigateToMovie
+                    )
+                    movie(
+                        sharedTransitionScope = this@SharedTransitionLayout,
+                        navigateToVideo = appState::navigateToVideo,
+                        onBack = appState::onBack
+                    )
+                    upcoming()
+                    video()
+                }
             }
         }
     }

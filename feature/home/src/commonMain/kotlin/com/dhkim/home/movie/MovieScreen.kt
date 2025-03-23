@@ -1,5 +1,8 @@
 package com.dhkim.home.movie
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -28,6 +31,7 @@ import com.dhkim.core.designsystem.Black70
 import com.dhkim.core.designsystem.MoviePickTheme
 import com.dhkim.core.designsystem.White
 import com.dhkim.core.ui.Chip
+import com.dhkim.core.ui.CircleCloseButton
 import com.dhkim.core.ui.MovieItem
 import com.dhkim.core.ui.RecommendationSeries
 import com.dhkim.core.ui.Resources
@@ -43,10 +47,14 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.painterResource
 
+@ExperimentalSharedTransitionApi
 @Composable
 fun MovieScreen(
     uiState: MovieUiState,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedContentScope,
     navigateToVideo: (String) -> Unit,
+    onBack: () -> Unit
 ) {
     val homeState = (uiState.displayState as? MovieDisplayState.Contents)?.movies?.let { homeMovieItems ->
         rememberHomeState(seriesItems = homeMovieItems, mainRecommendationMovieGroup = Group.MovieGroup.MAIN_RECOMMENDATION_MOVIE)
@@ -79,8 +87,11 @@ fun MovieScreen(
                     homeState = homeState,
                     movieSeriesItems = movies,
                     listState = homeState.listState,
+                    sharedTransitionScope = sharedTransitionScope,
+                    animatedContentScope = animatedVisibilityScope,
                     onUpdateRecommendationSeriesHeight = homeState::updateHeight,
-                    navigateToVideo = navigateToVideo
+                    navigateToVideo = navigateToVideo,
+                    onBack = onBack
                 )
             }
 
@@ -99,20 +110,30 @@ fun MovieScreen(
                         .fillMaxWidth()
                         .background(color = homeState.backgroundColor)
                 ) {
-                    CategoryChips(chipColor = onBackgroundColor)
+                    MovieCategoryChips(
+                        chipKey = "movie-category",
+                        chipColor = onBackgroundColor,
+                        sharedTransitionScope = sharedTransitionScope,
+                        animatedContentScope = animatedVisibilityScope,
+                        onBack = onBack
+                    )
                 }
             }
         }
     }
 }
 
+@ExperimentalSharedTransitionApi
 @Composable
 fun ContentsScreen(
     homeState: HomeState,
     listState: LazyListState,
     movieSeriesItems: ImmutableList<SeriesItem>,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
     onUpdateRecommendationSeriesHeight: (Int) -> Unit,
-    navigateToVideo: (String) -> Unit
+    navigateToVideo: (String) -> Unit,
+    onBack: () -> Unit
 ) {
     LazyColumn(
         state = listState,
@@ -124,7 +145,13 @@ fun ContentsScreen(
                 }
 
                 Group.MovieGroup.CATEGORY -> {
-                    CategoryChips(chipColor = homeState.onBackgroundColor)
+                    MovieCategoryChips(
+                        chipKey = "movie-category",
+                        chipColor = homeState.onBackgroundColor,
+                        sharedTransitionScope = sharedTransitionScope,
+                        animatedContentScope = animatedContentScope,
+                        onBack = onBack
+                    )
                 }
 
                 Group.MovieGroup.MAIN_RECOMMENDATION_MOVIE -> {
@@ -201,59 +228,64 @@ private fun AppBar() {
     }
 }
 
+@ExperimentalSharedTransitionApi
 @Composable
-private fun CategoryChips(chipColor: Color) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth()
-    ) {
-        Chip(
-            borderColor = chipColor,
-            onClick = {}
+private fun MovieCategoryChips(
+    chipKey: String,
+    chipColor: Color,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
+    onBack: () -> Unit,
+) {
+    with(sharedTransitionScope) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth()
         ) {
-            Text(
-                text = "영화",
+            CircleCloseButton(
                 color = chipColor,
-                style = MoviePickTheme.typography.labelMedium,
-                textAlign = TextAlign.Center,
+                onClick = onBack
             )
-        }
 
-        Chip(
-            borderColor = chipColor,
-            onClick = {}
-        ) {
-            Text(
-                text = "TV 프로그램",
-                color = chipColor,
-                style = MoviePickTheme.typography.labelMedium,
-                textAlign = TextAlign.Center,
-            )
-        }
-        Chip(
-            borderColor = chipColor,
-            onClick = {}
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
+            Chip(
+                modifier = Modifier
+                    .sharedElement(
+                        sharedTransitionScope.rememberSharedContentState(key = chipKey),
+                        animatedVisibilityScope = animatedContentScope
+                    ),
+                borderColor = chipColor,
             ) {
                 Text(
-                    text = "카테고리",
+                    text = "영화",
                     color = chipColor,
                     style = MoviePickTheme.typography.labelMedium,
                     textAlign = TextAlign.Center,
                 )
+            }
 
-                Icon(
-                    painter = painterResource(Resources.Icon.DropDown),
-                    contentDescription = null,
-                    tint = chipColor
-                )
+            Chip(
+                borderColor = chipColor,
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "카테고리",
+                        color = chipColor,
+                        style = MoviePickTheme.typography.labelMedium,
+                        textAlign = TextAlign.Center,
+                    )
+
+                    Icon(
+                        painter = painterResource(Resources.Icon.DropDown),
+                        contentDescription = null,
+                        tint = chipColor
+                    )
+                }
             }
         }
     }
 }
-

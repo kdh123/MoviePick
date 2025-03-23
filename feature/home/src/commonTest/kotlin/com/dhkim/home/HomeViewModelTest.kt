@@ -1,7 +1,7 @@
 import com.dhkim.core.testing.movie.FakeGetNowPlayingMoviesUseCase
-import com.dhkim.core.testing.movie.FakeGetTopRatedMoviesUseCase
 import com.dhkim.core.testing.movie.FakeGetTodayRecommendationMovieUseCase
 import com.dhkim.core.testing.movie.FakeGetTodayTop10MoviesUseCase
+import com.dhkim.core.testing.movie.FakeGetTopRatedMoviesUseCase
 import com.dhkim.core.testing.movie.MovieStatus
 import com.dhkim.core.testing.tv.FakeGetAiringTodayTvsUseCase
 import com.dhkim.core.testing.tv.FakeGetOnTheAirTvsUseCase

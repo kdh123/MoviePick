@@ -1,5 +1,7 @@
 package com.dhkim.home.navigation
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -14,9 +16,12 @@ const val MOVIE_ROUTE = "movie_route"
 
 fun NavController.navigateToMovie() = navigate(MOVIE_ROUTE)
 
+@ExperimentalSharedTransitionApi
 @KoinExperimentalAPI
 fun NavGraphBuilder.movie(
-    navigateToVideo: (String) -> Unit
+    sharedTransitionScope: SharedTransitionScope,
+    navigateToVideo: (String) -> Unit,
+    onBack: () -> Unit
 ) {
     composable(MOVIE_ROUTE) {
         val viewModel = koinViewModel<MovieViewModel>()
@@ -24,7 +29,10 @@ fun NavGraphBuilder.movie(
 
         MovieScreen(
             uiState = uiState,
-            navigateToVideo = navigateToVideo
+            sharedTransitionScope = sharedTransitionScope,
+            animatedVisibilityScope = this@composable,
+            navigateToVideo = navigateToVideo,
+            onBack = onBack
         )
     }
 }

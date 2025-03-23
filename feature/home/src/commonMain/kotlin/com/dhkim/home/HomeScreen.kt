@@ -1,5 +1,8 @@
 package com.dhkim.home
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -39,6 +42,7 @@ import com.dhkim.core.ui.MovieItem
 import com.dhkim.core.ui.RecommendationSeries
 import com.dhkim.core.ui.Resources
 import com.dhkim.core.ui.SeriesList
+import com.dhkim.core.ui.noRippleClick
 import com.dhkim.domain.movie.model.Movie
 import com.dhkim.domain.tv.model.Tv
 import com.skydoves.landscapist.coil3.CoilImage
@@ -46,9 +50,13 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.painterResource
 
+@ExperimentalSharedTransitionApi
 @Composable
 fun HomeScreen(
     uiState: HomeUiState,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    onAction: (HomeAction) -> Unit,
     navigateToVideo: (String) -> Unit,
     navigateToMovie: () -> Unit
 ) {
@@ -83,6 +91,9 @@ fun HomeScreen(
                     homeState = homeState,
                     homeSeriesItems = movies,
                     listState = homeState.listState,
+                    sharedTransitionScope = sharedTransitionScope,
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    onAction = onAction,
                     onUpdateRecommendationSeriesHeight = homeState::updateHeight,
                     navigateToVideo = navigateToVideo,
                     navigateToMovie = navigateToMovie
@@ -104,8 +115,12 @@ fun HomeScreen(
                         .fillMaxWidth()
                         .background(color = homeState.backgroundColor)
                 ) {
-                    CategoryChips(
+                    HomeCategoryChips(
+                        chipKey = "movie-category",
                         chipColor = onBackgroundColor,
+                        sharedTransitionScope = sharedTransitionScope,
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        onAction = {},
                         navigateToMovie = navigateToMovie
                     )
                 }
@@ -128,73 +143,87 @@ private fun AppBar() {
     }
 }
 
+@ExperimentalSharedTransitionApi
 @Composable
-private fun CategoryChips(
+private fun HomeCategoryChips(
     chipColor: Color,
+    chipKey: String,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    onAction: (HomeAction) -> Unit,
     navigateToMovie: () -> Unit
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth()
-    ) {
-        Chip(
-            borderColor = chipColor,
-            onClick = navigateToMovie
+    with(sharedTransitionScope) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth()
         ) {
-            Text(
-                text = "영화",
-                color = chipColor,
-                style = MoviePickTheme.typography.labelMedium,
-                textAlign = TextAlign.Center,
-            )
-        }
-
-        Chip(
-            borderColor = chipColor,
-            onClick = {}
-        ) {
-            Text(
-                text = "TV 프로그램",
-                color = chipColor,
-                style = MoviePickTheme.typography.labelMedium,
-                textAlign = TextAlign.Center,
-            )
-        }
-        Chip(
-            borderColor = chipColor,
-            onClick = {}
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
+            Chip(
+                modifier = Modifier
+                    .sharedBounds(
+                        rememberSharedContentState(key = chipKey),
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
+                    .noRippleClick { navigateToMovie() },
+                borderColor = chipColor,
             ) {
                 Text(
-                    text = "카테고리",
+                    text = "영화",
                     color = chipColor,
                     style = MoviePickTheme.typography.labelMedium,
                     textAlign = TextAlign.Center,
                 )
+            }
 
-                Icon(
-                    painter = painterResource(Resources.Icon.DropDown),
-                    contentDescription = null,
-                    tint = chipColor
+            Chip(
+                borderColor = chipColor,
+            ) {
+                Text(
+                    text = "TV 프로그램",
+                    color = chipColor,
+                    style = MoviePickTheme.typography.labelMedium,
+                    textAlign = TextAlign.Center,
                 )
+            }
+            Chip(
+                borderColor = chipColor,
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "카테고리",
+                        color = chipColor,
+                        style = MoviePickTheme.typography.labelMedium,
+                        textAlign = TextAlign.Center,
+                    )
+
+                    Icon(
+                        painter = painterResource(Resources.Icon.DropDown),
+                        contentDescription = null,
+                        tint = chipColor
+                    )
+                }
             }
         }
     }
 }
 
+@ExperimentalSharedTransitionApi
 @Composable
 private fun ContentsScreen(
     homeState: HomeState,
     listState: LazyListState,
     homeSeriesItems: ImmutableList<SeriesItem>,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    onAction: (HomeAction) -> Unit,
     onUpdateRecommendationSeriesHeight: (Int) -> Unit,
+    navigateToMovie: () -> Unit,
     navigateToVideo: (String) -> Unit,
-    navigateToMovie: () -> Unit
 ) {
     LazyColumn(
         state = listState,
@@ -206,8 +235,12 @@ private fun ContentsScreen(
                 }
 
                 Group.HomeGroup.CATEGORY -> {
-                    CategoryChips(
+                    HomeCategoryChips(
                         chipColor = homeState.onBackgroundColor,
+                        chipKey = "movie-category",
+                        sharedTransitionScope = sharedTransitionScope,
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        onAction = onAction,
                         navigateToMovie = navigateToMovie
                     )
                 }

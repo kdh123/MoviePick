@@ -1,6 +1,10 @@
 package com.dhkim.home
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -148,6 +152,8 @@ val onTheAirTvsItem = SeriesItem.MovieSeriesItem(Group.HomeGroup.ON_THE_AIR_TV, 
 val topRatedTvsStateFlow = MutableStateFlow(PagingData.from(topRatedTvs)).asStateFlow()
 val topRatedTvsItem = SeriesItem.MovieSeriesItem(Group.HomeGroup.ON_THE_AIR_TV, topRatedTvsStateFlow)
 
+@SuppressLint("UnusedContentLambdaTargetStateParameter")
+@ExperimentalSharedTransitionApi
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun HomeScreenDarkPreview() {
@@ -168,19 +174,30 @@ private fun HomeScreenDarkPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            HomeScreen(
-                uiState = HomeUiState(displayState = HomeDisplayState.Contents(series)),
-                navigateToVideo = {},
-                navigateToMovie = {}
-            )
+            SharedTransitionLayout {
+                AnimatedContent(targetState = false, label = "") {
+                    HomeScreen(
+                        uiState = HomeUiState(displayState = HomeDisplayState.Contents(series)),
+                        sharedTransitionScope = this@SharedTransitionLayout,
+                        animatedVisibilityScope = this@AnimatedContent,
+                        onAction = {},
+                        navigateToVideo = {},
+                        navigateToMovie = {},
+                    )
+                }
+            }
         }
     }
 }
 
+@SuppressLint("UnusedContentLambdaTargetStateParameter")
+@ExperimentalSharedTransitionApi
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 private fun HomeScreenPreview() {
     val series = persistentListOf(
+        SeriesItem.AppBar(group = Group.HomeGroup.APP_BAR),
+        SeriesItem.Category(group = Group.HomeGroup.CATEGORY),
         todayRecommendationSeriesItem,
         topRatedMoviesItem,
         nowPlayingMoviesItem,
@@ -194,11 +211,18 @@ private fun HomeScreenPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            HomeScreen(
-                uiState = HomeUiState(displayState = HomeDisplayState.Contents(series)),
-                navigateToVideo = {},
-                navigateToMovie = {}
-            )
+            SharedTransitionLayout {
+                AnimatedContent(targetState = false, label = "") {
+                    HomeScreen(
+                        uiState = HomeUiState(displayState = HomeDisplayState.Contents(series)),
+                        sharedTransitionScope = this@SharedTransitionLayout,
+                        animatedVisibilityScope = this@AnimatedContent,
+                        onAction = {},
+                        navigateToVideo = {},
+                        navigateToMovie = {},
+                    )
+                }
+            }
         }
     }
 }

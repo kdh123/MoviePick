@@ -1,5 +1,7 @@
 package com.dhkim.home.navigation
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -16,9 +18,11 @@ const val HOME_ROUTE = "home_route"
 
 fun NavController.navigateToHome() = navigate(HOME_ROUTE)
 
+@ExperimentalSharedTransitionApi
 @ExperimentalCoroutinesApi
 @KoinExperimentalAPI
 fun NavGraphBuilder.home(
+    sharedTransitionScope: SharedTransitionScope,
     navigateToVideo: (String) -> Unit,
     navigateToMovie: () -> Unit
 ) {
@@ -27,6 +31,9 @@ fun NavGraphBuilder.home(
         val uiState: HomeUiState by viewModel.uiState.collectAsStateWithLifecycle()
         HomeScreen(
             uiState = uiState,
+            sharedTransitionScope = sharedTransitionScope,
+            animatedVisibilityScope = this@composable,
+            onAction = viewModel::onAction,
             navigateToVideo = navigateToVideo,
             navigateToMovie = navigateToMovie
         )

@@ -15,6 +15,8 @@ import com.dhkim.domain.tv.usecase.AIRING_TODAY_TVS_KEY
 import com.dhkim.domain.tv.usecase.GetTvsUseCase
 import com.dhkim.domain.tv.usecase.ON_THE_AIR_TVS_KEY
 import com.dhkim.domain.tv.usecase.TOP_RATED_TVS_KEY
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,20 +26,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
-import org.koin.core.component.KoinComponent
 
 @ExperimentalCoroutinesApi
 class HomeViewModel(
     private val getMoviesUseCase: Map<String, GetMoviesUseCase>,
     private val getTvsUseCase: Map<String, GetTvsUseCase>,
-) : ViewModel(), KoinComponent {
+) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(HomeUiState(HomeDisplayState.Loading))
+    private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.onStart {
         init()
     }.onetimeStateIn(
         scope = viewModelScope,
-        initialValue = HomeUiState(HomeDisplayState.Loading)
+        initialValue = HomeUiState()
     )
 
     private fun init() {
@@ -84,24 +85,43 @@ class HomeViewModel(
                 jobs.add(onTheAirTvs)
                 jobs.add(topRatedTvs)
 
-                val series = listOf(SeriesItem.AppBar(group = Group.HomeGroup.APP_BAR), SeriesItem.Category(group = Group.HomeGroup.CATEGORY)) + jobs.awaitAll()
+                val series = listOf(
+                    SeriesItem.AppBar(group = Group.HomeGroup.APP_BAR),
+                    SeriesItem.Category(group = Group.HomeGroup.CATEGORY)
+                ) + jobs.awaitAll()
                     .map { SeriesItem.MovieSeriesItem(it.group, it.series) }
 
-                _uiState.update { HomeUiState(HomeDisplayState.Contents(movies = series.toImmutableList())) }
+                _uiState.update {
+                    HomeUiState(displayState = HomeDisplayState.Contents(movies = series.toImmutableList()))
+                }
             },
             error = {
                 val errorMessage = it.message ?: ""
-                _uiState.update { HomeUiState(HomeDisplayState.Error(errorCode = "300", message = errorMessage)) }
+                _uiState.update { state ->
+                    state.copy(displayState = HomeDisplayState.Error(errorCode = "300", message = errorMessage))
+                }
             }
         )
     }
 
     fun onAction(action: HomeAction) {
         when (action) {
-            is HomeAction.GetTopRatedMovies -> {
-
+            is HomeAction.BackToHome -> {
+                _uiState.update {
+                    it.copy(
+                        displayState = HomeDisplayState.Contents(
+                            movies = getCurrentHomeMovies()
+                        )
+                    )
+                }
             }
         }
+    }
+
+    private fun getCurrentHomeMovies(): ImmutableList<SeriesItem> {
+        if (_uiState.value.displayState !is HomeDisplayState.Contents) return persistentListOf()
+
+        return (_uiState.value.displayState as HomeDisplayState.Contents).movies
     }
 }
 
