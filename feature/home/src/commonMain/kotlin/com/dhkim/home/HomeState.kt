@@ -105,9 +105,14 @@ fun rememberHomeState(
         dominantColorState.updateFrom(Url(recommendationSeriesPosterUrl))
         state.updateBackgroundColor(dominantColorState.color)
         state.updateOnBackgroundColor(dominantColorState.onColor)
+
+        if (listState.firstVisibleItemIndex >= 2) {
+            val alpha = ((state.height.toFloat() - listState.firstVisibleItemScrollOffset) / state.height).coerceIn(0f, 1f)
+            state.updateBackgroundColor(backgroundColor = state.backgroundColor.copy(alpha = alpha))
+        }
     }
 
-    LaunchedEffect(listState) {
+    LaunchedEffect(listState, seriesItems) {
         snapshotFlow { listState.firstVisibleItemScrollOffset }.collect { offset ->
             state.updateShowTab(show = listState.firstVisibleItemIndex >= 1)
             if (listState.firstVisibleItemIndex == 2) {

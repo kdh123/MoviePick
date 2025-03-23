@@ -6,6 +6,7 @@ import com.dhkim.common.Genre
 import com.dhkim.common.Language
 import com.dhkim.common.Region
 import com.dhkim.common.handle
+import com.dhkim.common.onetimeStateIn
 import com.dhkim.domain.movie.usecase.GetMovieWithCategoryUseCase
 import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import com.dhkim.home.Group
@@ -16,9 +17,7 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
 class MovieViewModel(
@@ -29,15 +28,21 @@ class MovieViewModel(
     private val _uiState = MutableStateFlow(MovieUiState())
     val uiState = _uiState
         .onStart { init() }
-        .stateIn(
+        .onetimeStateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
             initialValue = MovieUiState()
         )
 
     private fun init() {
         viewModelScope.handle(
             block = {
+                val appBarItems = listOf(
+                    SeriesItem.AppBar(group = Group.MovieGroup.APP_BAR),
+                    SeriesItem.Category(group = Group.MovieGroup.CATEGORY),
+                ).toImmutableList()
+
+                _uiState.update { MovieUiState(displayState = MovieDisplayState.Contents(appBarItems)) }
+
                 val shouldShowMovieGenres = listOf(
                     Genre.ACTION,
                     Genre.ROMANCE,

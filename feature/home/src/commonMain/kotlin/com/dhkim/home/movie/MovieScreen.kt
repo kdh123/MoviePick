@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -73,6 +72,12 @@ fun MovieScreen(
         label = ""
     )
 
+    val selectedChipTextColor by animateColorAsState(
+        targetValue = if (homeState.showCategory) homeState.onBackgroundColor else White,
+        animationSpec = tween(500),
+        label = ""
+    )
+
     Box(
         modifier = Modifier
             .background(Brush.verticalGradient(backgroundGradientColors))
@@ -88,10 +93,8 @@ fun MovieScreen(
                 ContentsScreen(
                     homeState = homeState,
                     movieSeriesItems = movies,
-                    listState = homeState.listState,
                     sharedTransitionScope = sharedTransitionScope,
                     animatedContentScope = animatedVisibilityScope,
-                    onUpdateRecommendationSeriesHeight = homeState::updateHeight,
                     navigateToVideo = navigateToVideo,
                     onBack = onBack
                 )
@@ -115,6 +118,7 @@ fun MovieScreen(
                     MovieCategoryChips(
                         chipKey = "movie-category",
                         chipColor = onBackgroundColor,
+                        selectedChipTextColor = selectedChipTextColor,
                         sharedTransitionScope = sharedTransitionScope,
                         animatedVisibilityScope = animatedVisibilityScope,
                         onBack = onBack
@@ -129,30 +133,26 @@ fun MovieScreen(
 @Composable
 fun ContentsScreen(
     homeState: HomeState,
-    listState: LazyListState,
     movieSeriesItems: ImmutableList<SeriesItem>,
     sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope,
-    onUpdateRecommendationSeriesHeight: (Int) -> Unit,
     navigateToVideo: (String) -> Unit,
     onBack: () -> Unit
 ) {
     LazyColumn(
-        state = listState,
+        state = homeState.listState,
     ) {
         items(items = movieSeriesItems, key = { item -> item.group }) { item ->
             when (item.group as Group.MovieGroup) {
                 Group.MovieGroup.APP_BAR -> {
-                    AppBar(
-                        onBackGroundColor = homeState.onBackgroundColor,
-
-                    )
+                    AppBar(onBackGroundColor = homeState.onBackgroundColor)
                 }
 
                 Group.MovieGroup.CATEGORY -> {
                     MovieCategoryChips(
                         chipKey = "movie-category",
                         chipColor = homeState.onBackgroundColor,
+                        selectedChipTextColor = homeState.backgroundColor,
                         sharedTransitionScope = sharedTransitionScope,
                         animatedVisibilityScope = animatedContentScope,
                         onBack = onBack
@@ -165,7 +165,7 @@ fun ContentsScreen(
                         val series = movies[0] as Movie
                         RecommendationSeries(
                             series = series,
-                            onUpdateRecommendationSeriesHeight = onUpdateRecommendationSeriesHeight
+                            onUpdateRecommendationSeriesHeight = homeState::updateHeight
                         ) {
                             Genre()
                             RecommendationButtons(navigateToVideo = navigateToVideo)
@@ -220,9 +220,7 @@ fun ContentsScreen(
 }
 
 @Composable
-private fun AppBar(
-    onBackGroundColor: Color,
-) {
+private fun AppBar(onBackGroundColor: Color) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -244,6 +242,7 @@ private fun AppBar(
 private fun MovieCategoryChips(
     chipKey: String,
     chipColor: Color,
+    selectedChipTextColor: Color,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     onBack: () -> Unit,
@@ -267,11 +266,12 @@ private fun MovieCategoryChips(
                         sharedTransitionScope.rememberSharedContentState(key = chipKey),
                         animatedVisibilityScope = animatedVisibilityScope
                     ),
+                backgroundColor = chipColor,
                 borderColor = chipColor,
             ) {
                 Text(
                     text = "영화",
-                    color = chipColor,
+                    color = selectedChipTextColor,
                     style = MoviePickTheme.typography.labelMedium,
                     textAlign = TextAlign.Center,
                 )

@@ -97,3 +97,37 @@ private fun MovieScreenDarkPreview() {
         }
     }
 }
+
+@SuppressLint("UnusedContentLambdaTargetStateParameter")
+@ExperimentalSharedTransitionApi
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+private fun MovieScreenPreview() {
+    val series = persistentListOf(
+        SeriesItem.AppBar(group = Group.MovieGroup.APP_BAR),
+        SeriesItem.Category(group = Group.MovieGroup.CATEGORY),
+        todayRecommendationSeriesItem2,
+        actionMoviesSeriesItem,
+        animationSeriesItem
+    )
+
+    MoviePickTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            SharedTransitionLayout {
+                AnimatedContent(targetState = false, label = "") {
+                    MovieScreen(
+                        uiState = MovieUiState(displayState = MovieDisplayState.Contents(series)),
+                        sharedTransitionScope = this@SharedTransitionLayout,
+                        animatedVisibilityScope = this@AnimatedContent,
+                        onAction = {},
+                        navigateToVideo = {},
+                        onBack = {}
+                    )
+                }
+            }
+        }
+    }
+}
