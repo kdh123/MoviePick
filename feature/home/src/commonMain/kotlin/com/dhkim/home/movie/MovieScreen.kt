@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.cash.paging.compose.collectAsLazyPagingItems
+import com.dhkim.core.designsystem.Black
 import com.dhkim.core.designsystem.Black50
 import com.dhkim.core.designsystem.Black70
 import com.dhkim.core.designsystem.MoviePickTheme
@@ -73,7 +74,7 @@ fun MovieScreen(
     )
 
     val selectedChipTextColor by animateColorAsState(
-        targetValue = if (homeState.showCategory) homeState.onBackgroundColor else White,
+        targetValue = if (homeState.showCategory) Black else homeState.backgroundColor,
         animationSpec = tween(500),
         label = ""
     )
