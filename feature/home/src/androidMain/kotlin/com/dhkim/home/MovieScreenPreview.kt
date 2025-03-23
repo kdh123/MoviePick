@@ -88,6 +88,7 @@ private fun MovieScreenDarkPreview() {
                         uiState = MovieUiState(displayState = MovieDisplayState.Contents(series)),
                         sharedTransitionScope = this@SharedTransitionLayout,
                         animatedVisibilityScope = this@AnimatedContent,
+                        onAction = {},
                         navigateToVideo = {},
                         onBack = {}
                     )

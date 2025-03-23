@@ -31,6 +31,7 @@ fun NavGraphBuilder.movie(
             uiState = uiState,
             sharedTransitionScope = sharedTransitionScope,
             animatedVisibilityScope = this@composable,
+            onAction = viewModel::onAction,
             navigateToVideo = navigateToVideo,
             onBack = onBack
         )

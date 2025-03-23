@@ -67,10 +67,14 @@ class MovieViewModel(
                     SeriesItem.AppBar(group = Group.MovieGroup.APP_BAR),
                     SeriesItem.Category(group = Group.MovieGroup.CATEGORY),
                 ) + jobs.awaitAll()
-                _uiState.update { MovieUiState(MovieDisplayState.Contents(series.toImmutableList())) }
+                _uiState.update { MovieUiState(displayState = MovieDisplayState.Contents(series.toImmutableList())) }
             },
             error = {
             }
         )
+    }
+
+    fun onAction(action: MovieAction) {
+
     }
 }

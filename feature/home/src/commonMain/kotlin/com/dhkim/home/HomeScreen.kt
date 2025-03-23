@@ -163,8 +163,8 @@ private fun HomeCategoryChips(
         ) {
             Chip(
                 modifier = Modifier
-                    .sharedBounds(
-                        rememberSharedContentState(key = chipKey),
+                    .sharedElement(
+                        sharedTransitionScope.rememberSharedContentState(key = chipKey),
                         animatedVisibilityScope = animatedVisibilityScope
                     )
                     .noRippleClick { navigateToMovie() },
@@ -226,7 +226,7 @@ private fun ContentsScreen(
     navigateToVideo: (String) -> Unit,
 ) {
     LazyColumn(
-        state = listState,
+        state = homeState.listState,
     ) {
         items(items = homeSeriesItems, key = { item -> item.group }) { item ->
             when (item.group as Group.HomeGroup) {

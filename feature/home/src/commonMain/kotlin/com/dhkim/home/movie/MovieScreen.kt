@@ -1,6 +1,7 @@
 package com.dhkim.home.movie
 
 import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.animateColorAsState
@@ -53,6 +54,7 @@ fun MovieScreen(
     uiState: MovieUiState,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedContentScope,
+    onAction: (MovieAction) -> Unit,
     navigateToVideo: (String) -> Unit,
     onBack: () -> Unit
 ) {
@@ -114,7 +116,7 @@ fun MovieScreen(
                         chipKey = "movie-category",
                         chipColor = onBackgroundColor,
                         sharedTransitionScope = sharedTransitionScope,
-                        animatedContentScope = animatedVisibilityScope,
+                        animatedVisibilityScope = animatedVisibilityScope,
                         onBack = onBack
                     )
                 }
@@ -141,7 +143,10 @@ fun ContentsScreen(
         items(items = movieSeriesItems, key = { item -> item.group }) { item ->
             when (item.group as Group.MovieGroup) {
                 Group.MovieGroup.APP_BAR -> {
-                    AppBar()
+                    AppBar(
+                        onBackGroundColor = homeState.onBackgroundColor,
+
+                    )
                 }
 
                 Group.MovieGroup.CATEGORY -> {
@@ -149,7 +154,7 @@ fun ContentsScreen(
                         chipKey = "movie-category",
                         chipColor = homeState.onBackgroundColor,
                         sharedTransitionScope = sharedTransitionScope,
-                        animatedContentScope = animatedContentScope,
+                        animatedVisibilityScope = animatedContentScope,
                         onBack = onBack
                     )
                 }
@@ -215,15 +220,21 @@ fun ContentsScreen(
 }
 
 @Composable
-private fun AppBar() {
-    Row {
+private fun AppBar(
+    onBackGroundColor: Color,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier
+            .padding(top = 8.dp, start = 8.dp, bottom = 4.dp)
+    ) {
         Text(
-            text = "MOVIK",
-            style = MoviePickTheme.typography.headlineLargeBold,
-            color = Color.Red,
+            text = "영화",
+            style = MoviePickTheme.typography.headlineSmallBold,
+            color = onBackGroundColor,
             textAlign = TextAlign.Center,
             modifier = Modifier
-                .padding(start = 8.dp, top = 8.dp)
         )
     }
 }
@@ -234,7 +245,7 @@ private fun MovieCategoryChips(
     chipKey: String,
     chipColor: Color,
     sharedTransitionScope: SharedTransitionScope,
-    animatedContentScope: AnimatedContentScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     onBack: () -> Unit,
 ) {
     with(sharedTransitionScope) {
@@ -254,7 +265,7 @@ private fun MovieCategoryChips(
                 modifier = Modifier
                     .sharedElement(
                         sharedTransitionScope.rememberSharedContentState(key = chipKey),
-                        animatedVisibilityScope = animatedContentScope
+                        animatedVisibilityScope = animatedVisibilityScope
                     ),
                 borderColor = chipColor,
             ) {
