@@ -6,6 +6,7 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -15,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -90,14 +90,18 @@ fun HomeScreen(
                 ContentsScreen(
                     homeState = homeState,
                     homeSeriesItems = movies,
-                    listState = homeState.listState,
                     sharedTransitionScope = sharedTransitionScope,
                     animatedVisibilityScope = animatedVisibilityScope,
                     onAction = onAction,
-                    onUpdateRecommendationSeriesHeight = homeState::updateHeight,
+                    onCategoryClick = { homeState.showCategoryModal = !homeState.showCategoryModal },
                     navigateToVideo = navigateToVideo,
                     navigateToMovie = navigateToMovie
                 )
+                if (homeState.showCategoryModal) {
+                    CategoryModal(
+                        onClose = { homeState.showCategoryModal = false }
+                    )
+                }
             }
 
             is HomeDisplayState.Error -> {
@@ -121,6 +125,7 @@ fun HomeScreen(
                         sharedTransitionScope = sharedTransitionScope,
                         animatedVisibilityScope = animatedVisibilityScope,
                         onAction = {},
+                        onCategoryClick = { homeState.showCategoryModal = !homeState.showCategoryModal },
                         navigateToMovie = navigateToMovie
                     )
                 }
@@ -151,6 +156,7 @@ private fun HomeCategoryChips(
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     onAction: (HomeAction) -> Unit,
+    onCategoryClick: () -> Unit,
     navigateToMovie: () -> Unit
 ) {
     with(sharedTransitionScope) {
@@ -190,6 +196,8 @@ private fun HomeCategoryChips(
             }
             Chip(
                 borderColor = chipColor,
+                modifier = Modifier
+                    .clickable(onClick = onCategoryClick)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
@@ -216,12 +224,11 @@ private fun HomeCategoryChips(
 @Composable
 private fun ContentsScreen(
     homeState: HomeState,
-    listState: LazyListState,
     homeSeriesItems: ImmutableList<SeriesItem>,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     onAction: (HomeAction) -> Unit,
-    onUpdateRecommendationSeriesHeight: (Int) -> Unit,
+    onCategoryClick: () -> Unit,
     navigateToMovie: () -> Unit,
     navigateToVideo: (String) -> Unit,
 ) {
@@ -241,6 +248,7 @@ private fun ContentsScreen(
                         sharedTransitionScope = sharedTransitionScope,
                         animatedVisibilityScope = animatedVisibilityScope,
                         onAction = onAction,
+                        onCategoryClick = onCategoryClick,
                         navigateToMovie = navigateToMovie
                     )
                 }
@@ -251,7 +259,7 @@ private fun ContentsScreen(
                         val series = movies[0] as Movie
                         RecommendationSeries(
                             series = series,
-                            onUpdateRecommendationSeriesHeight = onUpdateRecommendationSeriesHeight
+                            onUpdateRecommendationSeriesHeight = homeState::updateHeight
                         ) {
                             Genre()
                             RecommendationButtons(navigateToVideo = navigateToVideo)

@@ -3,6 +3,7 @@ package com.dhkim.core.designsystem
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -91,6 +92,13 @@ internal val Typography = MoviePickTypography(
         letterSpacing = 0.sp,
         fontWeight = FontWeight.Bold
     ),
+    titleLargeLightGrayBold = SansSerifStyle.copy(
+        fontSize = 22.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.sp,
+        fontWeight = FontWeight.Bold,
+        color = Color.LightGray
+    ),
     titleMedium = SansSerifStyle.copy(
         fontSize = 18.sp,
         lineHeight = 24.sp,
@@ -150,6 +158,12 @@ internal val Typography = MoviePickTypography(
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp,
         color = Gray
+    ),
+    bodyLargeLightGrayBold = SansSerifStyle.copy(
+        fontSize = 18.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp,
+        color = LightGray
     ),
     bodyLargeBlack = SansSerifStyle.copy(
         fontSize = 18.sp,
@@ -248,6 +262,7 @@ val LocalTypography = staticCompositionLocalOf {
         headlineSmallBold = SansSerifStyle,
         titleLarge = SansSerifStyle,
         titleLargeBold = SansSerifStyle,
+        titleLargeLightGrayBold = SansSerifStyle,
         titleMedium = SansSerifStyle,
         titleMediumBold = SansSerifStyle,
         titleSmall = SansSerifStyle,
@@ -258,6 +273,7 @@ val LocalTypography = staticCompositionLocalOf {
         bodyLargeGray = SansSerifStyle,
         bodyLargeBold = SansSerifStyle,
         bodyLargeGrayBold = SansSerifStyle,
+        bodyLargeLightGrayBold = SansSerifStyle,
         bodyLargeWhiteBold = SansSerifStyle,
         bodyMedium = SansSerifStyle,
         bodyMediumBlack = SansSerifStyle,
@@ -291,6 +307,7 @@ data class MoviePickTypography(
     val headlineSmallBold: TextStyle,
     val titleLarge: TextStyle,
     val titleLargeBold: TextStyle,
+    val titleLargeLightGrayBold: TextStyle,
     val titleMedium: TextStyle,
     val titleMediumBold: TextStyle,
     val titleSmall: TextStyle,
@@ -301,6 +318,7 @@ data class MoviePickTypography(
     val bodyLargeGray: TextStyle,
     val bodyLargeBold: TextStyle,
     val bodyLargeGrayBold: TextStyle,
+    val bodyLargeLightGrayBold: TextStyle,
     val bodyLargeWhiteBold: TextStyle,
     val bodyMedium: TextStyle,
     val bodyMediumBlack: TextStyle,

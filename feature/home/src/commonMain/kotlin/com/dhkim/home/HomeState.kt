@@ -27,6 +27,8 @@ class HomeState(
     private val series: ImmutableList<SeriesItem>,
     val listState: LazyListState
 ) {
+    var showCategoryModal by mutableStateOf(false)
+
     val showCategory by derivedStateOf {
         listState.firstVisibleItemIndex >= 2
     }

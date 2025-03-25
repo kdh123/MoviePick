@@ -7,6 +7,7 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -38,6 +39,7 @@ import com.dhkim.core.ui.RecommendationSeries
 import com.dhkim.core.ui.Resources
 import com.dhkim.core.ui.SeriesList
 import com.dhkim.domain.movie.model.Movie
+import com.dhkim.home.CategoryModal
 import com.dhkim.home.Genre
 import com.dhkim.home.Group
 import com.dhkim.home.HomeState
@@ -100,6 +102,12 @@ fun MovieScreen(
                     navigateToVideo = navigateToVideo,
                     onBack = onBack
                 )
+
+                if (homeState.showCategoryModal) {
+                    CategoryModal(
+                        onClose = { homeState.showCategoryModal = false }
+                    )
+                }
             }
 
             is MovieDisplayState.Error -> {
@@ -123,6 +131,7 @@ fun MovieScreen(
                         selectedChipTextColor = selectedChipTextColor,
                         sharedTransitionScope = sharedTransitionScope,
                         animatedVisibilityScope = animatedVisibilityScope,
+                        onCategoryClick = { homeState.showCategoryModal = !homeState.showCategoryModal },
                         onBack = onBack
                     )
                 }
@@ -158,6 +167,7 @@ fun ContentsScreen(
                         selectedChipTextColor = selectedChipTextColor,
                         sharedTransitionScope = sharedTransitionScope,
                         animatedVisibilityScope = animatedContentScope,
+                        onCategoryClick = { homeState.showCategoryModal = !homeState.showCategoryModal },
                         onBack = onBack
                     )
                 }
@@ -248,6 +258,7 @@ private fun MovieCategoryChips(
     selectedChipTextColor: Color,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
+    onCategoryClick: () -> Unit,
     onBack: () -> Unit,
 ) {
     with(sharedTransitionScope) {
@@ -282,6 +293,8 @@ private fun MovieCategoryChips(
 
             Chip(
                 borderColor = chipColor,
+                modifier = Modifier
+                    .clickable(onClick = onCategoryClick),
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
