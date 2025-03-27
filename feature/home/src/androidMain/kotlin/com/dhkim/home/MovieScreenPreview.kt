@@ -11,6 +11,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import app.cash.paging.PagingData
 import com.dhkim.common.Genre
 import com.dhkim.common.Series
@@ -68,15 +70,9 @@ val animationSeriesItem = SeriesItem.MovieSeriesItem(Group.MovieGroup.ANIMATION_
 @ExperimentalSharedTransitionApi
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun MovieScreenDarkPreview() {
-    val series = persistentListOf(
-        SeriesItem.AppBar(group = Group.MovieGroup.APP_BAR),
-        SeriesItem.Category(group = Group.MovieGroup.CATEGORY),
-        todayRecommendationSeriesItem2,
-        actionMoviesSeriesItem,
-        animationSeriesItem
-    )
-
+private fun MovieScreenDarkPreview(
+    @PreviewParameter(MovieUiStatePreviewProvider::class) uiState: MovieUiState
+) {
     MoviePickTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -85,7 +81,7 @@ private fun MovieScreenDarkPreview() {
             SharedTransitionLayout {
                 AnimatedContent(targetState = false, label = "") {
                     MovieScreen(
-                        uiState = MovieUiState(displayState = MovieDisplayState.Contents(series)),
+                        uiState = uiState,
                         sharedTransitionScope = this@SharedTransitionLayout,
                         animatedVisibilityScope = this@AnimatedContent,
                         onAction = {},
@@ -102,15 +98,9 @@ private fun MovieScreenDarkPreview() {
 @ExperimentalSharedTransitionApi
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-private fun MovieScreenPreview() {
-    val series = persistentListOf(
-        SeriesItem.AppBar(group = Group.MovieGroup.APP_BAR),
-        SeriesItem.Category(group = Group.MovieGroup.CATEGORY),
-        todayRecommendationSeriesItem2,
-        actionMoviesSeriesItem,
-        animationSeriesItem
-    )
-
+private fun MovieScreenPreview(
+    @PreviewParameter(MovieUiStatePreviewProvider::class) uiState: MovieUiState
+) {
     MoviePickTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -119,7 +109,7 @@ private fun MovieScreenPreview() {
             SharedTransitionLayout {
                 AnimatedContent(targetState = false, label = "") {
                     MovieScreen(
-                        uiState = MovieUiState(displayState = MovieDisplayState.Contents(series)),
+                        uiState = uiState,
                         sharedTransitionScope = this@SharedTransitionLayout,
                         animatedVisibilityScope = this@AnimatedContent,
                         onAction = {},
@@ -130,4 +120,21 @@ private fun MovieScreenPreview() {
             }
         }
     }
+}
+
+class MovieUiStatePreviewProvider : PreviewParameterProvider<MovieUiState> {
+
+    private val series = persistentListOf(
+        SeriesItem.AppBar(group = Group.MovieGroup.APP_BAR),
+        SeriesItem.Category(group = Group.MovieGroup.CATEGORY),
+        todayRecommendationSeriesItem2,
+        actionMoviesSeriesItem,
+        animationSeriesItem
+    )
+
+    override val values: Sequence<MovieUiState>
+        get() = sequenceOf(
+            MovieUiState(displayState = MovieDisplayState.Contents(series)),
+            MovieUiState(displayState = MovieDisplayState.CategoryContents(moviesWithCategoryStateFlow)),
+        )
 }

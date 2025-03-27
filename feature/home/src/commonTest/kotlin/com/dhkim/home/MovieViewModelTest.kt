@@ -1,9 +1,12 @@
 package com.dhkim.home
 
+import app.cash.paging.testing.asSnapshot
 import com.dhkim.core.testing.movie.FakeGetMovieWithCategoryUseCase
 import com.dhkim.core.testing.movie.FakeGetTodayRecommendationMovieUseCase
 import com.dhkim.domain.movie.usecase.GetMovieWithCategoryUseCase
 import com.dhkim.domain.movie.usecase.GetMoviesUseCase
+import com.dhkim.home.movie.MovieAction
+import com.dhkim.home.movie.MovieDisplayState
 import com.dhkim.home.movie.MovieViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,8 +35,18 @@ class MovieViewModelTest {
     }
 
     @Test
-    fun `영화 가져오기 성공`() = runTest{
+    fun `영화 가져오기 성공`() = runTest {
         viewModel.uiState.first()
         println("answer : ${viewModel.uiState.value}")
+    }
+
+    @Test
+    fun `영화 카테고리 선택`() = runTest {
+        viewModel.uiState.first()
+        viewModel.onAction(MovieAction.SelectCategory(Category.Genre.ACTION))
+        val state = viewModel.uiState.value.displayState
+        if (state is MovieDisplayState.CategoryContents) {
+            println("movies : ${state.movies.asSnapshot()}")
+        }
     }
 }

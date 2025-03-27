@@ -1,6 +1,7 @@
 package com.dhkim.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,6 +29,7 @@ import com.dhkim.core.ui.CircleCloseButton
 
 @Composable
 fun CategoryModal(
+    onCategoryClick: (Category) -> Unit,
     onClose: () -> Unit
 ) {
     val bottomBackgroundColors = listOf(Black00, Black10, Black30, Black50, Black70, Black80)
@@ -36,9 +38,9 @@ fun CategoryModal(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val categories = mutableListOf<String>().apply {
-            Category.Region.entries.map { it.country }.forEach { add(it) }
-            Category.Genre.entries.map { it.genre }.forEach { add(it) }
+        val categories = mutableListOf<Category>().apply {
+            Category.Region.entries.forEach { add(it) }
+            Category.Genre.entries.forEach { add(it) }
         }
 
         LazyColumn(
@@ -48,13 +50,19 @@ fun CategoryModal(
                 .fillMaxWidth()
                 .background(Black70)
         ) {
-            items(items = categories, key = { it }) { name ->
+            items(items = categories, key = { it }) { category ->
+                val name = when (category) {
+                    is Category.Region -> category.country
+                    is Category.Genre -> category.genre
+                }
+
                 Text(
                     text = name,
                     style = MoviePickTheme.typography.titleLargeLightGrayBold,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
+                        .clickable { onCategoryClick(category) }
                 )
             }
         }

@@ -99,6 +99,7 @@ fun HomeScreen(
                 )
                 if (homeState.showCategoryModal) {
                     CategoryModal(
+                        onCategoryClick = {},
                         onClose = { homeState.showCategoryModal = false }
                     )
                 }
@@ -120,7 +121,6 @@ fun HomeScreen(
                         .background(color = homeState.backgroundColor)
                 ) {
                     HomeCategoryChips(
-                        chipKey = "movie-category",
                         chipColor = onBackgroundColor,
                         sharedTransitionScope = sharedTransitionScope,
                         animatedVisibilityScope = animatedVisibilityScope,
@@ -152,7 +152,6 @@ private fun AppBar() {
 @Composable
 private fun HomeCategoryChips(
     chipColor: Color,
-    chipKey: String,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     onAction: (HomeAction) -> Unit,
@@ -170,7 +169,7 @@ private fun HomeCategoryChips(
             Chip(
                 modifier = Modifier
                     .sharedElement(
-                        sharedTransitionScope.rememberSharedContentState(key = chipKey),
+                        sharedTransitionScope.rememberSharedContentState(key = "movie-category"),
                         animatedVisibilityScope = animatedVisibilityScope
                     )
                     .noRippleClick { navigateToMovie() },
@@ -197,6 +196,10 @@ private fun HomeCategoryChips(
             Chip(
                 borderColor = chipColor,
                 modifier = Modifier
+                    .sharedElement(
+                        sharedTransitionScope.rememberSharedContentState(key = "category"),
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
                     .clickable(onClick = onCategoryClick)
             ) {
                 Row(
@@ -244,7 +247,6 @@ private fun ContentsScreen(
                 Group.HomeGroup.CATEGORY -> {
                     HomeCategoryChips(
                         chipColor = homeState.onBackgroundColor,
-                        chipKey = "movie-category",
                         sharedTransitionScope = sharedTransitionScope,
                         animatedVisibilityScope = animatedVisibilityScope,
                         onAction = onAction,
@@ -267,41 +269,16 @@ private fun ContentsScreen(
                     }
                 }
 
-                Group.HomeGroup.TODAY_TOP_10_MOVIES -> {
-                    val movies = (item as SeriesItem.MovieSeriesItem).series.collectAsLazyPagingItems()
-                    SeriesList(title = (item.group as Group.HomeGroup).title, series = movies) { index, movie ->
-                        Top10MovieItem(index = index, movie = movie as Movie)
-                    }
-                }
-
-                Group.HomeGroup.NOW_PLAYING_MOVIE -> {
-                    val movies = (item as SeriesItem.MovieSeriesItem).series.collectAsLazyPagingItems()
-                    SeriesList(title = (item.group as Group.HomeGroup).title, series = movies) { _, movie ->
-                        MovieItem(movie = movie as Movie)
-                    }
-                }
-
+                Group.HomeGroup.TODAY_TOP_10_MOVIES,
+                Group.HomeGroup.NOW_PLAYING_MOVIE,
                 Group.HomeGroup.TOP_RATED_MOVIE -> {
                     val movies = (item as SeriesItem.MovieSeriesItem).series.collectAsLazyPagingItems()
                     SeriesList(title = (item.group as Group.HomeGroup).title, series = movies) { _, movie ->
                         MovieItem(movie = movie as Movie)
                     }
                 }
-
-                Group.HomeGroup.AIRING_TODAY_TV -> {
-                    val movies = (item as SeriesItem.MovieSeriesItem).series.collectAsLazyPagingItems()
-                    SeriesList(title = (item.group as Group.HomeGroup).title, series = movies) { _, tv ->
-                        TvItem(tv = tv as Tv)
-                    }
-                }
-
-                Group.HomeGroup.ON_THE_AIR_TV -> {
-                    val movies = (item as SeriesItem.MovieSeriesItem).series.collectAsLazyPagingItems()
-                    SeriesList(title = (item.group as Group.HomeGroup).title, series = movies) { _, tv ->
-                        TvItem(tv = tv as Tv)
-                    }
-                }
-
+                Group.HomeGroup.AIRING_TODAY_TV,
+                Group.HomeGroup.ON_THE_AIR_TV,
                 Group.HomeGroup.TOP_RATED_TV -> {
                     val movies = (item as SeriesItem.MovieSeriesItem).series.collectAsLazyPagingItems()
                     SeriesList(title = (item.group as Group.HomeGroup).title, series = movies) { _, tv ->
@@ -310,30 +287,6 @@ private fun ContentsScreen(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun Top10MovieItem(index: Int, movie: Movie) {
-    Row {
-        Text(
-            text = "${index + 1}",
-            fontWeight = FontWeight.Bold,
-            fontSize = 72.sp,
-            fontStyle = FontStyle.Italic,
-            color = White,
-            modifier = Modifier
-                .align(Alignment.CenterVertically)
-        )
-        CoilImage(
-            modifier = Modifier
-                .clip(RoundedCornerShape(12f))
-                .width(108.dp)
-                .aspectRatio(7f / 10f),
-            imageModel = { movie.imageUrl },
-            failure = {},
-            previewPlaceholder = painterResource(Resources.Icon.MoviePosterSample)
-        )
     }
 }
 

@@ -19,6 +19,7 @@ fun CategoryModalPreview() {
                 .background(color = Black)
         ) {
             CategoryModal(
+                onCategoryClick = {},
                 onClose = {}
             )
         }
