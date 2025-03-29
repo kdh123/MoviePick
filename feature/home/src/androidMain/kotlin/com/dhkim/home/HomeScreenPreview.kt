@@ -132,25 +132,25 @@ val topRatedTvs = mutableListOf<Series>().apply {
 }
 
 val todayRecommendationMovieStateFlow = MutableStateFlow(PagingData.from(todayRecommendationMovie)).asStateFlow()
-val todayRecommendationSeriesItem = SeriesItem.MovieSeriesItem(Group.HomeGroup.MAIN_RECOMMENDATION_MOVIE, todayRecommendationMovieStateFlow)
+val todayRecommendationSeriesItem = SeriesItem.Content(Group.HomeGroup.MAIN_RECOMMENDATION_MOVIE, todayRecommendationMovieStateFlow)
 
 val todayTop10MovieStateFlow = MutableStateFlow(PagingData.from(nowPlayingMovies)).asStateFlow()
-val todayTop10SeriesItem = SeriesItem.MovieSeriesItem(Group.HomeGroup.TODAY_TOP_10_MOVIES, todayTop10MovieStateFlow)
+val todayTop10SeriesItem = SeriesItem.Content(Group.HomeGroup.TODAY_TOP_10_MOVIES, todayTop10MovieStateFlow)
 
 val topRatedMoviesStateFlow = MutableStateFlow(PagingData.from(topRatedMovies)).asStateFlow()
-val topRatedMoviesItem = SeriesItem.MovieSeriesItem(Group.HomeGroup.TOP_RATED_MOVIE, topRatedMoviesStateFlow)
+val topRatedMoviesItem = SeriesItem.Content(Group.HomeGroup.TOP_RATED_MOVIE, topRatedMoviesStateFlow)
 
 val nowPlayingMoviesStateFlow = MutableStateFlow(PagingData.from(nowPlayingMovies)).asStateFlow()
-val nowPlayingMoviesItem = SeriesItem.MovieSeriesItem(Group.HomeGroup.NOW_PLAYING_MOVIE, nowPlayingMoviesStateFlow)
+val nowPlayingMoviesItem = SeriesItem.Content(Group.HomeGroup.NOW_PLAYING_MOVIE, nowPlayingMoviesStateFlow)
 
 val airingTodayTvsStateFlow = MutableStateFlow(PagingData.from(airingTodayTvs)).asStateFlow()
-val airingTodayTvsItem = SeriesItem.MovieSeriesItem(Group.HomeGroup.AIRING_TODAY_TV, airingTodayTvsStateFlow)
+val airingTodayTvsItem = SeriesItem.Content(Group.HomeGroup.AIRING_TODAY_TV, airingTodayTvsStateFlow)
 
 val onTheAirTvsStateFlow = MutableStateFlow(PagingData.from(onTheAirTvs)).asStateFlow()
-val onTheAirTvsItem = SeriesItem.MovieSeriesItem(Group.HomeGroup.ON_THE_AIR_TV, onTheAirTvsStateFlow)
+val onTheAirTvsItem = SeriesItem.Content(Group.HomeGroup.ON_THE_AIR_TV, onTheAirTvsStateFlow)
 
 val topRatedTvsStateFlow = MutableStateFlow(PagingData.from(topRatedTvs)).asStateFlow()
-val topRatedTvsItem = SeriesItem.MovieSeriesItem(Group.HomeGroup.ON_THE_AIR_TV, topRatedTvsStateFlow)
+val topRatedTvsItem = SeriesItem.Content(Group.HomeGroup.ON_THE_AIR_TV, topRatedTvsStateFlow)
 
 @SuppressLint("UnusedContentLambdaTargetStateParameter")
 @ExperimentalSharedTransitionApi
@@ -183,6 +183,7 @@ private fun HomeScreenDarkPreview() {
                         onAction = {},
                         navigateToVideo = {},
                         navigateToMovie = {},
+                        navigateToTv = {}
                     )
                 }
             }
@@ -220,6 +221,7 @@ private fun HomeScreenPreview() {
                         onAction = {},
                         navigateToVideo = {},
                         navigateToMovie = {},
+                        navigateToTv = {}
                     )
                 }
             }

@@ -33,7 +33,7 @@ internal class MovieWithCategoryPagingSource(
                 }
                 parameter("language", language.code)
                 parameter("with_genres", genre?.id)
-                parameter("region", region?.code)
+                parameter("with_origin_country", region?.code)
                 parameter("page", nextPageNumber)
             }
 

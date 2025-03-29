@@ -15,12 +15,9 @@ import androidx.compose.ui.unit.dp
 import com.dhkim.core.designsystem.MoviePickTheme
 import com.dhkim.core.designsystem.White
 import com.dhkim.core.ui.RecommendationSeriesScope
-import com.dhkim.domain.movie.model.Movie
 
 @Composable
 fun RecommendationSeriesScope.Genre() {
-    val movie = series as Movie
-
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
@@ -29,7 +26,7 @@ fun RecommendationSeriesScope.Genre() {
         contentPadding = PaddingValues(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        items(items = movie.genre, key = { it }) {
+        items(items = series.genre, key = { it }) {
             Text(
                 text = it,
                 style = MoviePickTheme.typography.labelMedium,

@@ -23,6 +23,6 @@ enum class Genre(val id: Int, val genre: String) {
     Unknown(-1, "알 수 없음");
 
     companion object {
-        fun movieGenre(id: Int): Genre = entries.find { it.id == id } ?: Unknown
+        fun seriesGenre(id: Int): Genre = entries.find { it.id == id } ?: Unknown
     }
 }

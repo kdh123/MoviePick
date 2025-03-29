@@ -1,4 +1,4 @@
-package com.dhkim.data.model
+package com.dhkim.data.tv.model
 
 import com.dhkim.common.Video
 import com.dhkim.common.VideoType
@@ -6,13 +6,13 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MovieVideoDto(
+data class TvVideoDto(
     val id: Int,
-    val results: List<MovieVideoResult>
+    val results: List<TvVideoResult>
 )
 
 @Serializable
-data class MovieVideoResult(
+data class TvVideoResult(
     val id: String,
     @SerialName("iso_3166_1")
     val iso31661: String,

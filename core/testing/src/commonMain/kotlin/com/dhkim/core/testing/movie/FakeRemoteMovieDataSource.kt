@@ -8,24 +8,24 @@ import app.cash.paging.testing.asPagingSourceFactory
 import com.dhkim.common.Genre
 import com.dhkim.common.Language
 import com.dhkim.common.Region
+import com.dhkim.common.Video
+import com.dhkim.common.VideoType
 import com.dhkim.data.datasource.RemoteMovieDataSource
 import com.dhkim.domain.movie.model.Movie
-import com.dhkim.domain.movie.model.MovieVideo
-import com.dhkim.domain.movie.model.MovieVideoType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class FakeRemoteMovieDataSource : RemoteMovieDataSource {
 
-    private val movieVideos = mutableListOf<MovieVideo>().apply {
+    private val movieVideos = mutableListOf<Video>().apply {
         repeat(10) {
             add(
-                MovieVideo(
+                Video(
                     id = "videoId$it",
                     key = "videoKey$it",
                     videoUrl = "videoUrl$it",
                     name = "name$it",
-                    type = MovieVideoType.Teaser
+                    type = VideoType.Teaser
                 )
             )
         }
@@ -128,7 +128,7 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
         }
     }
 
-    override fun getMovieVideos(id: String, language: Language): Flow<List<MovieVideo>> {
+    override fun getMovieVideos(id: String, language: Language): Flow<List<Video>> {
         return flow {
             emit(movieVideos)
         }

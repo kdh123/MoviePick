@@ -81,15 +81,15 @@ class HomeState(
 @Composable
 fun rememberHomeState(
     seriesItems: ImmutableList<SeriesItem>,
-    mainRecommendationMovieGroup: Group,
+    mainRecommendationSeriesGroup: Group,
     listState: LazyListState = rememberLazyListState()
 ): HomeState {
     val state = rememberSaveable(seriesItems, listState, saver = HomeState.Saver(series = seriesItems, listState = listState)) {
         HomeState(series = seriesItems, listState = listState)
     }
     val recommendationSeries = seriesItems
-        .firstOrNull { it.group == mainRecommendationMovieGroup }
-        ?.run { (this as SeriesItem.MovieSeriesItem).series }
+        .firstOrNull { it.group == mainRecommendationSeriesGroup }
+        ?.run { (this as SeriesItem.Content).series }
         ?.collectAsLazyPagingItems()
     val recommendationSeriesPosterUrl = if (!recommendationSeries?.itemSnapshotList.isNullOrEmpty()) {
         recommendationSeries?.itemSnapshotList?.firstOrNull()?.imageUrl ?: ""

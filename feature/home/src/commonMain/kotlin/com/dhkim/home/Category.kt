@@ -2,9 +2,8 @@ package com.dhkim.home
 
 sealed interface Category {
 
-    enum class Region(val country: String, val id: String) : Category {
+    enum class Region(val country: String, val code: String) : Category {
         Korea("한국", "KR"),
-        Japan("일본", "JP"),
         US("미국", "US"),
     }
 

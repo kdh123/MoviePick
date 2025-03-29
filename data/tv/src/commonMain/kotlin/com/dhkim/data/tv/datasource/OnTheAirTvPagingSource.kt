@@ -4,7 +4,7 @@ import app.cash.paging.PagingSource
 import app.cash.paging.PagingState
 import com.dhkim.common.Language
 import com.dhkim.core.network.AppException
-import com.dhkim.data.tv.model.OnTheAirTvDto
+import com.dhkim.data.tv.model.TvDto
 import com.dhkim.domain.tv.model.Tv
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -31,10 +31,10 @@ internal class OnTheAirTvPagingSource(
                 parameter("page", nextPageNumber)
             }
 
-            val onTheAirTvDto = response.body<OnTheAirTvDto>()
+            val onTheAirTvDto = response.body<TvDto>()
 
             return LoadResult.Page(
-                data = onTheAirTvDto.results.map { it.toOnTheAirTv() }.distinctBy { it.id },
+                data = onTheAirTvDto.results.map { it.toTv() }.distinctBy { it.id },
                 prevKey = if (nextPageNumber == 1) null else nextPageNumber - 1,
                 nextKey = if (onTheAirTvDto.results.isNotEmpty()) {
                     nextPageNumber + 1

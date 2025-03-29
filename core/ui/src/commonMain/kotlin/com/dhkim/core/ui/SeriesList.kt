@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.cash.paging.compose.LazyPagingItems
@@ -19,8 +18,6 @@ import com.dhkim.core.designsystem.MoviePickTheme
 
 @Composable
 fun SeriesList(title: String, series: LazyPagingItems<Series>, seriesItem: @Composable (Int, Series) -> Unit) {
-    val keys = remember { mutableSetOf<String>() }
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -45,10 +42,7 @@ fun SeriesList(title: String, series: LazyPagingItems<Series>, seriesItem: @Comp
             ) { index ->
                 val item = series[index]
                 if (item != null) {
-                    if (!keys.contains(item.id)) {
-                        seriesItem(index, item)
-                        keys.add(item.id)
-                    }
+                    seriesItem(index, item)
                 }
             }
         }

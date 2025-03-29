@@ -12,13 +12,13 @@ import com.skydoves.landscapist.coil3.CoilImage
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun MovieItem(movie: Series) {
+fun ContentItem(series: Series) {
     CoilImage(
         modifier = Modifier
             .clip(RoundedCornerShape(12f))
             .width(108.dp)
             .aspectRatio(7f / 10f),
-        imageModel = { movie.imageUrl },
+        imageModel = { series.imageUrl },
         failure = {},
         previewPlaceholder = painterResource(Resources.Icon.MoviePosterSample)
     )

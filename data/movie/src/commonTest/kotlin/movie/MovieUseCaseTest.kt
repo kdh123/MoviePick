@@ -135,7 +135,7 @@ class MovieUseCaseTest : KoinTest {
     @Test
     fun `카테고리에 해당하는 영화 가져오기_Real - Only Android`() = runTest {
         val getMovieWithCategoryUseCase = get<GetMovieWithCategoryUseCase>()
-        getMovieWithCategoryUseCase(language = Language.Korea, genre = Genre.ROMANCE).asSnapshot().forEach {
+        getMovieWithCategoryUseCase(language = Language.Korea,  region = Region.Korea, genre = Genre.ACTION).asSnapshot().forEach {
             println(it)
         }
     }

@@ -8,12 +8,28 @@ import app.cash.paging.testing.asPagingSourceFactory
 import com.dhkim.common.Genre
 import com.dhkim.common.Language
 import com.dhkim.common.Region
+import com.dhkim.common.Video
+import com.dhkim.common.VideoType
 import com.dhkim.data.tv.datasource.RemoteTvDataSource
 import com.dhkim.domain.tv.model.Tv
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class FakeRemoteTvDataSource : RemoteTvDataSource {
+
+    private val tvVideos = mutableListOf<Video>().apply {
+        repeat(10) {
+            add(
+                Video(
+                    id = "videoId$it",
+                    key = "videoKey$it",
+                    videoUrl = "videoUrl$it",
+                    name = "name$it",
+                    type = VideoType.Teaser
+                )
+            )
+        }
+    }
 
     private val airingTodayTvs = mutableListOf<Tv>().apply {
         repeat(50) {
@@ -75,6 +91,9 @@ class FakeRemoteTvDataSource : RemoteTvDataSource {
     private val airingTodayPagingSource = airingTodayTvs.asPagingSourceFactory().invoke()
     private val onTheAirPagingSource = onTheAirTvs.asPagingSourceFactory().invoke()
     private val topRatedPagingSource = topRatedTvs.asPagingSourceFactory().invoke()
+    private val tvWithCategoryPagingSource = (airingTodayTvs + onTheAirTvs + topRatedTvs)
+        .filter { it.genre.contains(Genre.ROMANCE.genre) || it.genre.contains(Genre.DRAMA.genre)}
+        .asPagingSourceFactory().invoke()
 
 
 
@@ -108,6 +127,23 @@ class FakeRemoteTvDataSource : RemoteTvDataSource {
                 append()
             } as PagingSource.LoadResult.Page
             emit(PagingData.from(page.data))
+        }
+    }
+
+    override fun getTvWithCategory(language: Language, genre: Genre?, region: Region?): Flow<PagingData<Tv>> {
+        return flow {
+            val pager = TestPager(PagingConfig(pageSize = 15), tvWithCategoryPagingSource)
+            val page = with(pager) {
+                refresh()
+                append()
+            } as PagingSource.LoadResult.Page
+            emit(PagingData.from(page.data))
+        }
+    }
+
+    override fun getTvVideos(id: String, language: Language): Flow<List<Video>> {
+        return flow {
+            emit(tvVideos)
         }
     }
 }

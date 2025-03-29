@@ -4,7 +4,7 @@ import app.cash.paging.PagingSource
 import app.cash.paging.PagingState
 import com.dhkim.common.Language
 import com.dhkim.core.network.AppException
-import com.dhkim.data.tv.model.TopRatedTvDto
+import com.dhkim.data.tv.model.TvDto
 import com.dhkim.domain.tv.model.Tv
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -31,10 +31,10 @@ internal class TopRatedTvPagingSource(
                 parameter("page", nextPageNumber)
             }
 
-            val topRatedTvDto = response.body<TopRatedTvDto>()
+            val topRatedTvDto = response.body<TvDto>()
 
             return LoadResult.Page(
-                data = topRatedTvDto.results.map { it.toTopRatedTv() },
+                data = topRatedTvDto.results.map { it.toTv() },
                 prevKey = if (nextPageNumber == 1) null else nextPageNumber - 1,
                 nextKey = if (topRatedTvDto.results.isNotEmpty()) {
                     nextPageNumber + 1

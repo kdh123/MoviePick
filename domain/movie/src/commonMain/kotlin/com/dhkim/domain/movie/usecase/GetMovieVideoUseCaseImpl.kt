@@ -1,7 +1,7 @@
 package com.dhkim.domain.movie.usecase
 
 import com.dhkim.common.Language
-import com.dhkim.domain.movie.model.MovieVideo
+import com.dhkim.common.Video
 import com.dhkim.domain.movie.repository.MovieRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -11,7 +11,7 @@ class GetMovieVideoUseCaseImpl(
     private val movieRepository: MovieRepository
 ) : GetMovieVideoUseCase {
 
-    override fun invoke(id: String, language: Language): Flow<MovieVideo?> {
+    override fun invoke(id: String, language: Language): Flow<Video?> {
         return flow {
             val movieVideos = movieRepository.getMovieVideos(id, language).first()
             if (movieVideos.isNotEmpty()) {

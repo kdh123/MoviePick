@@ -60,11 +60,11 @@ val moviesWithCategory = mutableListOf<Series>().apply {
 }
 
 val todayRecommendationMovieStateFlow2 = MutableStateFlow(PagingData.from(todayRecommendationMovie2)).asStateFlow()
-val todayRecommendationSeriesItem2 = SeriesItem.MovieSeriesItem(Group.MovieGroup.MAIN_RECOMMENDATION_MOVIE, todayRecommendationMovieStateFlow2)
+val todayRecommendationSeriesItem2 = SeriesItem.Content(Group.MovieGroup.MAIN_RECOMMENDATION_MOVIE, todayRecommendationMovieStateFlow2)
 
 val moviesWithCategoryStateFlow = MutableStateFlow(PagingData.from(moviesWithCategory)).asStateFlow()
-val actionMoviesSeriesItem = SeriesItem.MovieSeriesItem(Group.MovieGroup.ACTION_MOVIE, moviesWithCategoryStateFlow)
-val animationSeriesItem = SeriesItem.MovieSeriesItem(Group.MovieGroup.ANIMATION_MOVIE, moviesWithCategoryStateFlow)
+val actionMoviesSeriesItem = SeriesItem.Content(Group.MovieGroup.ACTION_MOVIE, moviesWithCategoryStateFlow)
+val animationSeriesItem = SeriesItem.Content(Group.MovieGroup.ANIMATION_MOVIE, moviesWithCategoryStateFlow)
 
 @SuppressLint("UnusedContentLambdaTargetStateParameter")
 @ExperimentalSharedTransitionApi

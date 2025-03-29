@@ -7,37 +7,33 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.dhkim.home.HomeScreen
-import com.dhkim.home.HomeUiState
-import com.dhkim.home.HomeViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.dhkim.home.tv.TvScreen
+import com.dhkim.home.tv.TvViewModel
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
-const val HOME_ROUTE = "home_route"
+const val TV_ROUTE = "tv_route"
 
-fun NavController.navigateToHome() = navigate(HOME_ROUTE)
+fun NavController.navigateToTv() = navigate(TV_ROUTE)
 
 @ExperimentalSharedTransitionApi
-@ExperimentalCoroutinesApi
 @KoinExperimentalAPI
-fun NavGraphBuilder.home(
+fun NavGraphBuilder.tv(
     sharedTransitionScope: SharedTransitionScope,
     navigateToVideo: (String) -> Unit,
-    navigateToMovie: () -> Unit,
-    navigateToTv: () -> Unit
+    onBack: () -> Unit
 ) {
-    composable(HOME_ROUTE) {
-        val viewModel = koinViewModel<HomeViewModel>()
-        val uiState: HomeUiState by viewModel.uiState.collectAsStateWithLifecycle()
-        HomeScreen(
+    composable(TV_ROUTE) {
+        val viewModel = koinViewModel<TvViewModel>()
+        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+        TvScreen(
             uiState = uiState,
             sharedTransitionScope = sharedTransitionScope,
             animatedVisibilityScope = this@composable,
             onAction = viewModel::onAction,
             navigateToVideo = navigateToVideo,
-            navigateToMovie = navigateToMovie,
-            navigateToTv = navigateToTv
+            onBack = onBack
         )
     }
 }

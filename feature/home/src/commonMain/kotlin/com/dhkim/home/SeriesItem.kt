@@ -22,15 +22,14 @@ sealed class SeriesItem(open val group: Group) {
         override val group: Group
     ) : SeriesItem(group)
 
-    data class MovieSeriesItem(
+    data class Content(
         override val group: Group,
         val series: StateFlow<PagingData<Series>>,
     ) : SeriesItem(group)
 }
 
-
-suspend fun Flow<PagingData<out Series>>.toMovieItem(group: Group, scope: CoroutineScope): SeriesItem.MovieSeriesItem {
-    return SeriesItem.MovieSeriesItem(
+suspend fun Flow<PagingData<out Series>>.toContent(group: Group, scope: CoroutineScope): SeriesItem.Content {
+    return SeriesItem.Content(
         group = group,
         series = map { pagingData ->
             val seenIds = mutableSetOf<String>()

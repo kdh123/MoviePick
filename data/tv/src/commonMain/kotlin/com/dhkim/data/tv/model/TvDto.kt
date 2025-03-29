@@ -7,9 +7,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class TopRatedTvDto(
+internal data class TvDto(
     val page: Int,
-    val results: List<TopRatedTvResult>,
+    val results: List<TvResult>,
     @SerialName("total_pages")
     val totalPages: Int,
     @SerialName("total_results")
@@ -17,10 +17,10 @@ internal data class TopRatedTvDto(
 )
 
 @Serializable
-internal data class TopRatedTvResult(
+internal data class TvResult(
     val adult: Boolean,
     @SerialName("backdrop_path")
-    val backdropPath: String,
+    val backdropPath: String?,
     @SerialName("first_air_date")
     val firstAirDate: String,
     @SerialName("genre_ids")
@@ -42,15 +42,15 @@ internal data class TopRatedTvResult(
     @SerialName("vote_count")
     val voteCount: Int
 ) {
-    fun toTopRatedTv(): Tv {
+    fun toTv(): Tv {
         return Tv(
             id = "$id",
             title = name,
             adult = adult,
             country = Region.entries.firstOrNull { it.code == originCountry[0] }?.country ?: Region.Unknown.country,
             overview = overview,
-            imageUrl = "https://image.tmdb.org/t/p/original$posterPath",
-            genre = genreIds.map { Genre.movieGenre(it).genre },
+            imageUrl = "https://image.tmdb.org/t/p/original${posterPath}",
+            genre = genreIds.map { Genre.seriesGenre(it).genre },
             voteAverage = voteAverage,
             firstAirDate = firstAirDate,
             popularity = popularity

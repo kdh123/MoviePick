@@ -5,8 +5,8 @@ import app.cash.paging.PagingData
 import com.dhkim.common.Genre
 import com.dhkim.common.Language
 import com.dhkim.common.Region
+import com.dhkim.common.Video
 import com.dhkim.domain.movie.model.Movie
-import com.dhkim.domain.movie.model.MovieVideo
 import com.dhkim.domain.movie.repository.MovieRepository
 import kotlinx.coroutines.flow.Flow
 
@@ -26,7 +26,7 @@ class FakeMovieRepository : MovieRepository {
         return remoteMovieDataSource.getUpcomingMovies(language, region)
     }
 
-    override fun getMovieVideos(id: String, language: Language): Flow<List<MovieVideo>> {
+    override fun getMovieVideos(id: String, language: Language): Flow<List<Video>> {
         return remoteMovieDataSource.getMovieVideos(id, language)
     }
 

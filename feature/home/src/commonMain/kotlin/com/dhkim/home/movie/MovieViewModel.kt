@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import androidx.paging.map
+import app.cash.paging.PagingData
 import com.dhkim.common.Genre
 import com.dhkim.common.Language
 import com.dhkim.common.Region
@@ -15,12 +16,13 @@ import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import com.dhkim.home.Category
 import com.dhkim.home.Group
 import com.dhkim.home.SeriesItem
-import com.dhkim.home.toMovieItem
+import com.dhkim.home.toContent
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -63,17 +65,17 @@ class MovieViewModel(
 
                 val language = Language.Korea
                 val region = Region.Korea
-                val jobs = mutableListOf<Deferred<SeriesItem.MovieSeriesItem>>()
+                val jobs = mutableListOf<Deferred<SeriesItem.Content>>()
                 val genres = Genre.entries.filter { shouldShowMovieGenres.contains(it.genre) }
                 val mainRecommendationMovie = async {
                     getMainRecommendationMoviesUseCase(language, region)
-                        .toMovieItem(group = Group.MovieGroup.MAIN_RECOMMENDATION_MOVIE, viewModelScope)
+                        .toContent(group = Group.MovieGroup.MAIN_RECOMMENDATION_MOVIE, viewModelScope)
                 }
                 jobs.add(mainRecommendationMovie)
                 for (genre in genres) {
                     val movieSeriesItem = async {
                         getMovieWithCategoryUseCase(language, genre, region)
-                            .toMovieItem(group = Group.MovieGroup.entries.first { it.genre == genre }, viewModelScope)
+                            .toContent(group = Group.MovieGroup.entries.first { it.genre == genre }, viewModelScope)
                     }
                     jobs.add(movieSeriesItem)
                 }
@@ -90,25 +92,28 @@ class MovieViewModel(
     }
 
     fun onAction(action: MovieAction) {
+        when (action) {
+            is MovieAction.SelectCategory -> {
+                selectCategory(action.category)
+            }
+        }
+    }
+
+    private fun selectCategory(category: Category) {
         viewModelScope.handle(
             block = {
-                when (action) {
-                    is MovieAction.SelectCategory -> {
-                        if (action.category is Category.Genre) {
-                            val movies = getMovieWithCategoryUseCase(
-                                language = Language.Korea,
-                                genre = Genre.movieGenre(action.category.id)
-                            ).first()
-                            val moviesWithCategory = flowOf(movies)
-                                .map { pagingData ->
-                                    pagingData.map { it as Series }
-                                }
-                                .catch { }
-                                .cachedIn(viewModelScope)
-                                .stateIn(viewModelScope)
-                            _uiState.update {
-                                MovieUiState(displayState = MovieDisplayState.CategoryContents(movies = moviesWithCategory))
-                            }
+                when (category) {
+                    is Category.Genre -> {
+                        val movies = getGenreMovies(category.id)
+                        _uiState.update {
+                            MovieUiState(displayState = MovieDisplayState.CategoryContents(movies = movies))
+                        }
+                    }
+
+                    is Category.Region -> {
+                        val movies = getRegionMovies(category.code)
+                        _uiState.update {
+                            MovieUiState(displayState = MovieDisplayState.CategoryContents(movies = movies))
                         }
                     }
                 }
@@ -117,5 +122,33 @@ class MovieViewModel(
 
             }
         )
+    }
+
+    private suspend fun getGenreMovies(categoryId: Int): StateFlow<PagingData<Series>> {
+        val movies = getMovieWithCategoryUseCase(
+            language = Language.Korea,
+            genre = Genre.seriesGenre(categoryId)
+        ).first()
+        return flowOf(movies)
+            .map { pagingData ->
+                pagingData.map { it as Series }
+            }
+            .catch { }
+            .cachedIn(viewModelScope)
+            .stateIn(viewModelScope)
+    }
+
+    private suspend fun getRegionMovies(countryCode: String): StateFlow<PagingData<Series>> {
+        val movies = getMovieWithCategoryUseCase(
+            language = Language.Korea,
+            region = Region.entries.firstOrNull { it.code == countryCode }
+        ).first()
+        return flowOf(movies)
+            .map { pagingData ->
+                pagingData.map { it as Series }
+            }
+            .catch { }
+            .cachedIn(viewModelScope)
+            .stateIn(viewModelScope)
     }
 }

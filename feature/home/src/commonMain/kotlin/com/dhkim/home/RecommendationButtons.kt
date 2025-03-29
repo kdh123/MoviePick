@@ -20,13 +20,12 @@ import com.dhkim.core.ui.MoviePickButton
 import com.dhkim.core.ui.RecommendationSeriesScope
 import com.dhkim.core.ui.Resources
 import com.dhkim.core.ui.noRippleClick
-import com.dhkim.domain.movie.model.Movie
 import com.dhkim.domain.movie.model.MovieVideoType
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun RecommendationSeriesScope.RecommendationButtons(navigateToVideo: (String) -> Unit) {
-    val movie = series as Movie
+    val hasVideo = series.video != null
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -34,7 +33,7 @@ fun RecommendationSeriesScope.RecommendationButtons(navigateToVideo: (String) ->
             .fillMaxWidth()
             .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
     ) {
-        if (movie.hasVideo()) {
+        if (hasVideo) {
             MoviePickButton(
                 color = White,
                 onClick = {},
@@ -45,7 +44,7 @@ fun RecommendationSeriesScope.RecommendationButtons(navigateToVideo: (String) ->
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .noRippleClick {
-                            navigateToVideo(movie.video!!.key)
+                            navigateToVideo(series.video!!.key)
                         }
                 ) {
                     Icon(
@@ -57,7 +56,7 @@ fun RecommendationSeriesScope.RecommendationButtons(navigateToVideo: (String) ->
                             .size(24.dp)
                     )
                     Text(
-                        text = movie.video?.type?.type ?: MovieVideoType.Teaser.type,
+                        text = series.video?.type?.type ?: MovieVideoType.Teaser.type,
                         style = MoviePickTheme.typography.labelLarge,
                         color = Black,
                         textAlign = TextAlign.Center,

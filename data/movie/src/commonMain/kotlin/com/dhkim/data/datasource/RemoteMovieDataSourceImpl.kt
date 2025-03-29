@@ -6,9 +6,9 @@ import app.cash.paging.PagingData
 import com.dhkim.common.Genre
 import com.dhkim.common.Language
 import com.dhkim.common.Region
+import com.dhkim.common.Video
 import com.dhkim.data.model.MovieVideoDto
 import com.dhkim.domain.movie.model.Movie
-import com.dhkim.domain.movie.model.MovieVideo
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -39,7 +39,7 @@ class RemoteMovieDataSourceImpl(
         }.flow
     }
 
-    override fun getMovieVideos(id: String, language: Language): Flow<List<MovieVideo>> {
+    override fun getMovieVideos(id: String, language: Language): Flow<List<Video>> {
         return flow {
             val response = apiService.get {
                 url {
@@ -48,7 +48,7 @@ class RemoteMovieDataSourceImpl(
                 parameter("language", language)
             }
             val results = response.body<MovieVideoDto>().results
-            emit(results.mapNotNull { it.toMovieVideo() })
+            emit(results.mapNotNull { it.toVideo() })
         }
     }
 

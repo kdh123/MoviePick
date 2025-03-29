@@ -2,7 +2,9 @@ package com.dhkim.data.tv.datasource
 
 import app.cash.paging.PagingSource
 import app.cash.paging.PagingState
+import com.dhkim.common.Genre
 import com.dhkim.common.Language
+import com.dhkim.common.Region
 import com.dhkim.core.network.AppException
 import com.dhkim.data.tv.model.TvDto
 import com.dhkim.domain.tv.model.Tv
@@ -15,9 +17,11 @@ import io.ktor.util.network.UnresolvedAddressException
 import io.ktor.utils.io.errors.IOException
 import kotlinx.serialization.SerializationException
 
-internal class AiringTodayTvPagingSource(
+internal class TvWithCategoryPagingSource(
     private val apiService: HttpClient,
     private val language: Language,
+    private val genre: Genre?,
+    private val region: Region?
 ) : PagingSource<Int, Tv>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Tv> {
@@ -25,18 +29,20 @@ internal class AiringTodayTvPagingSource(
             val nextPageNumber = params.key ?: 1
             val response = apiService.get {
                 url {
-                    path("/3/tv/airing_today")
+                    path("/3/discover/tv")
                 }
                 parameter("language", language.code)
+                parameter("with_genres", genre?.id)
+                parameter("with_origin_country", region?.code)
                 parameter("page", nextPageNumber)
             }
 
-            val tvDto = response.body<TvDto>()
+            val nowPlayingMovieDto = response.body<TvDto>()
 
             return LoadResult.Page(
-                data = tvDto.results.map { it.toTv() },
+                data = nowPlayingMovieDto.results.map { it.toTv() },
                 prevKey = if (nextPageNumber == 1) null else nextPageNumber - 1,
-                nextKey = if (tvDto.results.isNotEmpty()) {
+                nextKey = if (nowPlayingMovieDto.results.isNotEmpty()) {
                     nextPageNumber + 1
                 } else null
             )

@@ -1,4 +1,4 @@
-package com.dhkim.home.movie
+package com.dhkim.home.tv
 
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedVisibilityScope
@@ -38,7 +38,7 @@ import com.dhkim.core.ui.ContentItem
 import com.dhkim.core.ui.RecommendationSeries
 import com.dhkim.core.ui.Resources
 import com.dhkim.core.ui.SeriesList
-import com.dhkim.domain.movie.model.Movie
+import com.dhkim.domain.tv.model.Tv
 import com.dhkim.home.CategoryModal
 import com.dhkim.home.Genre
 import com.dhkim.home.GridSeriesWithCategory
@@ -53,17 +53,17 @@ import org.jetbrains.compose.resources.painterResource
 
 @ExperimentalSharedTransitionApi
 @Composable
-fun MovieScreen(
-    uiState: MovieUiState,
+fun TvScreen(
+    uiState: TvUiState,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedContentScope,
-    onAction: (MovieAction) -> Unit,
+    onAction: (TvAction) -> Unit,
     navigateToVideo: (String) -> Unit,
     onBack: () -> Unit
 ) {
-    val homeState = (uiState.displayState as? MovieDisplayState.Contents)?.movies?.let { homeMovieItems ->
-        rememberHomeState(seriesItems = homeMovieItems, mainRecommendationSeriesGroup = Group.MovieGroup.MAIN_RECOMMENDATION_MOVIE)
-    } ?: rememberHomeState(seriesItems = persistentListOf(), mainRecommendationSeriesGroup = Group.MovieGroup.MAIN_RECOMMENDATION_MOVIE)
+    val homeState = (uiState.displayState as? TvDisplayState.Contents)?.tvs?.let { seriesItems ->
+        rememberHomeState(seriesItems = seriesItems, mainRecommendationSeriesGroup = Group.TvGroup.MAIN_RECOMMENDATION_TV)
+    } ?: rememberHomeState(seriesItems = persistentListOf(), mainRecommendationSeriesGroup = Group.TvGroup.MAIN_RECOMMENDATION_TV)
 
     val backgroundGradientColors = listOf(homeState.backgroundColor, Black50)
 
@@ -73,15 +73,15 @@ fun MovieScreen(
             .fillMaxSize()
     ) {
         when (uiState.displayState) {
-            MovieDisplayState.Loading -> {
+            TvDisplayState.Loading -> {
 
             }
 
-            is MovieDisplayState.Contents -> {
-                val movies = uiState.displayState.movies
+            is TvDisplayState.Contents -> {
+                val tvs = uiState.displayState.tvs
                 ContentsScreen(
                     homeState = homeState,
-                    movieSeriesItems = movies,
+                    tvSeriesItems = tvs,
                     sharedTransitionScope = sharedTransitionScope,
                     animatedVisibilityScope = animatedVisibilityScope,
                     onAction = onAction,
@@ -90,11 +90,11 @@ fun MovieScreen(
                 )
             }
 
-            is MovieDisplayState.CategoryContents -> {
-                GridSeriesWithCategory(series = uiState.displayState.movies)
+            is TvDisplayState.CategoryContents -> {
+                GridSeriesWithCategory(series = uiState.displayState.tvs)
             }
 
-            is MovieDisplayState.Error -> {
+            is TvDisplayState.Error -> {
 
             }
         }
@@ -105,11 +105,11 @@ fun MovieScreen(
 @Composable
 fun ContentsScreen(
     homeState: HomeState,
-    movieSeriesItems: ImmutableList<SeriesItem>,
+    tvSeriesItems: ImmutableList<SeriesItem>,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     navigateToVideo: (String) -> Unit,
-    onAction: (MovieAction) -> Unit,
+    onAction: (TvAction) -> Unit,
     onBack: () -> Unit
 ) {
     val onBackgroundColor by animateColorAsState(
@@ -126,14 +126,14 @@ fun ContentsScreen(
 
     Box {
         LazyColumn(state = homeState.listState) {
-            items(items = movieSeriesItems, key = { item -> item.group }) { item ->
-                when (item.group as Group.MovieGroup) {
-                    Group.MovieGroup.APP_BAR -> {
+            items(items = tvSeriesItems, key = { item -> item.group }) { item ->
+                when (item.group as Group.TvGroup) {
+                    Group.TvGroup.APP_BAR -> {
                         AppBar(onBackGroundColor = homeState.onBackgroundColor)
                     }
 
-                    Group.MovieGroup.CATEGORY -> {
-                        MovieCategoryChips(
+                    Group.TvGroup.CATEGORY -> {
+                        TvCategoryChips(
                             chipColor = homeState.onBackgroundColor,
                             selectedChipTextColor = selectedChipTextColor,
                             sharedTransitionScope = sharedTransitionScope,
@@ -143,10 +143,10 @@ fun ContentsScreen(
                         )
                     }
 
-                    Group.MovieGroup.MAIN_RECOMMENDATION_MOVIE -> {
-                        val movies = (item as SeriesItem.Content).series.collectAsLazyPagingItems()
-                        if (movies.itemCount > 0) {
-                            val series = movies[0] as Movie
+                    Group.TvGroup.MAIN_RECOMMENDATION_TV -> {
+                        val tvs = (item as SeriesItem.Content).series.collectAsLazyPagingItems()
+                        if (tvs.itemCount > 0) {
+                            val series = tvs[0] as Tv
                             RecommendationSeries(
                                 series = series,
                                 onUpdateRecommendationSeriesHeight = homeState::updateHeight
@@ -157,15 +157,13 @@ fun ContentsScreen(
                         }
                     }
 
-                    Group.MovieGroup.ACTION_MOVIE,
-                    Group.MovieGroup.ROMANCE_MOVIE,
-                    Group.MovieGroup.COMEDY_MOVIE,
-                    Group.MovieGroup.THRILLER_MOVIE,
-                    Group.MovieGroup.ADVENTURE_MOVIE,
-                    Group.MovieGroup.ANIMATION_MOVIE -> {
-                        val movies = (item as SeriesItem.Content).series.collectAsLazyPagingItems()
-                        SeriesList(title = (item.group as Group.MovieGroup).title, series = movies) { _, movie ->
-                            ContentItem(series = movie as Movie)
+                    Group.TvGroup.COMEDY_TV,
+                    Group.TvGroup.AIRING_TODAY_TV,
+                    Group.TvGroup.ON_THE_AIR_TV,
+                    Group.TvGroup.TOP_RATED_TV -> {
+                        val tvs = (item as SeriesItem.Content).series.collectAsLazyPagingItems()
+                        SeriesList(title = (item.group as Group.TvGroup).title, series = tvs) { _, tv ->
+                            ContentItem(series = tv as Tv)
                         }
                     }
                 }
@@ -182,7 +180,7 @@ fun ContentsScreen(
                         .fillMaxWidth()
                         .background(color = homeState.backgroundColor)
                 ) {
-                    MovieCategoryChips(
+                    TvCategoryChips(
                         chipColor = onBackgroundColor,
                         selectedChipTextColor = selectedChipTextColor,
                         sharedTransitionScope = sharedTransitionScope,
@@ -197,7 +195,7 @@ fun ContentsScreen(
         if (homeState.showCategoryModal) {
             CategoryModal(
                 onCategoryClick = {
-                    onAction(MovieAction.SelectCategory(it))
+                    onAction(TvAction.SelectCategory(it))
                     homeState.showCategoryModal = false
                 },
                 onClose = { homeState.showCategoryModal = false }
@@ -215,7 +213,7 @@ private fun AppBar(onBackGroundColor: Color) {
             .padding(top = 8.dp, start = 8.dp, bottom = 4.dp)
     ) {
         Text(
-            text = "영화",
+            text = "TV 프로그램",
             style = MoviePickTheme.typography.headlineSmallBold,
             color = onBackGroundColor,
             textAlign = TextAlign.Center,
@@ -226,7 +224,7 @@ private fun AppBar(onBackGroundColor: Color) {
 
 @ExperimentalSharedTransitionApi
 @Composable
-private fun MovieCategoryChips(
+private fun TvCategoryChips(
     chipColor: Color,
     selectedChipTextColor: Color,
     sharedTransitionScope: SharedTransitionScope,
@@ -247,14 +245,14 @@ private fun MovieCategoryChips(
             Chip(
                 modifier = Modifier
                     .sharedElement(
-                        sharedTransitionScope.rememberSharedContentState(key = "movie-category"),
+                        sharedTransitionScope.rememberSharedContentState(key = "tv-category"),
                         animatedVisibilityScope = animatedVisibilityScope
                     ),
                 backgroundColor = chipColor,
                 borderColor = chipColor,
             ) {
                 Text(
-                    text = "영화",
+                    text = "TV 프로그램",
                     color = selectedChipTextColor,
                     style = MoviePickTheme.typography.labelMedium,
                     textAlign = TextAlign.Center,

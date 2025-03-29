@@ -1,7 +1,10 @@
 package com.dhkim.data.tv.repository
 
 import app.cash.paging.PagingData
+import com.dhkim.common.Genre
 import com.dhkim.common.Language
+import com.dhkim.common.Region
+import com.dhkim.common.Video
 import com.dhkim.data.tv.datasource.RemoteTvDataSource
 import com.dhkim.domain.tv.model.Tv
 import com.dhkim.domain.tv.repository.TvRepository
@@ -21,5 +24,13 @@ class TvRepositoryImpl(
 
     override fun getTopRatedTvs(language: Language): Flow<PagingData<Tv>> {
         return remoteTvDataSource.getTopRatedTvs(language)
+    }
+
+    override fun getTvWithCategory(language: Language, genre: Genre?, region: Region?): Flow<PagingData<Tv>> {
+        return remoteTvDataSource.getTvWithCategory(language, genre, region)
+    }
+
+    override fun getTvVideos(id: String, language: Language): Flow<List<Video>> {
+        return remoteTvDataSource.getTvVideos(id, language)
     }
 }
