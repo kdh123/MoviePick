@@ -39,6 +39,7 @@ import com.dhkim.core.ui.RecommendationSeries
 import com.dhkim.core.ui.Resources
 import com.dhkim.core.ui.SeriesList
 import com.dhkim.domain.movie.model.Movie
+import com.dhkim.home.Category
 import com.dhkim.home.CategoryModal
 import com.dhkim.home.Genre
 import com.dhkim.home.GridSeriesWithCategory
@@ -91,7 +92,13 @@ fun MovieScreen(
             }
 
             is MovieDisplayState.CategoryContents -> {
-                GridSeriesWithCategory(series = uiState.displayState.movies)
+                GridSeriesWithCategory(
+                    category = uiState.displayState.category,
+                    series = uiState.displayState.movies,
+                    onBack = {
+                        onAction(MovieAction.BackToMovieMain)
+                    }
+                )
             }
 
             is MovieDisplayState.Error -> {
@@ -195,7 +202,12 @@ fun ContentsScreen(
         }
 
         if (homeState.showCategoryModal) {
+            val categories = mutableListOf<Category>().apply {
+                Category.Region.entries.forEach { add(it) }
+                Category.MovieGenre.entries.forEach { add(it) }
+            }
             CategoryModal(
+                categories = categories,
                 onCategoryClick = {
                     onAction(MovieAction.SelectCategory(it))
                     homeState.showCategoryModal = false

@@ -57,7 +57,8 @@ fun HomeScreen(
     onAction: (HomeAction) -> Unit,
     navigateToVideo: (String) -> Unit,
     navigateToMovie: () -> Unit,
-    navigateToTv: () -> Unit
+    navigateToTv: () -> Unit,
+    onBack: () -> Unit
 ) {
     val homeState = (uiState.displayState as? HomeDisplayState.Contents)?.movies?.let { homeMovieItems ->
         rememberHomeState(seriesItems = homeMovieItems, mainRecommendationSeriesGroup = Group.HomeGroup.MAIN_RECOMMENDATION_MOVIE)
@@ -91,10 +92,6 @@ fun HomeScreen(
                     navigateToMovie = navigateToMovie,
                     navigateToTv = navigateToTv
                 )
-            }
-
-            is HomeDisplayState.CategoryContents -> {
-                GridSeriesWithCategory(series = uiState.displayState.movies)
             }
 
             is HomeDisplayState.Error -> {

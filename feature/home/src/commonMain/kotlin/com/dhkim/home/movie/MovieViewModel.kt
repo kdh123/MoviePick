@@ -17,13 +17,17 @@ import com.dhkim.home.Category
 import com.dhkim.home.Group
 import com.dhkim.home.SeriesItem
 import com.dhkim.home.toContent
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -31,6 +35,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
+@ExperimentalCoroutinesApi
 class MovieViewModel(
     private val getMainRecommendationMoviesUseCase: GetMoviesUseCase,
     private val getMovieWithCategoryUseCase: GetMovieWithCategoryUseCase
@@ -45,24 +50,29 @@ class MovieViewModel(
         Genre.ANIMATION
     ).map { it.genre }
 
+    private val appBarItems = listOf(
+        SeriesItem.AppBar(group = Group.MovieGroup.APP_BAR),
+        SeriesItem.Category(group = Group.MovieGroup.CATEGORY),
+    ).toImmutableList()
+
+    private val currentMovieContents = MutableStateFlow<ImmutableList<SeriesItem>>(persistentListOf())
+
     private val _uiState = MutableStateFlow(MovieUiState())
-    val uiState = _uiState
-        .onStart { init() }
-        .onetimeStateIn(
-            scope = viewModelScope,
-            initialValue = MovieUiState()
-        )
+    val uiState: StateFlow<MovieUiState> = combine(
+        currentMovieContents,
+        _uiState
+    ) { seriesItems, uiState ->
+        uiState.createUiState(seriesItems)
+    }.onStart {
+        init()
+    }.onetimeStateIn(
+        scope = viewModelScope,
+        initialValue = MovieUiState(displayState = MovieDisplayState.Contents(appBarItems))
+    )
 
     private fun init() {
         viewModelScope.handle(
             block = {
-                val appBarItems = listOf(
-                    SeriesItem.AppBar(group = Group.MovieGroup.APP_BAR),
-                    SeriesItem.Category(group = Group.MovieGroup.CATEGORY),
-                ).toImmutableList()
-
-                _uiState.update { MovieUiState(displayState = MovieDisplayState.Contents(appBarItems)) }
-
                 val language = Language.Korea
                 val region = Region.Korea
                 val jobs = mutableListOf<Deferred<SeriesItem.Content>>()
@@ -84,7 +94,7 @@ class MovieViewModel(
                     SeriesItem.AppBar(group = Group.MovieGroup.APP_BAR),
                     SeriesItem.Category(group = Group.MovieGroup.CATEGORY),
                 ) + jobs.awaitAll()
-                _uiState.update { MovieUiState(displayState = MovieDisplayState.Contents(series.toImmutableList())) }
+                currentMovieContents.update { series.toImmutableList() }
             },
             error = {
             }
@@ -96,6 +106,12 @@ class MovieViewModel(
             is MovieAction.SelectCategory -> {
                 selectCategory(action.category)
             }
+
+            MovieAction.BackToMovieMain -> {
+                _uiState.update {
+                    MovieUiState(displayState = MovieDisplayState.Contents(currentMovieContents.value))
+                }
+            }
         }
     }
 
@@ -103,19 +119,21 @@ class MovieViewModel(
         viewModelScope.handle(
             block = {
                 when (category) {
-                    is Category.Genre -> {
+                    is Category.MovieGenre -> {
                         val movies = getGenreMovies(category.id)
                         _uiState.update {
-                            MovieUiState(displayState = MovieDisplayState.CategoryContents(movies = movies))
+                            MovieUiState(displayState = MovieDisplayState.CategoryContents(category = category.genre, movies = movies))
                         }
                     }
 
                     is Category.Region -> {
                         val movies = getRegionMovies(category.code)
                         _uiState.update {
-                            MovieUiState(displayState = MovieDisplayState.CategoryContents(movies = movies))
+                            MovieUiState(displayState = MovieDisplayState.CategoryContents(category = category.country, movies = movies))
                         }
                     }
+
+                    is Category.TvGenre -> {}
                 }
             },
             error = {
@@ -150,5 +168,25 @@ class MovieViewModel(
             .catch { }
             .cachedIn(viewModelScope)
             .stateIn(viewModelScope)
+    }
+
+    private fun MovieUiState.createUiState(seriesItems: ImmutableList<SeriesItem>): MovieUiState {
+        return when (displayState) {
+            MovieDisplayState.Loading -> {
+                MovieUiState(displayState = MovieDisplayState.Contents(seriesItems))
+            }
+
+            is MovieDisplayState.Contents -> {
+                MovieUiState(displayState = MovieDisplayState.Contents(seriesItems))
+            }
+
+            is MovieDisplayState.CategoryContents -> {
+                this
+            }
+
+            is MovieDisplayState.Error -> {
+                this
+            }
+        }
     }
 }

@@ -13,12 +13,18 @@ import com.dhkim.core.designsystem.MoviePickTheme
 @Composable
 fun CategoryModalPreview() {
     MoviePickTheme {
+        val categories = mutableListOf<Category>().apply {
+            Category.Region.entries.forEach { add(it) }
+            Category.MovieGenre.entries.forEach { add(it) }
+        }
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = Black)
         ) {
             CategoryModal(
+                categories = categories,
                 onCategoryClick = {},
                 onClose = {}
             )

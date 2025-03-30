@@ -135,6 +135,6 @@ class MovieUiStatePreviewProvider : PreviewParameterProvider<MovieUiState> {
     override val values: Sequence<MovieUiState>
         get() = sequenceOf(
             MovieUiState(displayState = MovieDisplayState.Contents(series)),
-            MovieUiState(displayState = MovieDisplayState.CategoryContents(moviesWithCategoryStateFlow)),
+            MovieUiState(displayState = MovieDisplayState.CategoryContents(category = "액션", movies = moviesWithCategoryStateFlow)),
         )
 }

@@ -21,6 +21,8 @@ import com.dhkim.home.Category
 import com.dhkim.home.Group
 import com.dhkim.home.SeriesItem
 import com.dhkim.home.toContent
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -28,6 +30,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -42,26 +45,33 @@ class TvViewModel(
 
     private val shouldShowTvGenres = listOf(
         Genre.COMEDY,
+        Genre.ANIMATION,
+        Genre.NEWS
     ).map { it.genre }
 
+    private val appBarItems = listOf(
+        SeriesItem.AppBar(group = Group.TvGroup.APP_BAR),
+        SeriesItem.Category(group = Group.TvGroup.CATEGORY),
+    ).toImmutableList()
+
+    private val currentTvContents = MutableStateFlow<ImmutableList<SeriesItem>>(persistentListOf())
+
     private val _uiState = MutableStateFlow(TvUiState())
-    val uiState = _uiState
-        .onStart { init() }
-        .onetimeStateIn(
-            scope = viewModelScope,
-            initialValue = TvUiState()
-        )
+    val uiState: StateFlow<TvUiState> = combine(
+        currentTvContents,
+        _uiState
+    ) { seriesItems, uiState ->
+        uiState.createUiState(seriesItems)
+    }.onStart {
+        init()
+    }.onetimeStateIn(
+        scope = viewModelScope,
+        initialValue = TvUiState(displayState = TvDisplayState.Contents(appBarItems))
+    )
 
     private fun init() {
         viewModelScope.handle(
             block = {
-                val appBarItems = listOf(
-                    SeriesItem.AppBar(group = Group.TvGroup.APP_BAR),
-                    SeriesItem.Category(group = Group.TvGroup.CATEGORY),
-                ).toImmutableList()
-
-                _uiState.update { TvUiState(displayState = TvDisplayState.Contents(appBarItems)) }
-
                 val language = Language.Korea
                 val region = Region.Korea
                 val jobs = mutableListOf<Deferred<SeriesItem.Content>>()
@@ -96,7 +106,7 @@ class TvViewModel(
                     SeriesItem.AppBar(group = Group.TvGroup.APP_BAR),
                     SeriesItem.Category(group = Group.TvGroup.CATEGORY),
                 ) + jobs.awaitAll()
-                _uiState.update { TvUiState(displayState = TvDisplayState.Contents(series.toImmutableList())) }
+                currentTvContents.update { series.toImmutableList() }
             },
             error = {
             }
@@ -108,6 +118,12 @@ class TvViewModel(
             is TvAction.SelectCategory -> {
                 selectCategory(action.category)
             }
+
+            TvAction.BackToTvMain -> {
+                _uiState.update {
+                    TvUiState(displayState = TvDisplayState.Contents(currentTvContents.value))
+                }
+            }
         }
     }
 
@@ -115,19 +131,21 @@ class TvViewModel(
         viewModelScope.handle(
             block = {
                 when (category) {
-                    is Category.Genre -> {
+                    is Category.TvGenre -> {
                         val tvs = getGenreTvs(category.id)
                         _uiState.update {
-                            TvUiState(displayState = TvDisplayState.CategoryContents(tvs = tvs))
+                            TvUiState(displayState = TvDisplayState.CategoryContents(category = category.genre, tvs = tvs))
                         }
                     }
 
                     is Category.Region -> {
                         val tvs = getRegionTvs(category.code)
                         _uiState.update {
-                            TvUiState(displayState = TvDisplayState.CategoryContents(tvs = tvs))
+                            TvUiState(displayState = TvDisplayState.CategoryContents(category = category.code, tvs = tvs))
                         }
                     }
+
+                    is Category.MovieGenre -> {}
                 }
             },
             error = {
@@ -162,5 +180,25 @@ class TvViewModel(
             .catch { }
             .cachedIn(viewModelScope)
             .stateIn(viewModelScope)
+    }
+
+    private fun TvUiState.createUiState(seriesItems: ImmutableList<SeriesItem>): TvUiState {
+        return when (displayState) {
+            TvDisplayState.Loading -> {
+                TvUiState(displayState = TvDisplayState.Contents(seriesItems))
+            }
+
+            is TvDisplayState.Contents -> {
+                TvUiState(displayState = TvDisplayState.Contents(seriesItems))
+            }
+
+            is TvDisplayState.CategoryContents -> {
+                this
+            }
+
+            is TvDisplayState.Error -> {
+                this
+            }
+        }
     }
 }

@@ -29,6 +29,7 @@ import com.dhkim.core.ui.CircleCloseButton
 
 @Composable
 fun CategoryModal(
+    categories: List<Category>,
     onCategoryClick: (Category) -> Unit,
     onClose: () -> Unit
 ) {
@@ -38,11 +39,6 @@ fun CategoryModal(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val categories = mutableListOf<Category>().apply {
-            Category.Region.entries.forEach { add(it) }
-            Category.Genre.entries.forEach { add(it) }
-        }
-
         LazyColumn(
             contentPadding = PaddingValues(top = 84.dp, bottom = 42.dp),
             verticalArrangement = Arrangement.spacedBy(26.dp),
@@ -53,7 +49,8 @@ fun CategoryModal(
             items(items = categories, key = { it }) { category ->
                 val name = when (category) {
                     is Category.Region -> category.country
-                    is Category.Genre -> category.genre
+                    is Category.MovieGenre -> category.genre
+                    is Category.TvGenre ->category.genre
                 }
 
                 Text(

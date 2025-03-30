@@ -5,4 +5,5 @@ import com.dhkim.home.Category
 sealed interface MovieAction {
 
     data class SelectCategory(val category: Category) : MovieAction
+    data object BackToMovieMain : MovieAction
 }

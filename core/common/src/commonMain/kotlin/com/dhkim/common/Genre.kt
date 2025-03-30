@@ -20,6 +20,14 @@ enum class Genre(val id: Int, val genre: String) {
     THRILLER(53, "스릴러"),
     WAR(10752, "전쟁"),
     WESTERN(37, "서부"),
+    ACTION_ADVENTURE(10759, "액션 & 어드벤처"),
+    KIDS(10762, "키즈"),
+    NEWS(10763, "뉴스"),
+    REALITY(10764, "리얼리티"),
+    SCI_FI_FANTASY(10765, "SF & 판타지"),
+    SOAP(10766, "연속극"),
+    TALK(10767, "토크쇼"),
+    WAR_POLITICS(10768, "전쟁 & 정치"),
     Unknown(-1, "알 수 없음");
 
     companion object {

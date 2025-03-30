@@ -38,6 +38,8 @@ sealed interface Group {
         CATEGORY(title = "카테고리"),
         MAIN_RECOMMENDATION_TV(title = "오늘 대표 추천 TV"),
         COMEDY_TV(title = "코미디", genre = Genre.COMEDY),
+        ANIMATION_TV(title = "애니메이션", genre = Genre.ANIMATION),
+        NEWS_TV(title = "뉴스", genre = Genre.NEWS),
         AIRING_TODAY_TV(title = "오늘 방영하는 TV 프로그램"),
         ON_THE_AIR_TV(title = "지금 방송 중인 TV 프로그램"),
         TOP_RATED_TV(title = "인기 많은 TV 프로그램"),

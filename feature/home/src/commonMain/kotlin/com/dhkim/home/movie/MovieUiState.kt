@@ -14,5 +14,5 @@ sealed interface MovieDisplayState {
     data object Loading : MovieDisplayState
     data class Error(val errorCode: String, val message: String) : MovieDisplayState
     data class Contents(val movies: ImmutableList<SeriesItem>) : MovieDisplayState
-    data class CategoryContents(val movies: StateFlow<PagingData<Series>>) : MovieDisplayState
+    data class CategoryContents(val category: String, val movies: StateFlow<PagingData<Series>>) : MovieDisplayState
 }

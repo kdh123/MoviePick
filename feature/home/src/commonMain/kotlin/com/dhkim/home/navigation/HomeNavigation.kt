@@ -25,7 +25,8 @@ fun NavGraphBuilder.home(
     sharedTransitionScope: SharedTransitionScope,
     navigateToVideo: (String) -> Unit,
     navigateToMovie: () -> Unit,
-    navigateToTv: () -> Unit
+    navigateToTv: () -> Unit,
+    onBack: () -> Unit
 ) {
     composable(HOME_ROUTE) {
         val viewModel = koinViewModel<HomeViewModel>()
@@ -37,7 +38,8 @@ fun NavGraphBuilder.home(
             onAction = viewModel::onAction,
             navigateToVideo = navigateToVideo,
             navigateToMovie = navigateToMovie,
-            navigateToTv = navigateToTv
+            navigateToTv = navigateToTv,
+            onBack = onBack
         )
     }
 }

@@ -36,7 +36,7 @@ internal data class TvResult(
     val overview: String,
     val popularity: Double,
     @SerialName("poster_path")
-    val posterPath: String,
+    val posterPath: String?,
     @SerialName("vote_average")
     val voteAverage: Double,
     @SerialName("vote_count")
@@ -47,7 +47,11 @@ internal data class TvResult(
             id = "$id",
             title = name,
             adult = adult,
-            country = Region.entries.firstOrNull { it.code == originCountry[0] }?.country ?: Region.Unknown.country,
+            country = if (originCountry.isNotEmpty()) {
+                Region.entries.firstOrNull { it.code == originCountry[0] }?.country ?: Region.Unknown.country
+            } else {
+                Region.Unknown.country
+            },
             overview = overview,
             imageUrl = "https://image.tmdb.org/t/p/original${posterPath}",
             genre = genreIds.map { Genre.seriesGenre(it).genre },

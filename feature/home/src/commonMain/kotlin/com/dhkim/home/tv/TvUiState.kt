@@ -14,5 +14,5 @@ sealed interface TvDisplayState {
     data object Loading : TvDisplayState
     data class Error(val errorCode: String, val message: String) : TvDisplayState
     data class Contents(val tvs: ImmutableList<SeriesItem>) : TvDisplayState
-    data class CategoryContents(val tvs: StateFlow<PagingData<Series>>) : TvDisplayState
+    data class CategoryContents(val category: String, val tvs: StateFlow<PagingData<Series>>) : TvDisplayState
 }

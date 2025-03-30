@@ -39,6 +39,7 @@ import com.dhkim.core.ui.RecommendationSeries
 import com.dhkim.core.ui.Resources
 import com.dhkim.core.ui.SeriesList
 import com.dhkim.domain.tv.model.Tv
+import com.dhkim.home.Category
 import com.dhkim.home.CategoryModal
 import com.dhkim.home.Genre
 import com.dhkim.home.GridSeriesWithCategory
@@ -91,7 +92,11 @@ fun TvScreen(
             }
 
             is TvDisplayState.CategoryContents -> {
-                GridSeriesWithCategory(series = uiState.displayState.tvs)
+                GridSeriesWithCategory(
+                    category = uiState.displayState.category,
+                    series = uiState.displayState.tvs,
+                    onBack = { onAction(TvAction.BackToTvMain) }
+                )
             }
 
             is TvDisplayState.Error -> {
@@ -157,6 +162,8 @@ fun ContentsScreen(
                         }
                     }
 
+                    Group.TvGroup.NEWS_TV,
+                    Group.TvGroup.ANIMATION_TV,
                     Group.TvGroup.COMEDY_TV,
                     Group.TvGroup.AIRING_TODAY_TV,
                     Group.TvGroup.ON_THE_AIR_TV,
@@ -193,7 +200,12 @@ fun ContentsScreen(
         }
 
         if (homeState.showCategoryModal) {
+            val categories = mutableListOf<Category>().apply {
+                Category.Region.entries.forEach { add(it) }
+                Category.TvGenre.entries.forEach { add(it) }
+            }
             CategoryModal(
+                categories = categories,
                 onCategoryClick = {
                     onAction(TvAction.SelectCategory(it))
                     homeState.showCategoryModal = false
