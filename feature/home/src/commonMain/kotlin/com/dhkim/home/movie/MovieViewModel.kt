@@ -10,13 +10,13 @@ import com.dhkim.common.Language
 import com.dhkim.common.Region
 import com.dhkim.common.Series
 import com.dhkim.common.handle
-import com.dhkim.common.onetimeStateIn
 import com.dhkim.domain.movie.usecase.GetMovieWithCategoryUseCase
 import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import com.dhkim.home.Category
 import com.dhkim.home.Group
 import com.dhkim.home.SeriesItem
 import com.dhkim.home.toContent
+import com.diamondedge.logging.logging
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -25,6 +25,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
@@ -43,8 +44,8 @@ class MovieViewModel(
 
     private val shouldShowMovieGenres = listOf(
         Genre.ACTION,
-        Genre.ROMANCE,
-        Genre.COMEDY,
+        Genre.MUSIC,
+        Genre.DRAMA,
         Genre.THRILLER,
         Genre.ADVENTURE,
         Genre.ANIMATION
@@ -65,8 +66,9 @@ class MovieViewModel(
         uiState.createUiState(seriesItems)
     }.onStart {
         init()
-    }.onetimeStateIn(
+    }.stateIn(
         scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
         initialValue = MovieUiState(displayState = MovieDisplayState.Contents(appBarItems))
     )
 
@@ -121,9 +123,11 @@ class MovieViewModel(
                 when (category) {
                     is Category.MovieGenre -> {
                         val movies = getGenreMovies(category.id)
+                        logging().info { "selectCategory : ${uiState.value.displayState}" }
                         _uiState.update {
                             MovieUiState(displayState = MovieDisplayState.CategoryContents(category = category.genre, movies = movies))
                         }
+                        logging().info { "selectCategory222 : ${uiState.value.displayState}" }
                     }
 
                     is Category.Region -> {
@@ -137,7 +141,6 @@ class MovieViewModel(
                 }
             },
             error = {
-
             }
         )
     }

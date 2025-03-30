@@ -20,7 +20,7 @@ import org.jetbrains.compose.resources.DrawableResource
 @Stable
 class AppState(val navController: NavHostController) {
     val bottomNavItems = listOf(Screen.Home, Screen.Upcoming)
-    private val routes = listOf(HOME_ROUTE, MOVIE_ROUTE, UPCOMING_ROUTE)
+    private val routes = listOf(HOME_ROUTE, MOVIE_ROUTE, TV_ROUTE, UPCOMING_ROUTE)
 
     val showBottomNavigation: Boolean
         @Composable get() {
@@ -33,7 +33,7 @@ class AppState(val navController: NavHostController) {
     val currentDestination: String
         @Composable get() {
             val entry = navController.currentBackStackEntryAsState().value
-            val route = entry?.destination?.parent?.route ?: entry?.destination?.route ?: return Screen.Home.route
+            val route = entry?.destination?.parent?.route ?: entry?.destination?.route ?: return Screen.Home.route[0]
 
             return route
         }
@@ -63,8 +63,8 @@ fun rememberAppState(
     }
 }
 
-sealed class Screen(val res: DrawableResource, val route: String) {
-    data object Home : Screen(Res.drawable.ic_home, HOME_ROUTE)
-    data object Upcoming : Screen(Res.drawable.ic_upcoming, UPCOMING_ROUTE)
+sealed class Screen(val res: DrawableResource, val route: List<String>) {
+    data object Home : Screen(Res.drawable.ic_home, listOf(HOME_ROUTE, MOVIE_ROUTE, TV_ROUTE))
+    data object Upcoming : Screen(Res.drawable.ic_upcoming, listOf(UPCOMING_ROUTE))
 }
 

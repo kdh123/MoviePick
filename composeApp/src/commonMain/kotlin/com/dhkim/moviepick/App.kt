@@ -58,7 +58,7 @@ fun App() {
             ) { padding ->
                 NavHost(
                     navController = appState.navController,
-                    startDestination = Screen.Home.route,
+                    startDestination = Screen.Home.route[0],
                     modifier = Modifier
                         .padding(top = padding.calculateTopPadding(), bottom = padding.calculateBottomPadding())
                 ) {
@@ -96,10 +96,10 @@ fun BottomBar(appState: AppState) {
             .wrapContentHeight(align = Alignment.Bottom)
     ) {
         appState.bottomNavItems.forEach { screen ->
-            val isSelected = screen.route == appState.currentDestination
+            val isSelected = screen.route.contains(appState.currentDestination)
             val onBottomClick = remember {
                 {
-                    appState.navigateToTopLevelDestination(screen.route)
+                    appState.navigateToTopLevelDestination(screen.route[0])
                 }
             }
 
@@ -107,7 +107,7 @@ fun BottomBar(appState: AppState) {
                 icon = {
                     Icon(
                         painter = painterResource(screen.res),
-                        contentDescription = screen.route,
+                        contentDescription = screen.route[0],
                         tint = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
                     )
                 },
