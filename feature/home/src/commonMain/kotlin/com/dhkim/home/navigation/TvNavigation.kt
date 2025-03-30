@@ -7,7 +7,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.dhkim.home.tv.TvScreen
+import com.dhkim.home.TvScreenContainer
 import com.dhkim.home.tv.TvViewModel
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -27,7 +27,7 @@ fun NavGraphBuilder.tv(
         val viewModel = koinViewModel<TvViewModel>()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-        TvScreen(
+        TvScreenContainer(
             uiState = uiState,
             sharedTransitionScope = sharedTransitionScope,
             animatedVisibilityScope = this@composable,

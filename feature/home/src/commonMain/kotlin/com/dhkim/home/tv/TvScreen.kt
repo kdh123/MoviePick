@@ -60,7 +60,8 @@ fun TvScreen(
     animatedVisibilityScope: AnimatedContentScope,
     onAction: (TvAction) -> Unit,
     navigateToVideo: (String) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onBackPressed: @Composable (() -> Unit)? = null
 ) {
     val homeState = (uiState.displayState as? TvDisplayState.Contents)?.tvs?.let { seriesItems ->
         rememberHomeState(seriesItems = seriesItems, mainRecommendationSeriesGroup = Group.TvGroup.MAIN_RECOMMENDATION_TV)
@@ -97,6 +98,7 @@ fun TvScreen(
                     series = uiState.displayState.tvs,
                     onBack = { onAction(TvAction.BackToTvMain) }
                 )
+                onBackPressed?.invoke()
             }
 
             is TvDisplayState.Error -> {
