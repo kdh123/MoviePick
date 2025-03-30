@@ -32,6 +32,8 @@ kotlin {
     jvm("desktop")
 
     sourceSets {
+        val desktopMain by getting
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
@@ -72,6 +74,10 @@ kotlin {
             implementation(libs.bundles.paging)
             implementation(libs.bundles.kmpallete)
             api(libs.logging.kmp)
+        }
+        desktopMain.dependencies {
+            implementation(compose.desktop.currentOs)
+            implementation(libs.kotlinx.coroutines.swing)
         }
         commonTest.dependencies {
             implementation(projects.core.testing)

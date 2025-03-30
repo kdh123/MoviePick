@@ -7,8 +7,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.dhkim.home.movie.MovieScreen
+import com.dhkim.home.MovieScreenContainer
 import com.dhkim.home.movie.MovieViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
@@ -16,6 +17,7 @@ const val MOVIE_ROUTE = "movie_route"
 
 fun NavController.navigateToMovie() = navigate(MOVIE_ROUTE)
 
+@ExperimentalCoroutinesApi
 @ExperimentalSharedTransitionApi
 @KoinExperimentalAPI
 fun NavGraphBuilder.movie(
@@ -27,7 +29,7 @@ fun NavGraphBuilder.movie(
         val viewModel = koinViewModel<MovieViewModel>()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-        MovieScreen(
+        MovieScreenContainer(
             uiState = uiState,
             sharedTransitionScope = sharedTransitionScope,
             animatedVisibilityScope = this@composable,

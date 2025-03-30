@@ -60,7 +60,8 @@ fun MovieScreen(
     animatedVisibilityScope: AnimatedContentScope,
     onAction: (MovieAction) -> Unit,
     navigateToVideo: (String) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onBackPressed: @Composable (() -> Unit)? = null
 ) {
     val homeState = (uiState.displayState as? MovieDisplayState.Contents)?.movies?.let { homeMovieItems ->
         rememberHomeState(seriesItems = homeMovieItems, mainRecommendationSeriesGroup = Group.MovieGroup.MAIN_RECOMMENDATION_MOVIE)
@@ -99,6 +100,7 @@ fun MovieScreen(
                         onAction(MovieAction.BackToMovieMain)
                     }
                 )
+                onBackPressed?.invoke()
             }
 
             is MovieDisplayState.Error -> {
