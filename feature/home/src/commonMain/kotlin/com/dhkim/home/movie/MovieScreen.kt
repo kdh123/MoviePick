@@ -46,6 +46,7 @@ import com.dhkim.home.GridSeriesWithCategory
 import com.dhkim.home.Group
 import com.dhkim.home.HomeState
 import com.dhkim.home.RecommendationButtons
+import com.dhkim.home.Series
 import com.dhkim.home.SeriesItem
 import com.dhkim.home.rememberHomeState
 import kotlinx.collections.immutable.ImmutableList
@@ -60,8 +61,8 @@ fun MovieScreen(
     animatedVisibilityScope: AnimatedContentScope,
     onAction: (MovieAction) -> Unit,
     navigateToVideo: (String) -> Unit,
-    onBack: () -> Unit,
-    onBackPressed: @Composable (() -> Unit)? = null
+    navigateToSeriesCollection: (series: Series, genreId: Int?, region: String?) -> Unit,
+    onBack: () -> Unit
 ) {
     val homeState = (uiState.displayState as? MovieDisplayState.Contents)?.movies?.let { homeMovieItems ->
         rememberHomeState(seriesItems = homeMovieItems, mainRecommendationSeriesGroup = Group.MovieGroup.MAIN_RECOMMENDATION_MOVIE)
@@ -88,19 +89,9 @@ fun MovieScreen(
                     animatedVisibilityScope = animatedVisibilityScope,
                     onAction = onAction,
                     navigateToVideo = navigateToVideo,
+                    navigateToSeriesCollection = navigateToSeriesCollection,
                     onBack = onBack
                 )
-            }
-
-            is MovieDisplayState.CategoryContents -> {
-                GridSeriesWithCategory(
-                    category = uiState.displayState.category,
-                    series = uiState.displayState.movies,
-                    onBack = {
-                        onAction(MovieAction.BackToMovieMain)
-                    }
-                )
-                onBackPressed?.invoke()
             }
 
             is MovieDisplayState.Error -> {
@@ -118,6 +109,7 @@ fun ContentsScreen(
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     navigateToVideo: (String) -> Unit,
+    navigateToSeriesCollection: (series: Series, genreId: Int?, region: String?) -> Unit,
     onAction: (MovieAction) -> Unit,
     onBack: () -> Unit
 ) {
@@ -211,7 +203,11 @@ fun ContentsScreen(
             CategoryModal(
                 categories = categories,
                 onCategoryClick = {
-                    onAction(MovieAction.SelectCategory(it))
+                    when (it) {
+                        is Category.Region -> navigateToSeriesCollection(Series.MOVIE, null, it.code)
+                        is Category.MovieGenre -> navigateToSeriesCollection(Series.MOVIE, it.id, null)
+                        else -> {}
+                    }
                     homeState.showCategoryModal = false
                 },
                 onClose = { homeState.showCategoryModal = false }

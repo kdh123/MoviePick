@@ -86,6 +86,7 @@ private fun MovieScreenDarkPreview(
                         animatedVisibilityScope = this@AnimatedContent,
                         onAction = {},
                         navigateToVideo = {},
+                        navigateToSeriesCollection = { _, _, _ -> },
                         onBack = {}
                     )
                 }
@@ -114,6 +115,7 @@ private fun MovieScreenPreview(
                         animatedVisibilityScope = this@AnimatedContent,
                         onAction = {},
                         navigateToVideo = {},
+                        navigateToSeriesCollection = { _, _, _ -> },
                         onBack = {}
                     )
                 }
@@ -135,6 +137,5 @@ class MovieUiStatePreviewProvider : PreviewParameterProvider<MovieUiState> {
     override val values: Sequence<MovieUiState>
         get() = sequenceOf(
             MovieUiState(displayState = MovieDisplayState.Contents(series)),
-            MovieUiState(displayState = MovieDisplayState.CategoryContents(category = "액션", movies = moviesWithCategoryStateFlow)),
         )
 }

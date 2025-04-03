@@ -43,11 +43,19 @@ fun <T> LifecycleOwner.onStartCollect(flow: Flow<T>, block: suspend (T) -> Unit)
     }
 }
 
+interface Restarter {
+    fun restart()
+}
+
+interface RestartableStateFlow<out T> : StateFlow<T> {
+    fun restart()
+}
+
 fun <T> Flow<T>.onetimeStateIn(
     scope: CoroutineScope,
     initialValue: T,
     stopTimeOut: Long = 5_000,
-): StateFlow<T> {
+): RestartableStateFlow<T> {
     val restarter = OneTimeSharingStarted(stopTimeOut = stopTimeOut)
     val stateFlow = stateIn(
         scope = scope,
@@ -55,13 +63,17 @@ fun <T> Flow<T>.onetimeStateIn(
         initialValue = initialValue
     )
 
-    return stateFlow
+    return object : RestartableStateFlow<T>, StateFlow<T> by stateFlow {
+        override fun restart() {
+            restarter.restart()
+        }
+    }
 }
 
 class OneTimeSharingStarted(
     private val stopTimeOut: Long,
     private val replayExpiration: Long = Long.MAX_VALUE,
-) : SharingStarted {
+) : SharingStarted, Restarter {
 
     private val hasCollected: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private val restartFlow: MutableSharedFlow<SharingCommand> =
@@ -87,5 +99,9 @@ class OneTimeSharingStarted(
                 it != SharingCommand.START
             }.distinctUntilChanged()
         )
+    }
+
+    override fun restart() {
+        restartFlow.tryEmit(SharingCommand.START)
     }
 }

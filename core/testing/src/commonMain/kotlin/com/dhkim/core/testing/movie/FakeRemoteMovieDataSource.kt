@@ -91,9 +91,6 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
     private val topRatedPagingSource = topRatedMovies.asPagingSourceFactory().invoke()
     private val nowPlayingPagingSource = nowPlayingMovies.asPagingSourceFactory().invoke()
     private val upcomingPagingSource = upcomingMovies.asPagingSourceFactory().invoke()
-    private val movieWithCategoryPagingSource = (topRatedMovies + upcomingMovies + nowPlayingMovies)
-        .filter { it.genre.contains(Genre.ROMANCE.genre) || it.genre.contains(Genre.DRAMA.genre)}
-        .asPagingSourceFactory().invoke()
 
     override fun getTopRatedMovies(language: Language, region: Region): Flow<PagingData<Movie>> {
         return flow {
@@ -135,6 +132,11 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
     }
 
     override fun getMovieWithCategory(language: Language, genre: Genre?, region: Region?): Flow<PagingData<Movie>> {
+        val movieWithCategoryPagingSource = (topRatedMovies + upcomingMovies + nowPlayingMovies)
+            .filter { it.genre.contains(genre?.genre) || it.genre.contains(region?.country)}
+            .asPagingSourceFactory().invoke()
+
+
         return flow {
             val pager = TestPager(PagingConfig(pageSize = 15), movieWithCategoryPagingSource)
             val page = with(pager) {

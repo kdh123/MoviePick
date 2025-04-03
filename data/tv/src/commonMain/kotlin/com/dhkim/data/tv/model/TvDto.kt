@@ -54,7 +54,7 @@ internal data class TvResult(
             },
             overview = overview,
             imageUrl = "https://image.tmdb.org/t/p/original${posterPath}",
-            genre = genreIds.map { Genre.seriesGenre(it).genre },
+            genre = genreIds.map { Genre.seriesGenre(it)?.genre ?: Genre.Unknown.genre },
             voteAverage = voteAverage,
             firstAirDate = firstAirDate,
             popularity = popularity

@@ -7,7 +7,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.dhkim.home.MovieScreenContainer
+import com.dhkim.home.Series
+import com.dhkim.home.movie.MovieScreen
 import com.dhkim.home.movie.MovieViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.compose.viewmodel.koinViewModel
@@ -23,18 +24,20 @@ fun NavController.navigateToMovie() = navigate(MOVIE_ROUTE)
 fun NavGraphBuilder.movie(
     sharedTransitionScope: SharedTransitionScope,
     navigateToVideo: (String) -> Unit,
+    navigateToSeriesCollection: (series: Series, genreId: Int?, region: String?) -> Unit,
     onBack: () -> Unit
 ) {
     composable(MOVIE_ROUTE) {
         val viewModel = koinViewModel<MovieViewModel>()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-        MovieScreenContainer(
+        MovieScreen(
             uiState = uiState,
             sharedTransitionScope = sharedTransitionScope,
             animatedVisibilityScope = this@composable,
             onAction = viewModel::onAction,
             navigateToVideo = navigateToVideo,
+            navigateToSeriesCollection = navigateToSeriesCollection,
             onBack = onBack
         )
     }

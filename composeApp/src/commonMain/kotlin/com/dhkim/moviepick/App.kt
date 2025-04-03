@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.navigation.compose.NavHost
 import com.dhkim.home.navigation.home
 import com.dhkim.home.navigation.movie
+import com.dhkim.home.navigation.seriesCollection
 import com.dhkim.home.navigation.tv
 import com.dhkim.upcoming.navigation.upcoming
 import com.dhkim.video.navigation.video
@@ -72,11 +73,15 @@ fun App() {
                     movie(
                         sharedTransitionScope = this@SharedTransitionLayout,
                         navigateToVideo = appState::navigateToVideo,
+                        navigateToSeriesCollection = appState::navigateToSeriesCollection,
                         onBack = appState::onBack
                     )
                     tv(
                         sharedTransitionScope = this@SharedTransitionLayout,
                         navigateToVideo = appState::navigateToVideo,
+                        onBack = appState::onBack
+                    )
+                    seriesCollection(
                         onBack = appState::onBack
                     )
                     upcoming()
