@@ -7,6 +7,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.dhkim.home.Series
 import com.dhkim.home.tv.TvScreen
 import com.dhkim.home.tv.TvViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -21,6 +22,7 @@ fun NavController.navigateToTv() = navigate(TV_ROUTE)
 fun NavGraphBuilder.tv(
     sharedTransitionScope: SharedTransitionScope,
     navigateToVideo: (String) -> Unit,
+    navigateToSeriesCollection: (series: Series, genreId: Int?, region: String?) -> Unit,
     onBack: () -> Unit
 ) {
     composable(TV_ROUTE) {
@@ -33,6 +35,7 @@ fun NavGraphBuilder.tv(
             animatedVisibilityScope = this@composable,
             onAction = viewModel::onAction,
             navigateToVideo = navigateToVideo,
+            navigateToSeriesCollection = navigateToSeriesCollection,
             onBack = onBack
         )
     }

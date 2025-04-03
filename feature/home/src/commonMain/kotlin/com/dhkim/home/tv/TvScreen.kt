@@ -42,10 +42,10 @@ import com.dhkim.domain.tv.model.Tv
 import com.dhkim.home.Category
 import com.dhkim.home.CategoryModal
 import com.dhkim.home.Genre
-import com.dhkim.home.GridSeriesWithCategory
 import com.dhkim.home.Group
 import com.dhkim.home.HomeState
 import com.dhkim.home.RecommendationButtons
+import com.dhkim.home.Series
 import com.dhkim.home.SeriesItem
 import com.dhkim.home.rememberHomeState
 import kotlinx.collections.immutable.ImmutableList
@@ -60,8 +60,8 @@ fun TvScreen(
     animatedVisibilityScope: AnimatedContentScope,
     onAction: (TvAction) -> Unit,
     navigateToVideo: (String) -> Unit,
+    navigateToSeriesCollection: (series: Series, genreId: Int?, region: String?) -> Unit,
     onBack: () -> Unit,
-    onBackPressed: @Composable (() -> Unit)? = null
 ) {
     val homeState = (uiState.displayState as? TvDisplayState.Contents)?.tvs?.let { seriesItems ->
         rememberHomeState(seriesItems = seriesItems, mainRecommendationSeriesGroup = Group.TvGroup.MAIN_RECOMMENDATION_TV)
@@ -88,17 +88,9 @@ fun TvScreen(
                     animatedVisibilityScope = animatedVisibilityScope,
                     onAction = onAction,
                     navigateToVideo = navigateToVideo,
+                    navigateToSeriesCollection = navigateToSeriesCollection,
                     onBack = onBack
                 )
-            }
-
-            is TvDisplayState.CategoryContents -> {
-                GridSeriesWithCategory(
-                    category = uiState.displayState.category,
-                    series = uiState.displayState.tvs,
-                    onBack = { onAction(TvAction.BackToTvMain) }
-                )
-                onBackPressed?.invoke()
             }
 
             is TvDisplayState.Error -> {
@@ -116,6 +108,7 @@ fun ContentsScreen(
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     navigateToVideo: (String) -> Unit,
+    navigateToSeriesCollection: (series: Series, genreId: Int?, region: String?) -> Unit,
     onAction: (TvAction) -> Unit,
     onBack: () -> Unit
 ) {
@@ -209,7 +202,11 @@ fun ContentsScreen(
             CategoryModal(
                 categories = categories,
                 onCategoryClick = {
-                    onAction(TvAction.SelectCategory(it))
+                    when (it) {
+                        is Category.Region -> navigateToSeriesCollection(Series.TV, null, it.code)
+                        is Category.TvGenre -> navigateToSeriesCollection(Series.TV, it.id, null)
+                        else -> {}
+                    }
                     homeState.showCategoryModal = false
                 },
                 onClose = { homeState.showCategoryModal = false }

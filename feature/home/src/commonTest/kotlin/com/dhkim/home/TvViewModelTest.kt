@@ -60,14 +60,4 @@ class TvViewModelTest {
         viewModel.uiState.first()
         println("answer : ${viewModel.uiState.value}")
     }
-
-    @Test
-    fun `TV 카테고리 선택`() = runTest {
-        viewModel.uiState.first()
-        viewModel.onAction(TvAction.SelectCategory(Category.MovieGenre.COMEDY))
-        val state = viewModel.uiState.value.displayState
-        if (state is TvDisplayState.CategoryContents) {
-            println("movies : ${state.tvs.asSnapshot()}")
-        }
-    }
 }

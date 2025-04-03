@@ -42,7 +42,6 @@ import com.dhkim.domain.movie.model.Movie
 import com.dhkim.home.Category
 import com.dhkim.home.CategoryModal
 import com.dhkim.home.Genre
-import com.dhkim.home.GridSeriesWithCategory
 import com.dhkim.home.Group
 import com.dhkim.home.HomeState
 import com.dhkim.home.RecommendationButtons

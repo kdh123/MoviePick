@@ -79,6 +79,7 @@ fun App() {
                     tv(
                         sharedTransitionScope = this@SharedTransitionLayout,
                         navigateToVideo = appState::navigateToVideo,
+                        navigateToSeriesCollection = appState::navigateToSeriesCollection,
                         onBack = appState::onBack
                     )
                     seriesCollection(

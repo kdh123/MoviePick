@@ -12,8 +12,6 @@ import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import com.dhkim.home.Group
 import com.dhkim.home.SeriesItem
 import com.dhkim.home.toContent
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -43,8 +41,6 @@ class MovieViewModel(
         SeriesItem.AppBar(group = Group.MovieGroup.APP_BAR),
         SeriesItem.Category(group = Group.MovieGroup.CATEGORY),
     ).toImmutableList()
-
-    private val currentMovieContents = MutableStateFlow<ImmutableList<SeriesItem>>(persistentListOf())
 
     private val _uiState = MutableStateFlow(MovieUiState())
     val uiState: StateFlow<MovieUiState> = _uiState.onStart {
