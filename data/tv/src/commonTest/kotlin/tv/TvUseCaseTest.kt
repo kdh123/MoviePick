@@ -8,9 +8,13 @@ import com.dhkim.core.testing.movie.FakeGetTodayRecommendationTvUseCase
 import com.dhkim.core.testing.tv.FakeGetAiringTodayTvsUseCase
 import com.dhkim.core.testing.tv.FakeGetOnTheAirTvsUseCase
 import com.dhkim.core.testing.tv.FakeGetTopRatedTvsUseCase
+import com.dhkim.core.testing.tv.FakeGetTvDetailUseCase
+import com.dhkim.core.testing.tv.FakeGetTvReviewsUseCase
 import com.dhkim.core.testing.tv.FakeGetTvWithCategoryUseCase
 import com.dhkim.data.tv.di.tvModule
 import com.dhkim.domain.tv.usecase.AIRING_TODAY_TVS_KEY
+import com.dhkim.domain.tv.usecase.GetTvDetailUseCase
+import com.dhkim.domain.tv.usecase.GetTvReviewsUseCase
 import com.dhkim.domain.tv.usecase.GetTvWithCategoryUseCase
 import com.dhkim.domain.tv.usecase.GetTvsUseCase
 import com.dhkim.domain.tv.usecase.ON_THE_AIR_TVS_KEY
@@ -18,6 +22,7 @@ import com.dhkim.domain.tv.usecase.TODAY_RECOMMENDATION_TV_KEY
 import com.dhkim.domain.tv.usecase.TOP_RATED_TVS_KEY
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -67,8 +72,9 @@ class TvUseCaseTest : KoinTest {
 
     @Test
     fun `Airing Today TV 가져오기 성공_Fake`() = runTest {
-        val data = FakeGetAiringTodayTvsUseCase().invoke(Language.Korea).asSnapshot()
-        println(data)
+        FakeGetAiringTodayTvsUseCase().invoke(Language.Korea).asSnapshot().forEach {
+            println(it)
+        }
     }
 
     @Test
@@ -110,6 +116,34 @@ class TvUseCaseTest : KoinTest {
     @Test
     fun `카테고리에 해당하는 TV 가져오기_Fake - Only Android`() = runTest {
         FakeGetTvWithCategoryUseCase().invoke(language = Language.Korea, genre = Genre.ROMANCE).asSnapshot().forEach {
+            println(it)
+        }
+    }
+
+    @Test
+    fun `TV 상세 정보 가져오기_Real - Only Android`() = runTest {
+        val getTvDetailUseCase = get<GetTvDetailUseCase>()
+        val tv = getTvDetailUseCase(id = "61818", language = Language.Korea).first()
+        println(tv)
+    }
+
+    @Test
+    fun `TV 상세 정보 가져오기_Fake - Only Android`() = runTest {
+       val movie = FakeGetTvDetailUseCase().invoke(id = "airingTodayId7", language = Language.Korea)
+        println(movie.first())
+    }
+
+    @Test
+    fun `TV 리뷰 가져오기_Real - Only Android`() = runTest {
+        val getTvReviewsUseCase = get<GetTvReviewsUseCase>()
+        getTvReviewsUseCase(id = "2734").asSnapshot().forEach {
+            println(it)
+        }
+    }
+
+    @Test
+    fun `TV 리뷰 가져오기_Fake - Only Android`() = runTest {
+        FakeGetTvReviewsUseCase().invoke(id = "airingTodayId7").asSnapshot().forEach {
             println(it)
         }
     }

@@ -6,6 +6,10 @@ import com.dhkim.data.datasource.RemoteMovieDataSource
 import com.dhkim.data.datasource.RemoteMovieDataSourceImpl
 import com.dhkim.data.repository.MovieRepositoryImpl
 import com.dhkim.domain.movie.repository.MovieRepository
+import com.dhkim.domain.movie.usecase.GetMovieDetailUseCase
+import com.dhkim.domain.movie.usecase.GetMovieDetailUseCaseImpl
+import com.dhkim.domain.movie.usecase.GetMovieReviewsUseCase
+import com.dhkim.domain.movie.usecase.GetMovieReviewsUseCaseImpl
 import com.dhkim.domain.movie.usecase.GetMovieVideoUseCase
 import com.dhkim.domain.movie.usecase.GetMovieVideoUseCaseImpl
 import com.dhkim.domain.movie.usecase.GetMovieWithCategoryUseCase
@@ -38,6 +42,8 @@ val movieModule = module {
     factory<GetMoviesUseCase>(named(NOW_PLAYING_MOVIES_KEY)) { GetNowPlayingMoviesUseCase(get()) }
     factory<GetMoviesUseCase>(named(UPCOMING_MOVIES_KEY)) { GetUpcomingMoviesUseCase(get()) }
     factoryOf(::GetMovieWithCategoryUseCaseImpl).bind<GetMovieWithCategoryUseCase>()
+    factoryOf(::GetMovieDetailUseCaseImpl).bind<GetMovieDetailUseCase>()
+    factoryOf(::GetMovieReviewsUseCaseImpl).bind<GetMovieReviewsUseCase>()
     factory {
         mapOf(
             TODAY_RECOMMENDATION_MOVIE_KEY to get<GetMoviesUseCase>(named(TODAY_RECOMMENDATION_MOVIE_KEY)),

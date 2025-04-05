@@ -11,6 +11,10 @@ import com.dhkim.data.tv.datasource.RemoteTvDataSource
 import com.dhkim.domain.tv.repository.TvRepository
 import com.dhkim.domain.tv.usecase.AIRING_TODAY_TVS_KEY
 import com.dhkim.domain.tv.usecase.GetTodayRecommendationTvUseCase
+import com.dhkim.domain.tv.usecase.GetTvDetailUseCase
+import com.dhkim.domain.tv.usecase.GetTvDetailUseCaseImpl
+import com.dhkim.domain.tv.usecase.GetTvReviewsUseCase
+import com.dhkim.domain.tv.usecase.GetTvReviewsUseCaseImpl
 import com.dhkim.domain.tv.usecase.GetTvVideoUseCase
 import com.dhkim.domain.tv.usecase.GetTvWithCategoryUseCase
 import com.dhkim.domain.tv.usecase.GetTvsUseCase
@@ -34,6 +38,8 @@ val tvModule = module {
     factory<GetTvsUseCase>(named(TOP_RATED_TVS_KEY)) { GetTopRatedTvsUseCase(get()) }
     factoryOf(::GetTvWithCategoryUseCaseImpl).bind<GetTvWithCategoryUseCase>()
     factoryOf(::GetTvVideoUseCaseImpl).bind<GetTvVideoUseCase>()
+    factoryOf(::GetTvDetailUseCaseImpl).bind<GetTvDetailUseCase>()
+    factoryOf(::GetTvReviewsUseCaseImpl).bind<GetTvReviewsUseCase>()
     factory {
         mapOf(
             TODAY_RECOMMENDATION_TV_KEY to get<GetTvsUseCase>(named(TODAY_RECOMMENDATION_TV_KEY)),

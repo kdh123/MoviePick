@@ -4,12 +4,16 @@ import app.cash.paging.testing.asSnapshot
 import com.dhkim.common.Genre
 import com.dhkim.common.Language
 import com.dhkim.common.Region
+import com.dhkim.core.testing.movie.FakeGetMovieDetailUseCase
+import com.dhkim.core.testing.movie.FakeGetMovieReviewsUseCase
 import com.dhkim.core.testing.movie.FakeGetMovieVideoUseCase
 import com.dhkim.core.testing.movie.FakeGetMovieWithCategoryUseCase
 import com.dhkim.core.testing.movie.FakeGetTopRatedMoviesUseCase
 import com.dhkim.core.testing.movie.FakeGetUpcomingMoviesUseCase
 import com.dhkim.core.testing.movie.FakeGetTodayRecommendationMovieUseCase
 import com.dhkim.data.di.movieModule
+import com.dhkim.domain.movie.usecase.GetMovieDetailUseCase
+import com.dhkim.domain.movie.usecase.GetMovieReviewsUseCase
 import com.dhkim.domain.movie.usecase.GetMovieVideoUseCase
 import com.dhkim.domain.movie.usecase.GetMovieWithCategoryUseCase
 import com.dhkim.domain.movie.usecase.GetMoviesUseCase
@@ -143,6 +147,34 @@ class MovieUseCaseTest : KoinTest {
     @Test
     fun `카테고리에 해당하는 영화 가져오기_Fake - Only Android`() = runTest {
         FakeGetMovieWithCategoryUseCase().invoke(language = Language.Korea, genre = Genre.ROMANCE).asSnapshot().forEach {
+            println(it)
+        }
+    }
+
+    @Test
+    fun `영화 상세 정보 가져오기_Real - Only Android`() = runTest {
+        val getMovieDetailUseCase = get<GetMovieDetailUseCase>()
+        val movie = getMovieDetailUseCase(id = "447273", language = Language.Korea).first()
+        println(movie)
+    }
+
+    @Test
+    fun `영화 상세 정보 가져오기_Fake - Only Android`() = runTest {
+        val movie = FakeGetMovieDetailUseCase().invoke(id = "topRatedId7", language = Language.Korea)
+        println(movie.first())
+    }
+
+    @Test
+    fun `영화 리뷰 가져오기_Real - Only Android`() = runTest {
+        val getMovieReviewsUseCase = get<GetMovieReviewsUseCase>()
+        getMovieReviewsUseCase(id = "447273").asSnapshot().forEach {
+            println(it)
+        }
+    }
+
+    @Test
+    fun `영화 리뷰 가져오기_Fake - Only Android`() = runTest {
+        FakeGetMovieReviewsUseCase().invoke(id = "447273").asSnapshot().forEach {
             println(it)
         }
     }

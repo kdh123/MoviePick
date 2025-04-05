@@ -1,4 +1,5 @@
 import org.jetbrains.compose.ExperimentalComposeLibrary
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -22,7 +23,7 @@ kotlin {
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "core.common"
+            baseName = "seriesdetail"
             isStatic = true
         }
     }
@@ -30,18 +31,32 @@ kotlin {
     jvm("desktop")
 
     sourceSets {
+        val desktopMain by getting
 
+        androidMain.dependencies {
+            implementation(compose.preview)
+            implementation(libs.androidx.activity.compose)
+            implementation(libs.koin.android)
+            implementation(libs.koin.androidx.compose)
+        }
         commonMain.dependencies {
+
+            implementation(projects.core.common)
+            implementation(projects.core.ui)
+            implementation(projects.core.designsystem)
             implementation(projects.core.network)
+            implementation(projects.domain.movie)
+            implementation(projects.domain.tv)
+
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material)
+            implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
-            implementation(libs.kotlinx.datetime)
 
             implementation(libs.kotlinx.collections.immutable)
             implementation(compose.components.uiToolingPreview)
@@ -49,29 +64,35 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
 
             implementation(libs.bundles.ktor)
+            implementation(libs.coil)
 
             api(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.navigation.compose)
             implementation(libs.bundles.paging)
+            implementation(libs.bundles.kmpallete)
+            api(libs.logging.kmp)
         }
-
+        desktopMain.dependencies {
+            implementation(compose.desktop.currentOs)
+            implementation(libs.kotlinx.coroutines.swing)
+        }
         commonTest.dependencies {
-            implementation(libs.koin.test)
-            implementation(libs.bundles.paging)
             implementation(projects.core.testing)
             implementation(libs.kotlin.test)
             implementation(kotlin("test-annotations-common"))
             implementation(libs.assertk)
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.uiTest)
+            implementation(projects.domain.movie)
+            implementation(projects.data.movie)
         }
     }
 }
 
 android {
-    namespace = "com.dhkim.core.common"
+    namespace = "com.dhkim.seriesdetail"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
@@ -101,4 +122,15 @@ dependencies {
     debugImplementation(compose.uiTooling)
 }
 
+compose.desktop {
+    application {
+        mainClass = "com.dhkim.moviepick.MainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            packageName = "com.dhkim.moviepick"
+            packageVersion = "1.0.0"
+        }
+    }
+}
 

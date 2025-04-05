@@ -6,7 +6,9 @@ import app.cash.paging.PagingData
 import com.dhkim.common.Genre
 import com.dhkim.common.Language
 import com.dhkim.common.Region
+import com.dhkim.common.Review
 import com.dhkim.common.Video
+import com.dhkim.data.tv.model.TvDetailDto
 import com.dhkim.data.tv.model.TvVideoDto
 import com.dhkim.domain.tv.model.Tv
 import io.ktor.client.HttpClient
@@ -56,5 +58,24 @@ class RemoteTvDataSourceImpl(
             val results = response.body<TvVideoDto>().results
             emit(results.mapNotNull { it.toVideo() })
         }
+    }
+
+    override fun getTvDetail(id: String, language: Language): Flow<Tv> {
+        return flow {
+            val response = apiService.get {
+                url {
+                    path("/3/tv/$id")
+                }
+                parameter("language", language)
+            }
+            val movieDetailDto = response.body<TvDetailDto>()
+            emit(movieDetailDto.toTv())
+        }
+    }
+
+    override fun getTvReviews(id: String): Flow<PagingData<Review>> {
+        return Pager(PagingConfig(pageSize = 10)) {
+            TvReviewPagingSource(apiService, id)
+        }.flow
     }
 }

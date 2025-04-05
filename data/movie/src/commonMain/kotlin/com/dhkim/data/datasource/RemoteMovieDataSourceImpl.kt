@@ -6,7 +6,9 @@ import app.cash.paging.PagingData
 import com.dhkim.common.Genre
 import com.dhkim.common.Language
 import com.dhkim.common.Region
+import com.dhkim.common.Review
 import com.dhkim.common.Video
+import com.dhkim.data.model.MovieDetailDto
 import com.dhkim.data.model.MovieVideoDto
 import com.dhkim.domain.movie.model.Movie
 import io.ktor.client.HttpClient
@@ -55,6 +57,25 @@ class RemoteMovieDataSourceImpl(
     override fun getMovieWithCategory(language: Language, genre: Genre?, region: Region?): Flow<PagingData<Movie>> {
         return Pager(PagingConfig(pageSize = 15)) {
             MovieWithCategoryPagingSource(apiService, language, genre, region)
+        }.flow
+    }
+
+    override fun getMovieDetail(id: String, language: Language): Flow<Movie> {
+        return flow {
+            val response = apiService.get {
+                url {
+                    path("/3/movie/$id")
+                }
+                parameter("language", language)
+            }
+            val movieDetailDto = response.body<MovieDetailDto>()
+            emit(movieDetailDto.toMovie())
+        }
+    }
+
+    override fun getMovieReviews(id: String): Flow<PagingData<Review>> {
+        return Pager(PagingConfig(pageSize = 10)) {
+            MovieReviewPagingSource(apiService, id)
         }.flow
     }
 }

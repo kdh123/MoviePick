@@ -8,6 +8,7 @@ import app.cash.paging.testing.asPagingSourceFactory
 import com.dhkim.common.Genre
 import com.dhkim.common.Language
 import com.dhkim.common.Region
+import com.dhkim.common.Review
 import com.dhkim.common.Video
 import com.dhkim.common.VideoType
 import com.dhkim.data.datasource.RemoteMovieDataSource
@@ -88,9 +89,24 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
         }
     }
 
+    private val movieReviews = mutableListOf<Review>().apply {
+        repeat(50) {
+            add(
+                Review(
+                    id = "$it",
+                    author = "author$it",
+                    createdAt = "2025-12-24",
+                    content = "정말 좋은 영화입니다!",
+                    rating = 5.0
+                )
+            )
+        }
+    }
+
     private val topRatedPagingSource = topRatedMovies.asPagingSourceFactory().invoke()
     private val nowPlayingPagingSource = nowPlayingMovies.asPagingSourceFactory().invoke()
     private val upcomingPagingSource = upcomingMovies.asPagingSourceFactory().invoke()
+    private val movieReviewPagingSource = movieReviews.asPagingSourceFactory().invoke()
 
     override fun getTopRatedMovies(language: Language, region: Region): Flow<PagingData<Movie>> {
         return flow {
@@ -136,9 +152,26 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
             .filter { it.genre.contains(genre?.genre) || it.genre.contains(region?.country)}
             .asPagingSourceFactory().invoke()
 
-
         return flow {
             val pager = TestPager(PagingConfig(pageSize = 15), movieWithCategoryPagingSource)
+            val page = with(pager) {
+                refresh()
+                append()
+            } as PagingSource.LoadResult.Page
+            emit(PagingData.from(page.data))
+        }
+    }
+
+    override fun getMovieDetail(id: String, language: Language): Flow<Movie> {
+        return flow {
+            val movie = (topRatedMovies + upcomingMovies + nowPlayingMovies).firstOrNull { it.id == id }
+            if (movie != null) emit(movie)
+        }
+    }
+
+    override fun getMovieReviews(id: String): Flow<PagingData<Review>> {
+        return flow {
+            val pager = TestPager(PagingConfig(pageSize = 15), movieReviewPagingSource)
             val page = with(pager) {
                 refresh()
                 append()

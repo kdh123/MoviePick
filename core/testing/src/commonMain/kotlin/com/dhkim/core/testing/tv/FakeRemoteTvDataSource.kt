@@ -8,6 +8,7 @@ import app.cash.paging.testing.asPagingSourceFactory
 import com.dhkim.common.Genre
 import com.dhkim.common.Language
 import com.dhkim.common.Region
+import com.dhkim.common.Review
 import com.dhkim.common.Video
 import com.dhkim.common.VideoType
 import com.dhkim.data.tv.datasource.RemoteTvDataSource
@@ -88,13 +89,27 @@ class FakeRemoteTvDataSource : RemoteTvDataSource {
         }
     }
 
+    private val tvReviews = mutableListOf<Review>().apply {
+        repeat(50) {
+            add(
+                Review(
+                    id = "$it",
+                    author = "author$it",
+                    createdAt = "2025-12-24",
+                    content = "정말 좋은 프로그램입니다!",
+                    rating = 5.0
+                )
+            )
+        }
+    }
+
     private val airingTodayPagingSource = airingTodayTvs.asPagingSourceFactory().invoke()
     private val onTheAirPagingSource = onTheAirTvs.asPagingSourceFactory().invoke()
     private val topRatedPagingSource = topRatedTvs.asPagingSourceFactory().invoke()
     private val tvWithCategoryPagingSource = (airingTodayTvs + onTheAirTvs + topRatedTvs)
         .filter { it.genre.contains(Genre.ROMANCE.genre) || it.genre.contains(Genre.DRAMA.genre)}
         .asPagingSourceFactory().invoke()
-
+    private val tvReviewPagingSource = tvReviews.asPagingSourceFactory().invoke()
 
 
     override fun getAiringTodayTvs(language: Language): Flow<PagingData<Tv>> {
@@ -144,6 +159,24 @@ class FakeRemoteTvDataSource : RemoteTvDataSource {
     override fun getTvVideos(id: String, language: Language): Flow<List<Video>> {
         return flow {
             emit(tvVideos)
+        }
+    }
+
+    override fun getTvDetail(id: String, language: Language): Flow<Tv> {
+        return flow {
+            val tv = (topRatedTvs + airingTodayTvs + onTheAirTvs).firstOrNull { it.id == id }
+            if (tv != null) emit(tv)
+        }
+    }
+
+    override fun getTvReviews(id: String): Flow<PagingData<Review>> {
+        return flow {
+            val pager = TestPager(PagingConfig(pageSize = 15), tvReviewPagingSource)
+            val page = with(pager) {
+                refresh()
+                append()
+            } as PagingSource.LoadResult.Page
+            emit(PagingData.from(page.data))
         }
     }
 }
