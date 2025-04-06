@@ -13,6 +13,7 @@ import com.dhkim.common.Video
 import com.dhkim.common.VideoType
 import com.dhkim.data.datasource.RemoteMovieDataSource
 import com.dhkim.domain.movie.model.Movie
+import com.dhkim.domain.movie.model.MovieDetail
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -162,10 +163,25 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
         }
     }
 
-    override fun getMovieDetail(id: String, language: Language): Flow<Movie> {
+    override fun getMovieDetail(id: String, language: Language): Flow<MovieDetail> {
         return flow {
             val movie = (topRatedMovies + upcomingMovies + nowPlayingMovies).firstOrNull { it.id == id }
-            if (movie != null) emit(movie)
+            if (movie != null) {
+                val movieDetail = MovieDetail(
+                    id = movie.id,
+                    title = movie.title,
+                    adult = movie.adult,
+                    overview = movie.overview,
+                    imageUrl = movie.imageUrl,
+                    genre = movie.genre,
+                    releasedDate = movie.releasedDate,
+                    popularity = movie.popularity,
+                    runtime = 90,
+                    productionCompany = "Disney",
+                    country = "미국"
+                )
+                emit(movieDetail)
+            }
         }
     }
 
@@ -177,6 +193,12 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
                 append()
             } as PagingSource.LoadResult.Page
             emit(PagingData.from(page.data))
+        }
+    }
+
+    override fun getMovieActors(id: String, language: Language): Flow<List<String>> {
+        return flow {
+            emit(listOf("배우1", "배우2", "배우3"))
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.dhkim.data.model
 
-import com.dhkim.domain.movie.model.Movie
+import com.dhkim.domain.movie.model.MovieDetail
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -46,17 +46,19 @@ data class MovieDetailDto(
     @SerialName("vote_count")
     val voteCount: Int
 ) {
-    fun toMovie(): Movie {
-        return Movie(
+    fun toMovieDetail(): MovieDetail {
+        return MovieDetail(
             id = "$id",
             title = title,
             adult = adult,
             overview = overview,
             imageUrl = "https://image.tmdb.org/t/p/original$posterPath",
             genre = genres.map { it.name },
-            voteAverage = voteAverage,
-            releasedDate = releaseDate,
             popularity = popularity,
+            releasedDate = releaseDate,
+            runtime = runtime,
+            productionCompany = productionCompanies.map { it.name }.firstOrNull() ?: "",
+            country = originCountry.firstOrNull() ?: ""
         )
     }
 }

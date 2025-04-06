@@ -25,6 +25,7 @@ import com.dhkim.domain.movie.usecase.UPCOMING_MOVIES_KEY
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -156,6 +157,12 @@ class MovieUseCaseTest : KoinTest {
         val getMovieDetailUseCase = get<GetMovieDetailUseCase>()
         val movie = getMovieDetailUseCase(id = "447273", language = Language.Korea).first()
         println(movie)
+        movie.actors.forEach {
+            println(it)
+        }
+        flowOf(movie.review).asSnapshot().forEach {
+            println(it)
+        }
     }
 
     @Test

@@ -7,6 +7,7 @@ import com.dhkim.common.Region
 import com.dhkim.common.Review
 import com.dhkim.common.Video
 import com.dhkim.domain.movie.model.Movie
+import com.dhkim.domain.movie.model.MovieDetail
 import kotlinx.coroutines.flow.Flow
 
 interface RemoteMovieDataSource {
@@ -16,6 +17,7 @@ interface RemoteMovieDataSource {
     fun getUpcomingMovies(language: Language, region: Region): Flow<PagingData<Movie>>
     fun getMovieVideos(id: String, language: Language): Flow<List<Video>>
     fun getMovieWithCategory(language: Language, genre: Genre? = null, region: Region? = null): Flow<PagingData<Movie>>
-    fun getMovieDetail(id: String, language: Language): Flow<Movie>
+    fun getMovieDetail(id: String, language: Language): Flow<MovieDetail>
     fun getMovieReviews(id: String): Flow<PagingData<Review>>
+    fun getMovieActors(id: String, language: Language): Flow<List<String>>
 }

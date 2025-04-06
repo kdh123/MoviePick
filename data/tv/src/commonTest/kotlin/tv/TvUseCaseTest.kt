@@ -23,6 +23,7 @@ import com.dhkim.domain.tv.usecase.TOP_RATED_TVS_KEY
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -125,12 +126,18 @@ class TvUseCaseTest : KoinTest {
         val getTvDetailUseCase = get<GetTvDetailUseCase>()
         val tv = getTvDetailUseCase(id = "61818", language = Language.Korea).first()
         println(tv)
+        tv.actors.forEach {
+            println(it)
+        }
+        flowOf(tv.review).asSnapshot().forEach {
+            println(it)
+        }
     }
 
     @Test
     fun `TV 상세 정보 가져오기_Fake - Only Android`() = runTest {
-       val movie = FakeGetTvDetailUseCase().invoke(id = "airingTodayId7", language = Language.Korea)
-        println(movie.first())
+       val tv = FakeGetTvDetailUseCase().invoke(id = "airingTodayId7", language = Language.Korea)
+        println(tv.first())
     }
 
     @Test

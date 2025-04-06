@@ -8,6 +8,7 @@ import com.dhkim.common.Review
 import com.dhkim.common.Video
 import com.dhkim.data.tv.datasource.RemoteTvDataSource
 import com.dhkim.domain.tv.model.Tv
+import com.dhkim.domain.tv.model.TvDetail
 import com.dhkim.domain.tv.repository.TvRepository
 import kotlinx.coroutines.flow.Flow
 
@@ -35,11 +36,15 @@ class TvRepositoryImpl(
         return remoteTvDataSource.getTvVideos(id, language)
     }
 
-    override fun getTvDetail(id: String, language: Language): Flow<Tv> {
+    override fun getTvDetail(id: String, language: Language): Flow<TvDetail> {
         return remoteTvDataSource.getTvDetail(id, language)
     }
 
     override fun getTvReviews(id: String): Flow<PagingData<Review>> {
         return remoteTvDataSource.getTvReviews(id)
+    }
+
+    override fun getTvCastMembers(id: String, language: Language): Flow<List<String>> {
+        return remoteTvDataSource.getTvCastMembers(id, language)
     }
 }

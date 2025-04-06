@@ -8,9 +8,11 @@ import com.dhkim.common.Language
 import com.dhkim.common.Region
 import com.dhkim.common.Review
 import com.dhkim.common.Video
+import com.dhkim.data.tv.model.TvCreditsDto
 import com.dhkim.data.tv.model.TvDetailDto
 import com.dhkim.data.tv.model.TvVideoDto
 import com.dhkim.domain.tv.model.Tv
+import com.dhkim.domain.tv.model.TvDetail
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -60,7 +62,7 @@ class RemoteTvDataSourceImpl(
         }
     }
 
-    override fun getTvDetail(id: String, language: Language): Flow<Tv> {
+    override fun getTvDetail(id: String, language: Language): Flow<TvDetail> {
         return flow {
             val response = apiService.get {
                 url {
@@ -68,8 +70,8 @@ class RemoteTvDataSourceImpl(
                 }
                 parameter("language", language)
             }
-            val movieDetailDto = response.body<TvDetailDto>()
-            emit(movieDetailDto.toTv())
+            val tvDetailDto = response.body<TvDetailDto>()
+            emit(tvDetailDto.toTvDetail())
         }
     }
 
@@ -77,5 +79,19 @@ class RemoteTvDataSourceImpl(
         return Pager(PagingConfig(pageSize = 10)) {
             TvReviewPagingSource(apiService, id)
         }.flow
+    }
+
+    override fun getTvCastMembers(id: String, language: Language): Flow<List<String>> {
+        return flow {
+            val response = apiService.get {
+                url {
+                    path("/3/tv/$id/credits")
+                }
+                parameter("language", language)
+            }
+            val tvCreditsDto = response.body<TvCreditsDto>()
+            val castMembers = tvCreditsDto.cast.map { it.name }.distinctBy { it }
+            emit(castMembers)
+        }
     }
 }

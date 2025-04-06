@@ -8,6 +8,7 @@ import com.dhkim.common.Review
 import com.dhkim.common.Video
 import com.dhkim.data.datasource.RemoteMovieDataSource
 import com.dhkim.domain.movie.model.Movie
+import com.dhkim.domain.movie.model.MovieDetail
 import com.dhkim.domain.movie.repository.MovieRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -36,12 +37,16 @@ class MovieRepositoryImpl(
         return remoteMovieDataSource.getMovieVideos(id, language)
     }
 
-    override fun getMovieDetail(id: String, language: Language): Flow<Movie> {
+    override fun getMovieDetail(id: String, language: Language): Flow<MovieDetail> {
         return remoteMovieDataSource.getMovieDetail(id, language)
     }
 
     override fun getMovieReviews(id: String): Flow<PagingData<Review>> {
         return remoteMovieDataSource.getMovieReviews(id)
+    }
+
+    override fun getMovieActors(id: String, language: Language): Flow<List<String>> {
+        return remoteMovieDataSource.getMovieActors(id, language)
     }
 
     override fun getMovieWithCategory(language: Language, genre: Genre?, region: Region?): Flow<PagingData<Movie>> {

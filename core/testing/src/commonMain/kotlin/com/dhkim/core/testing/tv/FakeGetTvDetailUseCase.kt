@@ -1,7 +1,7 @@
 package com.dhkim.core.testing.tv
 
 import com.dhkim.common.Language
-import com.dhkim.domain.tv.model.Tv
+import com.dhkim.domain.tv.model.TvDetail
 import com.dhkim.domain.tv.usecase.GetTvDetailUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -17,7 +17,7 @@ class FakeGetTvDetailUseCase : GetTvDetailUseCase {
         currentStatus = status
     }
 
-    override fun invoke(id: String, language: Language): Flow<Tv> {
+    override fun invoke(id: String, language: Language): Flow<TvDetail> {
         return flow {
             emit(tvRepository.getTvDetail(id, language).first())
         }

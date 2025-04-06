@@ -8,9 +8,11 @@ import com.dhkim.common.Language
 import com.dhkim.common.Region
 import com.dhkim.common.Review
 import com.dhkim.common.Video
+import com.dhkim.data.model.MovieCreditsDto
 import com.dhkim.data.model.MovieDetailDto
 import com.dhkim.data.model.MovieVideoDto
 import com.dhkim.domain.movie.model.Movie
+import com.dhkim.domain.movie.model.MovieDetail
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -60,7 +62,7 @@ class RemoteMovieDataSourceImpl(
         }.flow
     }
 
-    override fun getMovieDetail(id: String, language: Language): Flow<Movie> {
+    override fun getMovieDetail(id: String, language: Language): Flow<MovieDetail> {
         return flow {
             val response = apiService.get {
                 url {
@@ -69,7 +71,7 @@ class RemoteMovieDataSourceImpl(
                 parameter("language", language)
             }
             val movieDetailDto = response.body<MovieDetailDto>()
-            emit(movieDetailDto.toMovie())
+            emit(movieDetailDto.toMovieDetail())
         }
     }
 
@@ -77,5 +79,19 @@ class RemoteMovieDataSourceImpl(
         return Pager(PagingConfig(pageSize = 10)) {
             MovieReviewPagingSource(apiService, id)
         }.flow
+    }
+
+    override fun getMovieActors(id: String, language: Language): Flow<List<String>> {
+        return flow {
+            val response = apiService.get {
+                url {
+                    path("/3/movie/$id/credits")
+                }
+                parameter("language", language)
+            }
+            val movieCreditsDto = response.body<MovieCreditsDto>()
+            val actors = movieCreditsDto.cast.map { it.name }.distinctBy { it }
+            emit(actors)
+        }
     }
 }

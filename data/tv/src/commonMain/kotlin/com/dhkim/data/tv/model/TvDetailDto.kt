@@ -1,6 +1,6 @@
 package com.dhkim.data.tv.model
 
-import com.dhkim.domain.tv.model.Tv
+import com.dhkim.domain.tv.model.TvDetail
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -58,8 +58,8 @@ data class TvDetailDto(
     @SerialName("vote_count")
     val voteCount: Int
 ) {
-    fun toTv(): Tv {
-        return Tv(
+    fun toTvDetail(): TvDetail {
+        return TvDetail(
             id = id.toString(),
             title = name,
             adult = adult,
@@ -68,8 +68,10 @@ data class TvDetailDto(
             genre = genres.map { it.name },
             imageUrl = posterPath,
             firstAirDate = firstAirDate,
-            voteAverage = voteAverage,
-            popularity = popularity
+            popularity = popularity,
+            productionCompany = productionCompanies?.firstOrNull()?.name ?: "",
+            numberOfSeasons = numberOfSeasons,
+            numberOfEpisodes = numberOfEpisodes,
         )
     }
 }

@@ -13,6 +13,7 @@ import com.dhkim.common.Video
 import com.dhkim.common.VideoType
 import com.dhkim.data.tv.datasource.RemoteTvDataSource
 import com.dhkim.domain.tv.model.Tv
+import com.dhkim.domain.tv.model.TvDetail
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -162,10 +163,29 @@ class FakeRemoteTvDataSource : RemoteTvDataSource {
         }
     }
 
-    override fun getTvDetail(id: String, language: Language): Flow<Tv> {
+    override fun getTvDetail(id: String, language: Language): Flow<TvDetail> {
         return flow {
             val tv = (topRatedTvs + airingTodayTvs + onTheAirTvs).firstOrNull { it.id == id }
-            if (tv != null) emit(tv)
+            if (tv != null) {
+                val tvDetail = TvDetail(
+                    id = tv.id,
+                    title = tv.title,
+                    adult = tv.adult,
+                    overview = tv.overview,
+                    imageUrl = tv.imageUrl,
+                    country = tv.country,
+                    genre = tv.genre,
+                    popularity = tv.popularity,
+                    firstAirDate = tv.firstAirDate,
+                    productionCompany = "Netflix",
+                    numberOfEpisodes = 10,
+                    numberOfSeasons = 2,
+                    actors = listOf("배우1", "배우2", "배우3"),
+                    review = PagingData.from(tvReviews),
+                    videos = tvVideos,
+                )
+                emit(tvDetail)
+            }
         }
     }
 
@@ -177,6 +197,12 @@ class FakeRemoteTvDataSource : RemoteTvDataSource {
                 append()
             } as PagingSource.LoadResult.Page
             emit(PagingData.from(page.data))
+        }
+    }
+
+    override fun getTvCastMembers(id: String, language: Language): Flow<List<String>> {
+        return flow {
+            emit(listOf("멤버1", "멤버2", "멤버3"))
         }
     }
 }
