@@ -15,6 +15,7 @@ import com.dhkim.data.datasource.RemoteMovieDataSource
 import com.dhkim.domain.movie.model.Movie
 import com.dhkim.domain.movie.model.MovieDetail
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 
 class FakeRemoteMovieDataSource : RemoteMovieDataSource {
@@ -178,7 +179,9 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
                     popularity = movie.popularity,
                     runtime = 90,
                     productionCompany = "Disney",
-                    country = "미국"
+                    country = "미국",
+                    videos = movieVideos,
+                    review = getMovieReviews(id).first()
                 )
                 emit(movieDetail)
             }

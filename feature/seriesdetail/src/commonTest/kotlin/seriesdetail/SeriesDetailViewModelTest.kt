@@ -1,14 +1,18 @@
 package seriesdetail
 
+import app.cash.paging.testing.asSnapshot
 import com.dhkim.common.SeriesType
 import com.dhkim.core.testing.movie.FakeGetMovieDetailUseCase
 import com.dhkim.core.testing.tv.FakeGetTvDetailUseCase
 import com.dhkim.domain.movie.usecase.GetMovieDetailUseCase
 import com.dhkim.domain.tv.usecase.GetTvDetailUseCase
+import com.dhkim.moviepick.SeriesDetailDisplayState
+import com.dhkim.moviepick.SeriesDetailItem
 import com.dhkim.moviepick.SeriesDetailViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -41,7 +45,16 @@ class SeriesDetailViewModelTest {
             getTvDetailUseCase = getTvDetailUseCase
         )
         viewModel.uiState.first()
-        println(viewModel.uiState.value)
+        if (viewModel.uiState.value.displayState is SeriesDetailDisplayState.Contents) {
+            (viewModel.uiState.value.displayState as SeriesDetailDisplayState.Contents).series.forEach {
+                if (it is SeriesDetailItem.ContentTab) {
+                    println(it.videos)
+                    println("${flowOf(it.reviews).asSnapshot()}")
+                } else {
+                    println(it)
+                }
+            }
+        }
     }
 
     @Test
@@ -55,7 +68,16 @@ class SeriesDetailViewModelTest {
             getTvDetailUseCase = getTvDetailUseCase
         )
         viewModel.uiState.first()
-        println(viewModel.uiState.value)
+        if (viewModel.uiState.value.displayState is SeriesDetailDisplayState.Contents) {
+            (viewModel.uiState.value.displayState as SeriesDetailDisplayState.Contents).series.forEach {
+                if (it is SeriesDetailItem.ContentTab) {
+                    println(it.videos)
+                    println("${flowOf(it.reviews).asSnapshot()}")
+                } else {
+                    println(it)
+                }
+            }
+        }
     }
 
     @AfterTest

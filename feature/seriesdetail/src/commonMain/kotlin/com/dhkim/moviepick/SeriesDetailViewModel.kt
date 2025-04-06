@@ -12,7 +12,6 @@ import com.dhkim.domain.tv.usecase.GetTvDetailUseCase
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 
@@ -31,8 +30,8 @@ class SeriesDetailViewModel(
                 SeriesType.TV.name -> getTvDetailUseCase(id = seriesId, language = Language.Korea)
                 else -> throw IllegalArgumentException("Unknown series type: $series")
             }
-        }.flatMapConcat {
-            flowOf(createUiState(it))
+        }.flatMapLatest { series ->
+            flowOf(createUiState(series))
         }.catch {
             flowOf(SeriesDetailUiState(displayState = SeriesDetailDisplayState.Error(errorCode = "", message = "${it.message}")))
         }
@@ -45,7 +44,8 @@ class SeriesDetailViewModel(
         val contents = persistentListOf(
             SeriesDetailItem.AppBar(),
             SeriesDetailItem.SeriesDetailPoster(imageUrl = seriesDetail.imageUrl),
-            SeriesDetailItem.Information(seriesType = SeriesType.entries.first { it.name == series }, series = seriesDetail)
+            SeriesDetailItem.Information(seriesType = SeriesType.entries.first { it.name == series }, series = seriesDetail),
+            SeriesDetailItem.ContentTab(videos = seriesDetail.videos, reviews = seriesDetail.review)
         )
 
         return SeriesDetailUiState(
