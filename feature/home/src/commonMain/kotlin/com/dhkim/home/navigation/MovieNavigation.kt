@@ -7,7 +7,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.dhkim.home.Series
+import com.dhkim.common.SeriesType
 import com.dhkim.home.movie.MovieScreen
 import com.dhkim.home.movie.MovieViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,7 +24,7 @@ fun NavController.navigateToMovie() = navigate(MOVIE_ROUTE)
 fun NavGraphBuilder.movie(
     sharedTransitionScope: SharedTransitionScope,
     navigateToVideo: (String) -> Unit,
-    navigateToSeriesCollection: (series: Series, genreId: Int?, region: String?) -> Unit,
+    navigateToSeriesCollection: (seriesType: SeriesType, genreId: Int?, region: String?) -> Unit,
     onBack: () -> Unit
 ) {
     composable(MOVIE_ROUTE) {

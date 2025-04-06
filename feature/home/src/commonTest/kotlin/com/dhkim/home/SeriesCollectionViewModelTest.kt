@@ -1,17 +1,12 @@
 package com.dhkim.home
 
 import app.cash.paging.testing.asSnapshot
-import com.dhkim.common.Genre
 import com.dhkim.common.Region
+import com.dhkim.common.SeriesType
 import com.dhkim.core.testing.movie.FakeGetMovieWithCategoryUseCase
-import com.dhkim.core.testing.movie.FakeGetTodayRecommendationMovieUseCase
 import com.dhkim.core.testing.tv.FakeGetTvWithCategoryUseCase
 import com.dhkim.domain.movie.usecase.GetMovieWithCategoryUseCase
-import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import com.dhkim.domain.tv.usecase.GetTvWithCategoryUseCase
-import com.dhkim.home.movie.MovieAction
-import com.dhkim.home.movie.MovieDisplayState
-import com.dhkim.home.movie.MovieViewModel
 import com.dhkim.home.series.SeriesCollectionDisplayState
 import com.dhkim.home.series.SeriesCollectionViewModel
 import kotlinx.coroutines.Dispatchers
@@ -39,7 +34,7 @@ class SeriesCollectionViewModelTest {
     @Test
     fun `영화 가져오기 성공`() = runTest {
         viewModel = SeriesCollectionViewModel(
-            series = Series.MOVIE.name,
+            series = SeriesType.MOVIE.name,
             genreId = null,
             regionCode = Region.Korea.code,
             getMovieWithCategoryUseCase = FakeGetMovieWithCategoryUseCase(),

@@ -1,18 +1,55 @@
 package com.dhkim.moviepick
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.dhkim.common.Language
+import com.dhkim.common.RestartableStateFlow
+import com.dhkim.common.SeriesDetail
+import com.dhkim.common.SeriesType
+import com.dhkim.common.onetimeStateIn
 import com.dhkim.domain.movie.usecase.GetMovieDetailUseCase
-import com.dhkim.domain.movie.usecase.GetMovieReviewsUseCase
 import com.dhkim.domain.tv.usecase.GetTvDetailUseCase
-import com.dhkim.domain.tv.usecase.GetTvReviewsUseCase
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 
+@ExperimentalCoroutinesApi
 class SeriesDetailViewModel(
     private val series: String,
     private val seriesId: String,
     private val getMovieDetailUseCase: GetMovieDetailUseCase,
-    private val getMovieReviewsUseCase: GetMovieReviewsUseCase,
     private val getTvDetailUseCase: GetTvDetailUseCase,
-    private val getTvReviewsUseCase: GetTvReviewsUseCase,
 ) : ViewModel() {
 
+    val uiState: RestartableStateFlow<SeriesDetailUiState> = flowOf(series)
+        .flatMapLatest {
+            when (series) {
+                SeriesType.MOVIE.name -> getMovieDetailUseCase(id = seriesId, language = Language.Korea)
+                SeriesType.TV.name -> getTvDetailUseCase(id = seriesId, language = Language.Korea)
+                else -> throw IllegalArgumentException("Unknown series type: $series")
+            }
+        }.flatMapConcat {
+            flowOf(createUiState(it))
+        }.catch {
+            flowOf(SeriesDetailUiState(displayState = SeriesDetailDisplayState.Error(errorCode = "", message = "${it.message}")))
+        }
+        .onetimeStateIn(
+            scope = viewModelScope,
+            initialValue = SeriesDetailUiState(displayState = SeriesDetailDisplayState.Loading)
+        )
+
+    private fun createUiState(seriesDetail: SeriesDetail): SeriesDetailUiState {
+        val contents = persistentListOf(
+            SeriesDetailItem.AppBar(),
+            SeriesDetailItem.SeriesDetailPoster(imageUrl = seriesDetail.imageUrl),
+            SeriesDetailItem.Information(seriesType = SeriesType.entries.first { it.name == series }, series = seriesDetail)
+        )
+
+        return SeriesDetailUiState(
+            displayState = SeriesDetailDisplayState.Contents(contents)
+        )
+    }
 }

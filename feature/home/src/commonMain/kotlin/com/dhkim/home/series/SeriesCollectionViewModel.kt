@@ -8,9 +8,9 @@ import app.cash.paging.map
 import com.dhkim.common.Genre
 import com.dhkim.common.Language
 import com.dhkim.common.Region
+import com.dhkim.common.SeriesType
 import com.dhkim.domain.movie.usecase.GetMovieWithCategoryUseCase
 import com.dhkim.domain.tv.usecase.GetTvWithCategoryUseCase
-import com.dhkim.home.Series
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -38,7 +38,7 @@ class SeriesCollectionViewModel(
         this ?: "알 수 없음"
     }
 
-    val uiState: StateFlow<SeriesCollectionUiState> = if (series == Series.MOVIE.name) {
+    val uiState: StateFlow<SeriesCollectionUiState> = if (series == SeriesType.MOVIE.name) {
         getMovieWithCategoryUseCase(language = Language.Korea, genre = genre, region = region)
     } else {
         getTvWithCategoryUseCase(language = Language.Korea, genre = genre, region = region)

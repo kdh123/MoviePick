@@ -1,4 +1,3 @@
-import com.dhkim.core.testing.movie.FakeGetMovieWithCategoryUseCase
 import com.dhkim.core.testing.movie.FakeGetNowPlayingMoviesUseCase
 import com.dhkim.core.testing.movie.FakeGetTodayRecommendationMovieUseCase
 import com.dhkim.core.testing.movie.FakeGetTodayTop10MoviesUseCase
@@ -7,15 +6,12 @@ import com.dhkim.core.testing.movie.MovieStatus
 import com.dhkim.core.testing.tv.FakeGetAiringTodayTvsUseCase
 import com.dhkim.core.testing.tv.FakeGetOnTheAirTvsUseCase
 import com.dhkim.core.testing.tv.FakeGetTopRatedTvsUseCase
-import com.dhkim.core.testing.tv.FakeGetTvWithCategoryUseCase
-import com.dhkim.domain.movie.usecase.GetMovieWithCategoryUseCase
 import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import com.dhkim.domain.movie.usecase.NOW_PLAYING_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TODAY_RECOMMENDATION_MOVIE_KEY
 import com.dhkim.domain.movie.usecase.TODAY_TOP_10_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TOP_RATED_MOVIES_KEY
 import com.dhkim.domain.tv.usecase.AIRING_TODAY_TVS_KEY
-import com.dhkim.domain.tv.usecase.GetTvWithCategoryUseCase
 import com.dhkim.domain.tv.usecase.GetTvsUseCase
 import com.dhkim.domain.tv.usecase.ON_THE_AIR_TVS_KEY
 import com.dhkim.domain.tv.usecase.TOP_RATED_TVS_KEY

@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.cash.paging.compose.collectAsLazyPagingItems
+import com.dhkim.common.SeriesType
 import com.dhkim.core.designsystem.Black
 import com.dhkim.core.designsystem.Black50
 import com.dhkim.core.designsystem.Black70
@@ -45,7 +46,6 @@ import com.dhkim.home.Genre
 import com.dhkim.home.Group
 import com.dhkim.home.HomeState
 import com.dhkim.home.RecommendationButtons
-import com.dhkim.home.Series
 import com.dhkim.home.SeriesItem
 import com.dhkim.home.rememberHomeState
 import kotlinx.collections.immutable.ImmutableList
@@ -60,7 +60,7 @@ fun TvScreen(
     animatedVisibilityScope: AnimatedContentScope,
     onAction: (TvAction) -> Unit,
     navigateToVideo: (String) -> Unit,
-    navigateToSeriesCollection: (series: Series, genreId: Int?, region: String?) -> Unit,
+    navigateToSeriesCollection: (seriesType: SeriesType, genreId: Int?, region: String?) -> Unit,
     onBack: () -> Unit,
 ) {
     val homeState = (uiState.displayState as? TvDisplayState.Contents)?.tvs?.let { seriesItems ->
@@ -108,7 +108,7 @@ fun ContentsScreen(
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     navigateToVideo: (String) -> Unit,
-    navigateToSeriesCollection: (series: Series, genreId: Int?, region: String?) -> Unit,
+    navigateToSeriesCollection: (seriesType: SeriesType, genreId: Int?, region: String?) -> Unit,
     onAction: (TvAction) -> Unit,
     onBack: () -> Unit
 ) {
@@ -203,8 +203,8 @@ fun ContentsScreen(
                 categories = categories,
                 onCategoryClick = {
                     when (it) {
-                        is Category.Region -> navigateToSeriesCollection(Series.TV, null, it.code)
-                        is Category.TvGenre -> navigateToSeriesCollection(Series.TV, it.id, null)
+                        is Category.Region -> navigateToSeriesCollection(SeriesType.TV, null, it.code)
+                        is Category.TvGenre -> navigateToSeriesCollection(SeriesType.TV, it.id, null)
                         else -> {}
                     }
                     homeState.showCategoryModal = false

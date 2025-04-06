@@ -41,6 +41,7 @@ kotlin {
             implementation(libs.koin.androidx.compose)
         }
         commonMain.dependencies {
+            implementation(projects.core.common)
             implementation(projects.core.designsystem)
             implementation(projects.core.ui)
             implementation(projects.core.di)

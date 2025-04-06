@@ -2,23 +2,17 @@ package com.dhkim.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.cachedIn
-import androidx.paging.map
-import app.cash.paging.PagingData
-import com.dhkim.common.Genre
 import com.dhkim.common.Language
 import com.dhkim.common.Region
-import com.dhkim.common.Series
+import com.dhkim.common.SeriesType
 import com.dhkim.common.handle
 import com.dhkim.common.onetimeStateIn
-import com.dhkim.domain.movie.usecase.GetMovieWithCategoryUseCase
 import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import com.dhkim.domain.movie.usecase.NOW_PLAYING_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TODAY_RECOMMENDATION_MOVIE_KEY
 import com.dhkim.domain.movie.usecase.TODAY_TOP_10_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TOP_RATED_MOVIES_KEY
 import com.dhkim.domain.tv.usecase.AIRING_TODAY_TVS_KEY
-import com.dhkim.domain.tv.usecase.GetTvWithCategoryUseCase
 import com.dhkim.domain.tv.usecase.GetTvsUseCase
 import com.dhkim.domain.tv.usecase.ON_THE_AIR_TVS_KEY
 import com.dhkim.domain.tv.usecase.TOP_RATED_TVS_KEY
@@ -31,13 +25,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
 @ExperimentalCoroutinesApi
@@ -71,12 +59,12 @@ class HomeViewModel(
                     TOP_RATED_TVS_KEY to Group.HomeGroup.TOP_RATED_TV
                 ).map {
                     async {
-                        when (it.second.series) {
-                            com.dhkim.home.Series.MOVIE -> {
+                        when (it.second.seriesType) {
+                            SeriesType.MOVIE -> {
                                 getMoviesUseCase[it.first]!!(language, region).toContent(group = it.second, viewModelScope)
                             }
 
-                            com.dhkim.home.Series.TV -> {
+                            SeriesType.TV -> {
                                 getTvsUseCase[it.first]!!(language).toContent(group = it.second, viewModelScope)
                             }
 

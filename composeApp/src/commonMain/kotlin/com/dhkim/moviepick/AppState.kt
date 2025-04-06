@@ -7,7 +7,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.dhkim.home.Series
+import com.dhkim.common.SeriesType
 import com.dhkim.home.navigation.HOME_ROUTE
 import com.dhkim.home.navigation.MOVIE_ROUTE
 import com.dhkim.home.navigation.SERIES_COLLECTION_ROUTE
@@ -53,8 +53,8 @@ class AppState(val navController: NavHostController) {
     fun navigateToVideo(videoUrl: String) = navController.navigateToVideo(videoUrl)
     fun navigateToMovie() = navController.navigate(MOVIE_ROUTE)
     fun navigateToTv() = navController.navigate(TV_ROUTE)
-    fun navigateToSeriesCollection(series: Series, genreId: Int?, region: String?) =
-        navController.navigate("$SERIES_COLLECTION_ROUTE/${series.name}/${genreId?.toString()}/$region")
+    fun navigateToSeriesCollection(seriesType: SeriesType, genreId: Int?, region: String?) =
+        navController.navigate("$SERIES_COLLECTION_ROUTE/${seriesType.name}/${genreId?.toString()}/$region")
     fun onBack() = navController.navigateUp()
 }
 
