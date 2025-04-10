@@ -55,7 +55,7 @@ class RemoteTvDataSourceImpl(
                 url {
                     path("/3/tv/$id/videos")
                 }
-                parameter("language", language)
+                parameter("language", language.code)
             }
             val results = response.body<TvVideoDto>().results
             emit(results.mapNotNull { it.toVideo() })
@@ -68,7 +68,7 @@ class RemoteTvDataSourceImpl(
                 url {
                     path("/3/tv/$id")
                 }
-                parameter("language", language)
+                parameter("language", language.code)
             }
             val tvDetailDto = response.body<TvDetailDto>()
             emit(tvDetailDto.toTvDetail())
@@ -87,7 +87,7 @@ class RemoteTvDataSourceImpl(
                 url {
                     path("/3/tv/$id/credits")
                 }
-                parameter("language", language)
+                parameter("language", language.code)
             }
             val tvCreditsDto = response.body<TvCreditsDto>()
             val castMembers = tvCreditsDto.cast.map { it.name }.distinctBy { it }

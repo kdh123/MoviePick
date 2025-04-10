@@ -85,6 +85,7 @@ private fun MovieScreenDarkPreview(
                         sharedTransitionScope = this@SharedTransitionLayout,
                         animatedVisibilityScope = this@AnimatedContent,
                         onAction = {},
+                        navigateToSeriesDetail = { _, _ -> },
                         navigateToVideo = {},
                         navigateToSeriesCollection = { _, _, _ -> },
                         onBack = {}
@@ -114,6 +115,7 @@ private fun MovieScreenPreview(
                         sharedTransitionScope = this@SharedTransitionLayout,
                         animatedVisibilityScope = this@AnimatedContent,
                         onAction = {},
+                        navigateToSeriesDetail = { _, _ -> },
                         navigateToVideo = {},
                         navigateToSeriesCollection = { _, _, _ -> },
                         onBack = {}

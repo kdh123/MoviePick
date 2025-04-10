@@ -154,8 +154,12 @@ class MovieUseCaseTest : KoinTest {
 
     @Test
     fun `영화 상세 정보 가져오기_Real - Only Android`() = runTest {
+        //베테랑 : 995926
+        //백설공주 : 447273
+        //부산행 : 396535
+
         val getMovieDetailUseCase = get<GetMovieDetailUseCase>()
-        val movie = getMovieDetailUseCase(id = "447273", language = Language.Korea).first()
+        val movie = getMovieDetailUseCase(id = "396535", language = Language.Korea).first()
         println(movie)
         movie.actors.forEach {
             println(it)

@@ -21,6 +21,7 @@ fun NavController.navigateToTv() = navigate(TV_ROUTE)
 @KoinExperimentalAPI
 fun NavGraphBuilder.tv(
     sharedTransitionScope: SharedTransitionScope,
+    navigateToSeriesDetail: (seriesType: SeriesType, seriesId: String) -> Unit,
     navigateToVideo: (String) -> Unit,
     navigateToSeriesCollection: (seriesType: SeriesType, genreId: Int?, region: String?) -> Unit,
     onBack: () -> Unit
@@ -34,6 +35,7 @@ fun NavGraphBuilder.tv(
             sharedTransitionScope = sharedTransitionScope,
             animatedVisibilityScope = this@composable,
             onAction = viewModel::onAction,
+            navigateToSeriesDetail = navigateToSeriesDetail,
             navigateToVideo = navigateToVideo,
             navigateToSeriesCollection = navigateToSeriesCollection,
             onBack = onBack

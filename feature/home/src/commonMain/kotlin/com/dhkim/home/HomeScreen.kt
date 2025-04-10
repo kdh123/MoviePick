@@ -31,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.cash.paging.compose.collectAsLazyPagingItems
+import com.dhkim.common.SeriesType
 import com.dhkim.core.designsystem.Black50
 import com.dhkim.core.designsystem.Black70
 import com.dhkim.core.designsystem.MoviePickTheme
@@ -43,6 +44,7 @@ import com.dhkim.core.ui.SeriesList
 import com.dhkim.core.ui.noRippleClick
 import com.dhkim.domain.movie.model.Movie
 import com.dhkim.domain.tv.model.Tv
+import com.diamondedge.logging.logging
 import com.skydoves.landscapist.coil3.CoilImage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -55,6 +57,7 @@ fun HomeScreen(
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     onAction: (HomeAction) -> Unit,
+    navigateToSeriesDetail: (seriesType: SeriesType, seriesId: String) -> Unit,
     navigateToVideo: (String) -> Unit,
     navigateToMovie: () -> Unit,
     navigateToTv: () -> Unit,
@@ -87,7 +90,7 @@ fun HomeScreen(
                     sharedTransitionScope = sharedTransitionScope,
                     animatedVisibilityScope = animatedVisibilityScope,
                     onAction = onAction,
-                    onCategoryClick = { homeState.showCategoryModal = !homeState.showCategoryModal },
+                    navigateToSeriesDetail = navigateToSeriesDetail,
                     navigateToVideo = navigateToVideo,
                     navigateToMovie = navigateToMovie,
                     navigateToTv = navigateToTv
@@ -122,7 +125,6 @@ private fun HomeCategoryChips(
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     onAction: (HomeAction) -> Unit,
-    onCategoryClick: () -> Unit,
     navigateToMovie: () -> Unit,
     navigateToTv: () -> Unit
 ) {
@@ -179,7 +181,7 @@ private fun ContentsScreen(
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     onAction: (HomeAction) -> Unit,
-    onCategoryClick: () -> Unit,
+    navigateToSeriesDetail: (seriesType: SeriesType, seriesId: String) -> Unit,
     navigateToMovie: () -> Unit,
     navigateToTv: () -> Unit,
     navigateToVideo: (String) -> Unit,
@@ -206,7 +208,6 @@ private fun ContentsScreen(
                             sharedTransitionScope = sharedTransitionScope,
                             animatedVisibilityScope = animatedVisibilityScope,
                             onAction = onAction,
-                            onCategoryClick = onCategoryClick,
                             navigateToMovie = navigateToMovie,
                             navigateToTv = navigateToTv
                         )
@@ -218,6 +219,7 @@ private fun ContentsScreen(
                             val series = movies[0] as Movie
                             RecommendationSeries(
                                 series = series,
+                                onClick = { navigateToSeriesDetail(SeriesType.MOVIE, series.id) },
                                 onUpdateRecommendationSeriesHeight = homeState::updateHeight
                             ) {
                                 Genre()
@@ -229,14 +231,23 @@ private fun ContentsScreen(
                     Group.HomeGroup.TODAY_TOP_10_MOVIES -> {
                         val movies = (item as SeriesItem.Content).series.collectAsLazyPagingItems()
                         SeriesList(title = (item.group as Group.HomeGroup).title, series = movies) { index, movie ->
-                            Top10MovieItem(index = index, movie = movie as Movie)
+                            Top10MovieItem(
+                                index = index,
+                                movie = movie as Movie,
+                                onClick = { navigateToSeriesDetail(SeriesType.MOVIE, movie.id) }
+                            )
                         }
                     }
                     Group.HomeGroup.NOW_PLAYING_MOVIE,
                     Group.HomeGroup.TOP_RATED_MOVIE -> {
                         val movies = (item as SeriesItem.Content).series.collectAsLazyPagingItems()
                         SeriesList(title = (item.group as Group.HomeGroup).title, series = movies) { _, movie ->
-                            ContentItem(series = movie as Movie)
+                            ContentItem(
+                                series = movie as Movie,
+                                onClick = {
+                                    navigateToSeriesDetail(SeriesType.MOVIE, movie.id)
+                                }
+                            )
                         }
                     }
                     Group.HomeGroup.AIRING_TODAY_TV,
@@ -244,7 +255,13 @@ private fun ContentsScreen(
                     Group.HomeGroup.TOP_RATED_TV -> {
                         val movies = (item as SeriesItem.Content).series.collectAsLazyPagingItems()
                         SeriesList(title = (item.group as Group.HomeGroup).title, series = movies) { _, tv ->
-                            TvItem(tv = tv as Tv)
+                            ContentItem(
+                                series = tv as Tv,
+                                onClick = {
+                                    logging().info { "tvId : ${tv.id}" }
+                                    navigateToSeriesDetail(SeriesType.TV, tv.id)
+                                }
+                            )
                         }
                     }
                 }
@@ -266,7 +283,6 @@ private fun ContentsScreen(
                         sharedTransitionScope = sharedTransitionScope,
                         animatedVisibilityScope = animatedVisibilityScope,
                         onAction = {},
-                        onCategoryClick = { homeState.showCategoryModal = !homeState.showCategoryModal },
                         navigateToMovie = navigateToMovie,
                         navigateToTv = navigateToTv
                     )
@@ -277,8 +293,15 @@ private fun ContentsScreen(
 }
 
 @Composable
-private fun Top10MovieItem(index: Int, movie: Movie) {
-    Row {
+private fun Top10MovieItem(
+    index: Int,
+    movie: Movie,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .noRippleClick(onClick)
+    ) {
         Text(
             text = "${index + 1}",
             fontWeight = FontWeight.Bold,
@@ -298,17 +321,4 @@ private fun Top10MovieItem(index: Int, movie: Movie) {
             previewPlaceholder = painterResource(Resources.Icon.MoviePosterSample)
         )
     }
-}
-
-@Composable
-private fun TvItem(tv: Tv) {
-    CoilImage(
-        modifier = Modifier
-            .clip(RoundedCornerShape(12f))
-            .width(108.dp)
-            .aspectRatio(7f / 10f),
-        imageModel = { tv.imageUrl },
-        failure = {},
-        previewPlaceholder = painterResource(Resources.Icon.TvPosterSample)
-    )
 }

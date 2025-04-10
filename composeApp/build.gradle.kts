@@ -46,6 +46,7 @@ kotlin {
             implementation(projects.core.ui)
             implementation(projects.core.di)
             implementation(projects.feature.home)
+            implementation(projects.feature.seriesdetail)
             implementation(projects.feature.upcoming)
             implementation(projects.feature.video)
 

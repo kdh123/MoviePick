@@ -23,6 +23,7 @@ fun NavController.navigateToMovie() = navigate(MOVIE_ROUTE)
 @KoinExperimentalAPI
 fun NavGraphBuilder.movie(
     sharedTransitionScope: SharedTransitionScope,
+    navigateToSeriesDetail: (seriesType: SeriesType, seriesId: String) -> Unit,
     navigateToVideo: (String) -> Unit,
     navigateToSeriesCollection: (seriesType: SeriesType, genreId: Int?, region: String?) -> Unit,
     onBack: () -> Unit
@@ -36,6 +37,7 @@ fun NavGraphBuilder.movie(
             sharedTransitionScope = sharedTransitionScope,
             animatedVisibilityScope = this@composable,
             onAction = viewModel::onAction,
+            navigateToSeriesDetail = navigateToSeriesDetail,
             navigateToVideo = navigateToVideo,
             navigateToSeriesCollection = navigateToSeriesCollection,
             onBack = onBack

@@ -2,6 +2,7 @@ package com.dhkim.di
 
 import com.dhkim.core.di.coreModule
 import com.dhkim.home.di.homeModule
+import com.dhkim.moviepick.di.seriesDetailModule
 import com.dhkim.upcoming.di.upcomingModule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.core.context.startKoin
@@ -11,6 +12,6 @@ import org.koin.dsl.KoinAppDeclaration
 fun initKoin(config: KoinAppDeclaration? = null) {
     startKoin {
         config?.invoke(this)
-        modules(coreModule, homeModule, upcomingModule)
+        modules(coreModule, homeModule, seriesDetailModule, upcomingModule)
     }
 }

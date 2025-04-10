@@ -34,6 +34,7 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun RecommendationSeries(
     series: Series,
+    onClick: () -> Unit = {},
     onPosterImageLoadSuccess: ((Painter) -> Unit)? = null,
     onUpdateRecommendationSeriesHeight: ((Int) -> Unit)? = null,
     content: @Composable RecommendationSeriesScope.() -> Unit,
@@ -47,6 +48,7 @@ fun RecommendationSeries(
             .aspectRatio(7f / 9f)
             .padding(horizontal = 24.dp, vertical = 8.dp)
             .clip(RoundedCornerShape(12.dp))
+            .noRippleClick(onClick)
             .onGloballyPositioned {
                 onUpdateRecommendationSeriesHeight?.invoke(it.size.height)
             }

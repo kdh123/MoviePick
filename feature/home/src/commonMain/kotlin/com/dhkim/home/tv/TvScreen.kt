@@ -59,6 +59,7 @@ fun TvScreen(
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedContentScope,
     onAction: (TvAction) -> Unit,
+    navigateToSeriesDetail: (seriesType: SeriesType, seriesId: String) -> Unit,
     navigateToVideo: (String) -> Unit,
     navigateToSeriesCollection: (seriesType: SeriesType, genreId: Int?, region: String?) -> Unit,
     onBack: () -> Unit,
@@ -87,6 +88,7 @@ fun TvScreen(
                     sharedTransitionScope = sharedTransitionScope,
                     animatedVisibilityScope = animatedVisibilityScope,
                     onAction = onAction,
+                    navigateToSeriesDetail = navigateToSeriesDetail,
                     navigateToVideo = navigateToVideo,
                     navigateToSeriesCollection = navigateToSeriesCollection,
                     onBack = onBack
@@ -107,6 +109,7 @@ fun ContentsScreen(
     tvSeriesItems: ImmutableList<SeriesItem>,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
+    navigateToSeriesDetail: (seriesType: SeriesType, seriesId: String) -> Unit,
     navigateToVideo: (String) -> Unit,
     navigateToSeriesCollection: (seriesType: SeriesType, genreId: Int?, region: String?) -> Unit,
     onAction: (TvAction) -> Unit,
@@ -149,6 +152,7 @@ fun ContentsScreen(
                             val series = tvs[0] as Tv
                             RecommendationSeries(
                                 series = series,
+                                onClick = { navigateToSeriesDetail(SeriesType.TV, series.id) },
                                 onUpdateRecommendationSeriesHeight = homeState::updateHeight
                             ) {
                                 Genre()
@@ -165,7 +169,12 @@ fun ContentsScreen(
                     Group.TvGroup.TOP_RATED_TV -> {
                         val tvs = (item as SeriesItem.Content).series.collectAsLazyPagingItems()
                         SeriesList(title = (item.group as Group.TvGroup).title, series = tvs) { _, tv ->
-                            ContentItem(series = tv as Tv)
+                            ContentItem(
+                                series = tv as Tv,
+                                onClick = {
+                                    navigateToSeriesDetail(SeriesType.TV, tv.id)
+                                }
+                            )
                         }
                     }
                 }

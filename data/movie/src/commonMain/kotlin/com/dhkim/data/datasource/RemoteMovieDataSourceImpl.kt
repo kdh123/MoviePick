@@ -68,7 +68,7 @@ class RemoteMovieDataSourceImpl(
                 url {
                     path("/3/movie/$id")
                 }
-                parameter("language", language)
+                parameter("language", language.code)
             }
             val movieDetailDto = response.body<MovieDetailDto>()
             emit(movieDetailDto.toMovieDetail())

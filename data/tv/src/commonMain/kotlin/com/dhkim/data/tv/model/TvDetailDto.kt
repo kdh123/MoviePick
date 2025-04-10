@@ -23,12 +23,8 @@ data class TvDetailDto(
     val languages: List<String>,
     @SerialName("last_air_date")
     val lastAirDate: String,
-    @SerialName("last_episode_to_air")
-    val lastEpisodeToAir: LastEpisodeToAir,
     val name: String,
     val networks: List<Network>,
-    @SerialName("next_episode_to_air")
-    val nextEpisodeToAir: NextEpisodeToAir,
     @SerialName("number_of_episodes")
     val numberOfEpisodes: Int,
     @SerialName("number_of_seasons")
@@ -42,7 +38,7 @@ data class TvDetailDto(
     val overview: String,
     val popularity: Double,
     @SerialName("poster_path")
-    val posterPath: String,
+    val posterPath: String?,
     @SerialName("production_companies")
     val productionCompanies: List<ProductionCompany>?,
     @SerialName("production_countries")
@@ -66,7 +62,7 @@ data class TvDetailDto(
             country = if (originCountry.isNotEmpty()) originCountry.first() else "",
             overview = overview,
             genre = genres.map { it.name },
-            imageUrl = posterPath,
+            imageUrl = posterPath ?: "",
             firstAirDate = firstAirDate,
             popularity = popularity,
             productionCompany = productionCompanies?.firstOrNull()?.name ?: "",
@@ -79,12 +75,12 @@ data class TvDetailDto(
 @Serializable
 data class CreatedBy(
     @SerialName("credit_id")
-    val creditId: Int,
+    val creditId: String,
     val gender: Int,
     val id: Int,
     val name: String,
     @SerialName("profile_path")
-    val profilePath: String
+    val profilePath: String?
 )
 
 @Serializable
@@ -96,7 +92,7 @@ data class Genre(
 @Serializable
 data class LastEpisodeToAir(
     @SerialName("air_date")
-    val airDate: String,
+    val airDate: String?,
     @SerialName("episode_number")
     val episodeNumber: Int,
     @SerialName("episode_type")
@@ -132,7 +128,7 @@ data class Network(
 @Serializable
 data class NextEpisodeToAir(
     @SerialName("air_date")
-    val airDate: String,
+    val airDate: String?,
     @SerialName("episode_number")
     val episodeNumber: Int,
     @SerialName("episode_type")
@@ -175,14 +171,14 @@ data class ProductionCountry(
 @Serializable
 data class Season(
     @SerialName("air_date")
-    val airDate: String,
+    val airDate: String?,
     @SerialName("episode_count")
     val episodeCount: Int,
     val id: Int,
     val name: String,
     val overview: String,
     @SerialName("poster_path")
-    val posterPath: String,
+    val posterPath: String?,
     @SerialName("season_number")
     val seasonNumber: Int,
     @SerialName("vote_average")

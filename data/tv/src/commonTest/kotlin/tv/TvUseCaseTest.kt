@@ -124,7 +124,7 @@ class TvUseCaseTest : KoinTest {
     @Test
     fun `TV 상세 정보 가져오기_Real - Only Android`() = runTest {
         val getTvDetailUseCase = get<GetTvDetailUseCase>()
-        val tv = getTvDetailUseCase(id = "61818", language = Language.Korea).first()
+        val tv = getTvDetailUseCase(id = "71026", language = Language.Korea).first()
         println(tv)
         tv.actors.forEach {
             println(it)

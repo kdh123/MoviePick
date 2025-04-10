@@ -27,6 +27,7 @@ import com.dhkim.home.navigation.home
 import com.dhkim.home.navigation.movie
 import com.dhkim.home.navigation.seriesCollection
 import com.dhkim.home.navigation.tv
+import com.dhkim.moviepick.navigation.seriesDetail
 import com.dhkim.upcoming.navigation.upcoming
 import com.dhkim.video.navigation.video
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -65,6 +66,7 @@ fun App() {
                 ) {
                     home(
                         sharedTransitionScope = this@SharedTransitionLayout,
+                        navigateToSeriesDetail = appState::navigateToSeriesDetail,
                         navigateToVideo = appState::navigateToVideo,
                         navigateToMovie = appState::navigateToMovie,
                         navigateToTv = appState::navigateToTv,
@@ -73,16 +75,22 @@ fun App() {
                     movie(
                         sharedTransitionScope = this@SharedTransitionLayout,
                         navigateToVideo = appState::navigateToVideo,
+                        navigateToSeriesDetail = appState::navigateToSeriesDetail,
                         navigateToSeriesCollection = appState::navigateToSeriesCollection,
                         onBack = appState::onBack
                     )
                     tv(
                         sharedTransitionScope = this@SharedTransitionLayout,
+                        navigateToSeriesDetail = appState::navigateToSeriesDetail,
                         navigateToVideo = appState::navigateToVideo,
                         navigateToSeriesCollection = appState::navigateToSeriesCollection,
                         onBack = appState::onBack
                     )
+                    seriesDetail(
+                        onBack = appState::onBack
+                    )
                     seriesCollection(
+                        navigateToSeriesDetail = appState::navigateToSeriesDetail,
                         onBack = appState::onBack
                     )
                     upcoming()

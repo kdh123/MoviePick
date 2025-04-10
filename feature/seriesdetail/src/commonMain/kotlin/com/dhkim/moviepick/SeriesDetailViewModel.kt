@@ -2,6 +2,7 @@ package com.dhkim.moviepick
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.dhkim.common.Language
 import com.dhkim.common.RestartableStateFlow
 import com.dhkim.common.SeriesDetail
@@ -33,11 +34,18 @@ class SeriesDetailViewModel(
         }.flatMapLatest { series ->
             flowOf(createUiState(series))
         }.catch {
-            flowOf(SeriesDetailUiState(displayState = SeriesDetailDisplayState.Error(errorCode = "", message = "${it.message}")))
+            flowOf(
+                SeriesDetailUiState(
+                    seriesType = SeriesType.entries.first { series == it.name },
+                    displayState = SeriesDetailDisplayState.Error(errorCode = "", message = "${it.message}"))
+            )
         }
         .onetimeStateIn(
             scope = viewModelScope,
-            initialValue = SeriesDetailUiState(displayState = SeriesDetailDisplayState.Loading)
+            initialValue = SeriesDetailUiState(
+                seriesType = SeriesType.entries.first { series == it.name },
+                displayState = SeriesDetailDisplayState.Loading
+            )
         )
 
     private fun createUiState(seriesDetail: SeriesDetail): SeriesDetailUiState {
@@ -45,10 +53,11 @@ class SeriesDetailViewModel(
             SeriesDetailItem.AppBar(),
             SeriesDetailItem.SeriesDetailPoster(imageUrl = seriesDetail.imageUrl),
             SeriesDetailItem.Information(seriesType = SeriesType.entries.first { it.name == series }, series = seriesDetail),
-            SeriesDetailItem.ContentTab(videos = seriesDetail.videos, reviews = seriesDetail.review)
+            SeriesDetailItem.ContentTab(videos = seriesDetail.videos, reviews = flowOf(seriesDetail.review).cachedIn(viewModelScope))
         )
 
         return SeriesDetailUiState(
+            seriesType = SeriesType.entries.first { it.name == series },
             displayState = SeriesDetailDisplayState.Contents(contents)
         )
     }

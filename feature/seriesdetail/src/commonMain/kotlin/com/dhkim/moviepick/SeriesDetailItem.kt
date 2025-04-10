@@ -5,6 +5,7 @@ import com.dhkim.common.Review
 import com.dhkim.common.SeriesDetail
 import com.dhkim.common.SeriesType
 import com.dhkim.common.Video
+import kotlinx.coroutines.flow.Flow
 
 sealed class SeriesDetailItem(open val group: Group) {
 
@@ -26,6 +27,6 @@ sealed class SeriesDetailItem(open val group: Group) {
     data class ContentTab(
         override val group: Group = Group.ContentTab,
         val videos: List<Video>,
-        val reviews: PagingData<Review>
+        val reviews: Flow<PagingData<Review>>
     ) : SeriesDetailItem(group)
 }

@@ -59,6 +59,7 @@ fun MovieScreen(
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedContentScope,
     onAction: (MovieAction) -> Unit,
+    navigateToSeriesDetail: (seriesType: SeriesType, seriesId: String) -> Unit,
     navigateToVideo: (String) -> Unit,
     navigateToSeriesCollection: (seriesType: SeriesType, genreId: Int?, region: String?) -> Unit,
     onBack: () -> Unit
@@ -87,6 +88,7 @@ fun MovieScreen(
                     sharedTransitionScope = sharedTransitionScope,
                     animatedVisibilityScope = animatedVisibilityScope,
                     onAction = onAction,
+                    navigateToSeriesDetail = navigateToSeriesDetail,
                     navigateToVideo = navigateToVideo,
                     navigateToSeriesCollection = navigateToSeriesCollection,
                     onBack = onBack
@@ -107,6 +109,7 @@ fun ContentsScreen(
     movieSeriesItems: ImmutableList<SeriesItem>,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
+    navigateToSeriesDetail: (seriesType: SeriesType, seriesId: String) -> Unit,
     navigateToVideo: (String) -> Unit,
     navigateToSeriesCollection: (seriesType: SeriesType, genreId: Int?, region: String?) -> Unit,
     onAction: (MovieAction) -> Unit,
@@ -149,6 +152,7 @@ fun ContentsScreen(
                             val series = movies[0] as Movie
                             RecommendationSeries(
                                 series = series,
+                                onClick = { navigateToSeriesDetail(SeriesType.MOVIE, series.id) },
                                 onUpdateRecommendationSeriesHeight = homeState::updateHeight
                             ) {
                                 Genre()
@@ -165,7 +169,10 @@ fun ContentsScreen(
                     Group.MovieGroup.ANIMATION_MOVIE -> {
                         val movies = (item as SeriesItem.Content).series.collectAsLazyPagingItems()
                         SeriesList(title = (item.group as Group.MovieGroup).title, series = movies) { _, movie ->
-                            ContentItem(series = movie as Movie)
+                            ContentItem(
+                                series = movie as Movie,
+                                onClick = { navigateToSeriesDetail(SeriesType.MOVIE, movie.id) }
+                            )
                         }
                     }
                 }

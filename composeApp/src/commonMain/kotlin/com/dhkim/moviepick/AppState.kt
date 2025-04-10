@@ -12,6 +12,7 @@ import com.dhkim.home.navigation.HOME_ROUTE
 import com.dhkim.home.navigation.MOVIE_ROUTE
 import com.dhkim.home.navigation.SERIES_COLLECTION_ROUTE
 import com.dhkim.home.navigation.TV_ROUTE
+import com.dhkim.moviepick.navigation.SERIES_DETAIL_ROUTE
 import com.dhkim.upcoming.navigation.UPCOMING_ROUTE
 import com.dhkim.video.navigation.navigateToVideo
 import moviepick.composeapp.generated.resources.Res
@@ -53,6 +54,8 @@ class AppState(val navController: NavHostController) {
     fun navigateToVideo(videoUrl: String) = navController.navigateToVideo(videoUrl)
     fun navigateToMovie() = navController.navigate(MOVIE_ROUTE)
     fun navigateToTv() = navController.navigate(TV_ROUTE)
+    fun navigateToSeriesDetail(seriesType: SeriesType, seriesId: String) =
+        navController.navigate("$SERIES_DETAIL_ROUTE/${seriesType.name}/$seriesId")
     fun navigateToSeriesCollection(seriesType: SeriesType, genreId: Int?, region: String?) =
         navController.navigate("$SERIES_COLLECTION_ROUTE/${seriesType.name}/${genreId?.toString()}/$region")
     fun onBack() = navController.navigateUp()

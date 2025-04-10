@@ -7,6 +7,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.dhkim.common.SeriesType
 import com.dhkim.home.HomeScreen
 import com.dhkim.home.HomeUiState
 import com.dhkim.home.HomeViewModel
@@ -23,6 +24,7 @@ fun NavController.navigateToHome() = navigate(HOME_ROUTE)
 @KoinExperimentalAPI
 fun NavGraphBuilder.home(
     sharedTransitionScope: SharedTransitionScope,
+    navigateToSeriesDetail: (seriesType: SeriesType, seriesId: String) -> Unit,
     navigateToVideo: (String) -> Unit,
     navigateToMovie: () -> Unit,
     navigateToTv: () -> Unit,
@@ -36,6 +38,7 @@ fun NavGraphBuilder.home(
             sharedTransitionScope = sharedTransitionScope,
             animatedVisibilityScope = this@composable,
             onAction = viewModel::onAction,
+            navigateToSeriesDetail = navigateToSeriesDetail,
             navigateToVideo = navigateToVideo,
             navigateToMovie = navigateToMovie,
             navigateToTv = navigateToTv,

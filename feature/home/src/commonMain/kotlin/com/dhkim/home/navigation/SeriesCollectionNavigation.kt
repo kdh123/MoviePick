@@ -6,6 +6,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.dhkim.common.Genre
+import com.dhkim.common.SeriesType
 import com.dhkim.home.series.SeriesCollectionScreen
 import com.dhkim.home.series.SeriesCollectionViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,6 +20,7 @@ const val SERIES_COLLECTION_ROUTE = "series_collection"
 @ExperimentalSharedTransitionApi
 @KoinExperimentalAPI
 fun NavGraphBuilder.seriesCollection(
+    navigateToSeriesDetail: (seriesType: SeriesType, seriesId: String) -> Unit,
     onBack: () -> Unit
 ) {
     composable(
@@ -37,6 +39,7 @@ fun NavGraphBuilder.seriesCollection(
 
         SeriesCollectionScreen(
             uiState = uiState,
+            navigateToSeriesDetail = navigateToSeriesDetail,
             onBack = onBack
         )
     }

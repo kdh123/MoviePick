@@ -1,10 +1,12 @@
 package com.dhkim.moviepick
 
 import androidx.compose.runtime.Stable
+import com.dhkim.common.SeriesType
 import kotlinx.collections.immutable.ImmutableList
 
 @Stable
 data class SeriesDetailUiState(
+    val seriesType: SeriesType,
     val displayState: SeriesDetailDisplayState = SeriesDetailDisplayState.Loading
 )
 

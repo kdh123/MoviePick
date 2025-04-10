@@ -22,13 +22,16 @@ import app.cash.paging.compose.collectAsLazyPagingItems
 import app.cash.paging.compose.itemContentType
 import app.cash.paging.compose.itemKey
 import com.dhkim.common.Series
+import com.dhkim.common.SeriesType
 import com.dhkim.core.designsystem.MoviePickTheme
 import com.dhkim.core.ui.ContentItem
+import com.dhkim.domain.movie.model.Movie
 import com.diamondedge.logging.logging
 
 @Composable
 fun SeriesCollectionScreen(
     uiState: SeriesCollectionUiState,
+    navigateToSeriesDetail: (seriesType: SeriesType, seriesId: String) -> Unit,
     onBack: () -> Unit
 ) {
     when (uiState.displayState) {
@@ -37,6 +40,7 @@ fun SeriesCollectionScreen(
             SeriesCollectionContent(
                 category = uiState.categoryName,
                 series = series,
+                navigateToSeriesDetail = navigateToSeriesDetail,
                 onBack = onBack
             )
         }
@@ -55,9 +59,9 @@ fun SeriesCollectionScreen(
 fun SeriesCollectionContent(
     category: String,
     series: LazyPagingItems<Series>,
+    navigateToSeriesDetail: (seriesType: SeriesType, seriesId: String) -> Unit,
     onBack: () -> Unit
 ) {
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -95,7 +99,16 @@ fun SeriesCollectionContent(
                 val item = series[index]
                 if (item != null) {
                     logging().info { item.imageUrl }
-                    ContentItem(series = item)
+                    ContentItem(
+                        series = item,
+                        onClick = {
+                            val seriesType = when {
+                                item is Movie -> SeriesType.MOVIE
+                                else -> SeriesType.TV
+                            }
+                            navigateToSeriesDetail(seriesType, item.id)
+                        }
+                    )
                 }
             }
         }
