@@ -1,5 +1,8 @@
 package com.dhkim.moviepick
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,7 +17,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -22,17 +30,12 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.PointerEventType
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,6 +48,7 @@ import com.dhkim.common.SeriesType
 import com.dhkim.common.Video
 import com.dhkim.core.designsystem.MoviePickTheme
 import com.dhkim.core.ui.Resources
+import com.dhkim.core.ui.noRippleClick
 import com.dhkim.domain.movie.model.MovieDetail
 import com.dhkim.domain.tv.model.TvDetail
 import com.skydoves.landscapist.coil3.CoilImage
@@ -59,48 +63,54 @@ fun SeriesDetailScreen(
     uiState: SeriesDetailUiState,
     onBack: () -> Unit
 ) {
+    val listState = rememberLazyListState()
+    val showTabBar by remember { derivedStateOf { listState.firstVisibleItemIndex >= 3 } }
+    val seriesInformation = (uiState.displayState as? SeriesDetailDisplayState.Contents)
+        ?.series
+        ?.firstOrNull { it.group == Group.Information } as? SeriesDetailItem.Information
+    val seriesTitle = seriesInformation?.series?.title ?: ""
+
     Scaffold(
         topBar = {
-
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier
+                        .noRippleClick(onBack)
+                )
+                AnimatedVisibility(
+                    visible = showTabBar,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    Text(
+                        text = seriesTitle,
+                        style = MoviePickTheme.typography.titleMedium
+                    )
+                }
+            }
         }
     ) { paddingValues ->
         when (uiState.displayState) {
             SeriesDetailDisplayState.Loading -> {}
             is SeriesDetailDisplayState.Contents -> {
+                val pages = listOf("리뷰", "비디오")
+                val pagerState = rememberPagerState(initialPage = 0, pageCount = { pages.size })
                 Box(
                     modifier = Modifier
+                        .padding(top = paddingValues.calculateTopPadding())
                         .fillMaxWidth()
-
                 ) {
-                    val listState = rememberLazyListState()
-                    var userScrollEnabled by remember {
-                        mutableStateOf(false)
-                    }
-
                     LazyColumn(
                         state = listState,
                         modifier = Modifier
-                            .pointerInput(Unit) {
-                                awaitPointerEventScope {
-                                    while (true) {
-                                        val event = awaitPointerEvent()
-                                        val action = event.type
-
-                                        when (action) {
-                                            PointerEventType.Press -> {
-                                            }
-
-                                            PointerEventType.Release -> {
-                                                userScrollEnabled = listState.firstVisibleItemIndex >= 3
-                                            }
-
-                                            PointerEventType.Move -> {
-                                                println("➡️ MOVE")
-                                            }
-                                        }
-                                    }
-                                }
-                            }
                     ) {
                         items(items = uiState.displayState.series, key = { it.group }) {
                             when (it) {
@@ -118,18 +128,24 @@ fun SeriesDetailScreen(
 
                                 is SeriesDetailItem.ContentTab -> {
                                     val reviews = it.reviews.collectAsLazyPagingItems()
-                                    val videos = it.videos.toImmutableList()
-
-                                    Column {
-                                        ContentTab(
-                                            videos = videos,
-                                            reviews = reviews,
-                                            userScrollEnabled = userScrollEnabled
-                                        )
-                                    }
+                                    ContentTab(
+                                        pagerState = pagerState,
+                                        pages = pages.toImmutableList(),
+                                        videos = it.videos.toImmutableList(),
+                                        reviews = reviews,
+                                        showTabBar = showTabBar
+                                    )
                                 }
                             }
                         }
+                    }
+                    if (showTabBar) {
+                        TabBar(
+                            pagerState = pagerState,
+                            pages = pages.toImmutableList(),
+                            modifier = Modifier
+
+                        )
                     }
                 }
             }
@@ -144,67 +160,72 @@ fun SeriesDetailScreen(
 
 @Composable
 fun ContentTab(
-    videos: List<Video>,
+    pagerState: PagerState,
+    pages: ImmutableList<String>,
+    videos: ImmutableList<Video>,
     reviews: LazyPagingItems<Review>,
-    userScrollEnabled: Boolean
+    showTabBar: Boolean
 ) {
-    val pages = listOf("리뷰", "비디오")
-    val pagerState = rememberPagerState(initialPage = 0, pageCount = { pages.size })
-    val scope = rememberCoroutineScope()
-
     Column(
         modifier = Modifier
     ) {
-        TabRow(
-            selectedTabIndex = pagerState.currentPage,
-            indicator = { tabPositions ->
-                TabRowDefaults.PrimaryIndicator(
-                    modifier = Modifier
-                        .tabIndicatorOffset(currentTabPosition = tabPositions[pagerState.currentPage])
-                        .fillMaxWidth()
-                )
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            pages.forEachIndexed { index, title ->
-                Tab(
-                    text = { Text(text = title) },
-                    selected = pagerState.currentPage == index,
-                    onClick = {
-                        scope.launch {
-                            pagerState.scrollToPage(index)
-                        }
-                    }
-                )
-            }
-        }
-        HorizontalPager(
-            state = pagerState,
-        ) {
+        TabBar(pagerState, pages)
+        HorizontalPager(state = pagerState) {
             when (it) {
-                0 -> key("review") {
-                    ReviewList(reviews, userScrollEnabled)
-                }
-                1 -> key("video") {
-                    VideoList(videos.toImmutableList())
-                }
+                0 -> ReviewList(reviews, showTabBar)
+                1 -> VideoList(videos)
             }
         }
     }
 }
 
+@Composable
+fun TabBar(
+    pagerState: PagerState,
+    pages: ImmutableList<String>,
+    modifier: Modifier = Modifier
+) {
+    val scope = rememberCoroutineScope()
 
+    TabRow(
+        selectedTabIndex = pagerState.currentPage,
+        indicator = { tabPositions ->
+            TabRowDefaults.PrimaryIndicator(
+                modifier = Modifier
+                    .tabIndicatorOffset(currentTabPosition = tabPositions[pagerState.currentPage])
+                    .fillMaxWidth()
+            )
+        },
+        modifier = modifier
+            .fillMaxWidth()
+    ) {
+        pages.forEachIndexed { index, title ->
+            Tab(
+                text = { Text(text = title) },
+                selected = pagerState.currentPage == index,
+                onClick = {
+                    scope.launch {
+                        pagerState.animateScrollToPage(index)
+                    }
+                }
+            )
+        }
+    }
+}
 
 @Composable
 fun ReviewList(
     reviews: LazyPagingItems<Review>,
-    userScrollEnabled: Boolean,
+    showTabBar: Boolean,
 ) {
-
+    val listState = rememberLazyListState()
+    val isTopAt by remember {
+        derivedStateOf { listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0 }
+    }
 
     LazyColumn(
-        userScrollEnabled = userScrollEnabled,
+        state = listState,
+        userScrollEnabled = listState.isScrollInProgress || !isTopAt || showTabBar,
         modifier = Modifier
             .fillMaxWidth()
             .height(900.dp)
@@ -227,12 +248,16 @@ fun ReviewList(
                     ) {
                         Text(
                             text = item.author,
-                            fontWeight = FontWeight.Bold
+                            style = MoviePickTheme.typography.bodyMediumBold
                         )
-                        Text(text = item.createdAt)
+                        Text(
+                            text = item.createdAt,
+                            style = MoviePickTheme.typography.bodyMedium
+                        )
                     }
                     Text(
-                        text = item.content
+                        text = item.content,
+                        style = MoviePickTheme.typography.bodyMedium
                     )
                 }
             }
@@ -250,7 +275,7 @@ fun VideoList(videos: ImmutableList<Video>) {
         verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp)
+            .height(900.dp)
     ) {
         items(items = videos, key = { it.id }) {
             Row {
@@ -283,8 +308,7 @@ fun MovieInformation(
         Text(
             text = movie.title,
             textAlign = TextAlign.Center,
-            fontSize = 24.sp,
-            modifier = Modifier
+            style = MoviePickTheme.typography.bodyLargeBold
         )
 
         Row(
@@ -293,10 +317,12 @@ fun MovieInformation(
         ) {
             Text(
                 text = movie.releasedDate,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                style = MoviePickTheme.typography.bodyMedium
             )
             Text(
                 text = "${movie.runtime}분",
+                style = MoviePickTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
@@ -306,6 +332,7 @@ fun MovieInformation(
 
         Text(
             text = movie.overview,
+            style = MoviePickTheme.typography.bodyMedium,
             lineHeight = 22.sp
         )
     }
@@ -322,8 +349,7 @@ fun TvInformation(tv: TvDetail) {
         Text(
             text = tv.title,
             textAlign = TextAlign.Center,
-            fontSize = 24.sp,
-            modifier = Modifier
+            style = MoviePickTheme.typography.bodyLargeBold
         )
 
         Row(
@@ -332,10 +358,12 @@ fun TvInformation(tv: TvDetail) {
         ) {
             Text(
                 text = tv.firstAirDate,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                style = MoviePickTheme.typography.bodyMedium,
             )
             Text(
                 text = "시즌 ${tv.numberOfSeasons}개",
+                style = MoviePickTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
@@ -345,6 +373,7 @@ fun TvInformation(tv: TvDetail) {
 
         Text(
             text = tv.overview,
+            style = MoviePickTheme.typography.bodyMedium,
             lineHeight = 22.sp
         )
     }
@@ -360,6 +389,5 @@ private fun Poster(
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(1.3f)
-
     )
 }
