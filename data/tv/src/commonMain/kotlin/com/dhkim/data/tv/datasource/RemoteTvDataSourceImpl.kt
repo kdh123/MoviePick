@@ -7,9 +7,11 @@ import com.dhkim.common.Genre
 import com.dhkim.common.Language
 import com.dhkim.common.Region
 import com.dhkim.common.Review
+import com.dhkim.common.SeriesImage
 import com.dhkim.common.Video
 import com.dhkim.data.tv.model.TvCreditsDto
 import com.dhkim.data.tv.model.TvDetailDto
+import com.dhkim.data.tv.model.TvImageDto
 import com.dhkim.data.tv.model.TvVideoDto
 import com.dhkim.domain.tv.model.Tv
 import com.dhkim.domain.tv.model.TvDetail
@@ -92,6 +94,19 @@ class RemoteTvDataSourceImpl(
             val tvCreditsDto = response.body<TvCreditsDto>()
             val castMembers = tvCreditsDto.cast.map { it.name }.distinctBy { it }
             emit(castMembers)
+        }
+    }
+
+    override fun getTvImages(id: String): Flow<List<SeriesImage>> {
+        return flow {
+            val response = apiService.get {
+                url {
+                    path("/3/tv/$id/images")
+                }
+            }
+            val tvImageDto = response.body<TvImageDto>()
+            val images = tvImageDto.toSeriesImages()
+            emit(images)
         }
     }
 }

@@ -6,9 +6,11 @@ import app.cash.paging.PagingData
 import app.cash.paging.testing.TestPager
 import app.cash.paging.testing.asPagingSourceFactory
 import com.dhkim.common.Genre
+import com.dhkim.common.ImageType
 import com.dhkim.common.Language
 import com.dhkim.common.Region
 import com.dhkim.common.Review
+import com.dhkim.common.SeriesImage
 import com.dhkim.common.Video
 import com.dhkim.common.VideoType
 import com.dhkim.data.tv.datasource.RemoteTvDataSource
@@ -18,6 +20,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class FakeRemoteTvDataSource : RemoteTvDataSource {
+
+    private val tvImages = mutableListOf<SeriesImage>().apply {
+        repeat(10) {
+            add(
+                SeriesImage(
+                    imageUrl = "imageUrl$it",
+                    imageType = ImageType.Landscape
+                )
+            )
+        }
+    }
 
     private val tvVideos = mutableListOf<Video>().apply {
         repeat(10) {
@@ -203,6 +216,12 @@ class FakeRemoteTvDataSource : RemoteTvDataSource {
     override fun getTvCastMembers(id: String, language: Language): Flow<List<String>> {
         return flow {
             emit(listOf("멤버1", "멤버2", "멤버3"))
+        }
+    }
+
+    override fun getTvImages(id: String): Flow<List<SeriesImage>> {
+        return flow {
+            emit(tvImages)
         }
     }
 }

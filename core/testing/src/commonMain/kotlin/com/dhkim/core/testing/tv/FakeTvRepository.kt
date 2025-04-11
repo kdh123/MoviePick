@@ -5,6 +5,7 @@ import com.dhkim.common.Genre
 import com.dhkim.common.Language
 import com.dhkim.common.Region
 import com.dhkim.common.Review
+import com.dhkim.common.SeriesImage
 import com.dhkim.common.Video
 import com.dhkim.domain.tv.model.Tv
 import com.dhkim.domain.tv.model.TvDetail
@@ -45,5 +46,9 @@ class FakeTvRepository : TvRepository {
 
     override fun getTvCastMembers(id: String, language: Language): Flow<List<String>> {
         return remoteTvDataSource.getTvCastMembers(id, language)
+    }
+
+    override fun getTvImages(id: String): Flow<List<SeriesImage>> {
+        return remoteTvDataSource.getTvImages(id)
     }
 }

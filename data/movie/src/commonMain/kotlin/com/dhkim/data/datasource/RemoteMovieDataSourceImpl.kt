@@ -7,9 +7,11 @@ import com.dhkim.common.Genre
 import com.dhkim.common.Language
 import com.dhkim.common.Region
 import com.dhkim.common.Review
+import com.dhkim.common.SeriesImage
 import com.dhkim.common.Video
 import com.dhkim.data.model.MovieCreditsDto
 import com.dhkim.data.model.MovieDetailDto
+import com.dhkim.data.model.MovieImageDto
 import com.dhkim.data.model.MovieVideoDto
 import com.dhkim.domain.movie.model.Movie
 import com.dhkim.domain.movie.model.MovieDetail
@@ -92,6 +94,19 @@ class RemoteMovieDataSourceImpl(
             val movieCreditsDto = response.body<MovieCreditsDto>()
             val actors = movieCreditsDto.cast.map { it.name }.distinctBy { it }
             emit(actors)
+        }
+    }
+
+    override fun getMovieImages(id: String): Flow<List<SeriesImage>> {
+        return flow {
+            val response = apiService.get {
+                url {
+                    path("/3/movie/$id/images")
+                }
+            }
+            val movieImageDto = response.body<MovieImageDto>()
+            val images = movieImageDto.toSeriesImages()
+            emit(images)
         }
     }
 }

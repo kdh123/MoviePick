@@ -1,6 +1,5 @@
 package seriesdetail
 
-import app.cash.paging.testing.asSnapshot
 import com.dhkim.common.SeriesType
 import com.dhkim.core.testing.movie.FakeGetMovieDetailUseCase
 import com.dhkim.core.testing.tv.FakeGetTvDetailUseCase
@@ -12,7 +11,6 @@ import com.dhkim.moviepick.SeriesDetailViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -49,7 +47,6 @@ class SeriesDetailViewModelTest {
             (viewModel.uiState.value.displayState as SeriesDetailDisplayState.Contents).series.forEach {
                 if (it is SeriesDetailItem.ContentTab) {
                     println(it.videos)
-                    println("${flowOf(it.reviews).asSnapshot()}")
                 } else {
                     println(it)
                 }
@@ -72,7 +69,6 @@ class SeriesDetailViewModelTest {
             (viewModel.uiState.value.displayState as SeriesDetailDisplayState.Contents).series.forEach {
                 if (it is SeriesDetailItem.ContentTab) {
                     println(it.videos)
-                    println("${flowOf(it.reviews).asSnapshot()}")
                 } else {
                     println(it)
                 }

@@ -6,9 +6,11 @@ import app.cash.paging.PagingData
 import app.cash.paging.testing.TestPager
 import app.cash.paging.testing.asPagingSourceFactory
 import com.dhkim.common.Genre
+import com.dhkim.common.ImageType
 import com.dhkim.common.Language
 import com.dhkim.common.Region
 import com.dhkim.common.Review
+import com.dhkim.common.SeriesImage
 import com.dhkim.common.Video
 import com.dhkim.common.VideoType
 import com.dhkim.data.datasource.RemoteMovieDataSource
@@ -19,6 +21,17 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 
 class FakeRemoteMovieDataSource : RemoteMovieDataSource {
+
+    private val movieImages = mutableListOf<SeriesImage>().apply {
+        repeat(10) {
+            add(
+                SeriesImage(
+                    imageUrl = "imageUrl$it",
+                    imageType = ImageType.Landscape
+                )
+            )
+        }
+    }
 
     private val movieVideos = mutableListOf<Video>().apply {
         repeat(10) {
@@ -151,7 +164,7 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
 
     override fun getMovieWithCategory(language: Language, genre: Genre?, region: Region?): Flow<PagingData<Movie>> {
         val movieWithCategoryPagingSource = (topRatedMovies + upcomingMovies + nowPlayingMovies)
-            .filter { it.genre.contains(genre?.genre) || it.genre.contains(region?.country)}
+            .filter { it.genre.contains(genre?.genre) || it.genre.contains(region?.country) }
             .asPagingSourceFactory().invoke()
 
         return flow {
@@ -202,6 +215,12 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
     override fun getMovieActors(id: String, language: Language): Flow<List<String>> {
         return flow {
             emit(listOf("배우1", "배우2", "배우3"))
+        }
+    }
+
+    override fun getMovieImages(id: String): Flow<List<SeriesImage>> {
+        return flow {
+            emit(movieImages)
         }
     }
 }

@@ -5,6 +5,7 @@ import com.dhkim.common.Genre
 import com.dhkim.common.Language
 import com.dhkim.common.Region
 import com.dhkim.common.Review
+import com.dhkim.common.SeriesImage
 import com.dhkim.common.Video
 import com.dhkim.data.datasource.RemoteMovieDataSource
 import com.dhkim.domain.movie.model.Movie
@@ -47,6 +48,10 @@ class MovieRepositoryImpl(
 
     override fun getMovieActors(id: String, language: Language): Flow<List<String>> {
         return remoteMovieDataSource.getMovieActors(id, language)
+    }
+
+    override fun getMovieImages(id: String): Flow<List<SeriesImage>> {
+        return remoteMovieDataSource.getMovieImages(id)
     }
 
     override fun getMovieWithCategory(language: Language, genre: Genre?, region: Region?): Flow<PagingData<Movie>> {

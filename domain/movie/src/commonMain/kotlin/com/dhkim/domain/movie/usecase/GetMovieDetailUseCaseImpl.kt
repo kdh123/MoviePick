@@ -1,5 +1,6 @@
 package com.dhkim.domain.movie.usecase
 
+import com.dhkim.common.ImageType
 import com.dhkim.common.Language
 import com.dhkim.domain.movie.model.MovieDetail
 import com.dhkim.domain.movie.repository.MovieRepository
@@ -15,9 +16,12 @@ class GetMovieDetailUseCaseImpl(
             movieRepository.getMovieDetail(id, language),
             movieRepository.getMovieVideos(id, language),
             movieRepository.getMovieReviews(id),
-            movieRepository.getMovieActors(id, language)
-        ) { movieDetail, videos, reviews, actors ->
+            movieRepository.getMovieActors(id, language),
+            movieRepository.getMovieImages(id)
+        ) { movieDetail, videos, reviews, actors, images ->
+
             movieDetail.copy(
+                imageUrl = images.firstOrNull { it.imageType == ImageType.Landscape }?.imageUrl ?: "",
                 videos = videos,
                 review = reviews,
                 actors = actors

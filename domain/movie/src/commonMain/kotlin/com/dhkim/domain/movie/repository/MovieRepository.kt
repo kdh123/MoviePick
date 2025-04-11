@@ -5,6 +5,7 @@ import com.dhkim.common.Genre
 import com.dhkim.common.Language
 import com.dhkim.common.Region
 import com.dhkim.common.Review
+import com.dhkim.common.SeriesImage
 import com.dhkim.common.Video
 import com.dhkim.domain.movie.model.Movie
 import com.dhkim.domain.movie.model.MovieDetail
@@ -20,4 +21,5 @@ interface MovieRepository {
     fun getMovieDetail(id: String, language: Language): Flow<MovieDetail>
     fun getMovieReviews(id: String): Flow<PagingData<Review>>
     fun getMovieActors(id: String, language: Language): Flow<List<String>>
+    fun getMovieImages(id: String): Flow<List<SeriesImage>>
 }

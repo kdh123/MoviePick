@@ -1,5 +1,6 @@
 package com.dhkim.domain.tv.usecase
 
+import com.dhkim.common.ImageType
 import com.dhkim.common.Language
 import com.dhkim.domain.tv.model.TvDetail
 import com.dhkim.domain.tv.repository.TvRepository
@@ -15,9 +16,11 @@ class GetTvDetailUseCaseImpl(
             tvRepository.getTvDetail(id, language),
             tvRepository.getTvVideos(id, language),
             tvRepository.getTvReviews(id),
-            tvRepository.getTvCastMembers(id, language)
-        ) { tvDetail, videos, reviews, castMembers ->
+            tvRepository.getTvCastMembers(id, language),
+            tvRepository.getTvImages(id)
+        ) { tvDetail, videos, reviews, castMembers, images ->
             tvDetail.copy(
+                imageUrl = images.firstOrNull { it.imageType == ImageType.Landscape }?.imageUrl ?: "",
                 videos = videos,
                 review = reviews,
                 actors = castMembers
