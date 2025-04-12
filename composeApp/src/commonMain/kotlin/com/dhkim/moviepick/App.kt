@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,12 +18,14 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
 import androidx.navigation.compose.NavHost
+import com.dhkim.core.designsystem.MoviePickTheme
 import com.dhkim.home.navigation.home
 import com.dhkim.home.navigation.movie
 import com.dhkim.home.navigation.seriesCollection
@@ -122,11 +125,21 @@ fun BottomBar(appState: AppState) {
 
             NavigationBarItem(
                 icon = {
-                    Icon(
-                        painter = painterResource(screen.res),
-                        contentDescription = screen.route[0],
-                        tint = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
-                    )
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            painter = painterResource(screen.res),
+                            contentDescription = screen.route[0],
+                            tint = if (isSelected) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.secondary
+                        )
+                        Text(
+                            text = screen.title,
+                            style = MoviePickTheme.typography.labelSmall,
+                            color = if (isSelected) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.secondary
+                        )
+                    }
+
                 },
                 selected = isSelected,
                 onClick = onBottomClick

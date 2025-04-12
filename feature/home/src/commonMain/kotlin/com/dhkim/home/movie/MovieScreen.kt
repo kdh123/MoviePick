@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,11 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.cash.paging.compose.collectAsLazyPagingItems
 import com.dhkim.common.SeriesType
-import com.dhkim.core.designsystem.Black
-import com.dhkim.core.designsystem.Black50
-import com.dhkim.core.designsystem.Black70
 import com.dhkim.core.designsystem.MoviePickTheme
-import com.dhkim.core.designsystem.White
 import com.dhkim.core.ui.Chip
 import com.dhkim.core.ui.CircleCloseButton
 import com.dhkim.core.ui.ContentItem
@@ -68,7 +65,10 @@ fun MovieScreen(
         rememberHomeState(seriesItems = homeMovieItems, mainRecommendationSeriesGroup = Group.MovieGroup.MAIN_RECOMMENDATION_MOVIE)
     } ?: rememberHomeState(seriesItems = persistentListOf(), mainRecommendationSeriesGroup = Group.MovieGroup.MAIN_RECOMMENDATION_MOVIE)
 
-    val backgroundGradientColors = listOf(homeState.backgroundColor, Black50)
+    val backgroundGradientColors = listOf(
+        homeState.backgroundColor,
+        MaterialTheme.colorScheme.background
+    )
 
     Box(
         modifier = Modifier
@@ -116,13 +116,13 @@ fun ContentsScreen(
     onBack: () -> Unit
 ) {
     val onBackgroundColor by animateColorAsState(
-        targetValue = if (homeState.showCategory) White else homeState.onBackgroundColor,
+        targetValue = if (homeState.showCategory) MaterialTheme.colorScheme.onBackground else homeState.onBackgroundColor,
         animationSpec = tween(500),
         label = ""
     )
 
     val selectedChipTextColor by animateColorAsState(
-        targetValue = if (homeState.showCategory) Black else homeState.backgroundColor,
+        targetValue = if (homeState.showCategory) MaterialTheme.colorScheme.background else homeState.backgroundColor,
         animationSpec = tween(500),
         label = ""
     )
@@ -182,7 +182,7 @@ fun ContentsScreen(
         if (homeState.showTab) {
             Box(
                 modifier = Modifier
-                    .background(color = Black70)
+                    .background(color = MaterialTheme.colorScheme.background.copy(alpha = 0.7f))
             ) {
                 Box(
                     modifier = Modifier

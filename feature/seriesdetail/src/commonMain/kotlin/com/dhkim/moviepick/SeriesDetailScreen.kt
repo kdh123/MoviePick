@@ -47,7 +47,6 @@ import app.cash.paging.compose.itemContentType
 import app.cash.paging.compose.itemKey
 import com.dhkim.common.Review
 import com.dhkim.common.SeriesType
-import com.dhkim.common.Video
 import com.dhkim.core.designsystem.MoviePickTheme
 import com.dhkim.core.ui.Resources
 import com.dhkim.core.ui.noRippleClick
@@ -235,6 +234,7 @@ fun ReviewList(
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
+                .height(900.dp)
                 .padding(10.dp)
         )
         return
@@ -300,6 +300,7 @@ fun VideoList(
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
+                .height(900.dp)
                 .padding(10.dp)
         )
         return

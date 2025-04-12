@@ -14,7 +14,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import app.cash.paging.compose.collectAsLazyPagingItems
 import com.dhkim.core.designsystem.Black50
 import com.kmpalette.loader.rememberNetworkLoader
@@ -98,10 +97,13 @@ fun rememberHomeState(
     }
     val networkLoader = rememberNetworkLoader()
     val dominantColorState = rememberDominantColorState(loader = networkLoader, defaultColor = MaterialTheme.colorScheme.background)
-    val vibrantColor = dominantColorState.result
-        ?.paletteOrNull
-        ?.getVibrantColor(Black50.toArgb())
-        ?: MaterialTheme.colorScheme.background.toArgb()
+    val initBackgroundColor = MaterialTheme.colorScheme.background
+    val initOnBackgroundColor = MaterialTheme.colorScheme.onBackground
+
+    LaunchedEffect(Unit) {
+        state.updateBackgroundColor(initBackgroundColor)
+        state.updateOnBackgroundColor(initOnBackgroundColor)
+    }
 
     LaunchedEffect(recommendationSeriesPosterUrl) {
         dominantColorState.updateFrom(Url(recommendationSeriesPosterUrl))

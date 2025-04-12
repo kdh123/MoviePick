@@ -5,6 +5,7 @@ import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -63,7 +64,8 @@ fun UpcomingScreen(
 
         is UpcomingDisplayState.Contents -> {
             ContentScreen(
-                series = uiState.displayState.series
+                series = uiState.displayState.series,
+                navigateToDetail = navigateToDetail
             )
         }
 
@@ -75,7 +77,8 @@ fun UpcomingScreen(
 
 @Composable
 fun ContentScreen(
-    series: ImmutableList<FeaturedSeries>
+    series: ImmutableList<FeaturedSeries>,
+    navigateToDetail: (seriesType: SeriesType, seriesId: String) -> Unit
 ) {
     val pages = listOf("🍿 공개 예정", "🔥 인기")
     var selectedTabIndex by remember { mutableIntStateOf(0) }
@@ -167,7 +170,17 @@ fun ContentScreen(
                 }
 
                 Card(
-                    shape = RoundedCornerShape(10.dp)
+                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier
+                        .clickable {
+                            navigateToDetail(
+                                when (it.series) {
+                                    is Movie -> SeriesType.MOVIE
+                                    else -> SeriesType.TV
+                                },
+                                it.series.id
+                            )
+                        }
                 ) {
                     Column(
                         verticalArrangement = Arrangement.spacedBy(4.dp),

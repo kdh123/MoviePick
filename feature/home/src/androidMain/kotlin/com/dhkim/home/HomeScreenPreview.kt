@@ -202,6 +202,7 @@ private fun HomeScreenPreview() {
         SeriesItem.AppBar(group = Group.HomeGroup.APP_BAR),
         SeriesItem.Category(group = Group.HomeGroup.CATEGORY),
         todayRecommendationSeriesItem,
+        todayTop10SeriesItem,
         topRatedMoviesItem,
         nowPlayingMoviesItem,
         airingTodayTvsItem,

@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,10 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.cash.paging.compose.collectAsLazyPagingItems
 import com.dhkim.common.SeriesType
-import com.dhkim.core.designsystem.Black50
-import com.dhkim.core.designsystem.Black70
 import com.dhkim.core.designsystem.MoviePickTheme
-import com.dhkim.core.designsystem.White
 import com.dhkim.core.ui.Chip
 import com.dhkim.core.ui.ContentItem
 import com.dhkim.core.ui.RecommendationSeries
@@ -69,7 +67,7 @@ fun HomeScreen(
 
     val backgroundGradientColors = listOf(
         homeState.backgroundColor,
-        Black50
+        MaterialTheme.colorScheme.background
     )
 
     Box(
@@ -187,7 +185,7 @@ private fun ContentsScreen(
     navigateToVideo: (String) -> Unit,
 ) {
     val onBackgroundColor by animateColorAsState(
-        targetValue = if (homeState.showCategory) White else homeState.onBackgroundColor,
+        targetValue = if (homeState.showCategory) MaterialTheme.colorScheme.onBackground else homeState.onBackgroundColor,
         animationSpec = tween(500),
         label = ""
     )
@@ -271,7 +269,7 @@ private fun ContentsScreen(
         if (homeState.showTab) {
             Box(
                 modifier = Modifier
-                    .background(color = Black70)
+                    .background(color = MaterialTheme.colorScheme.background.copy(alpha = 0.7f))
             ) {
                 Box(
                     modifier = Modifier
@@ -307,7 +305,7 @@ private fun Top10MovieItem(
             fontWeight = FontWeight.Bold,
             fontSize = 72.sp,
             fontStyle = FontStyle.Italic,
-            color = White,
+            color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier
                 .align(Alignment.CenterVertically)
         )
