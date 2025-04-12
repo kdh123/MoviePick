@@ -62,7 +62,6 @@ data class TvDetailDto(
             country = if (originCountry.isNotEmpty()) originCountry.first() else "",
             overview = overview,
             genre = genres.map { it.name },
-            imageUrl = posterPath ?: "",
             firstAirDate = firstAirDate,
             popularity = popularity,
             productionCompany = productionCompanies?.firstOrNull()?.name ?: "",

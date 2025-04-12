@@ -1,11 +1,11 @@
 package com.dhkim.core.testing.movie
 
+import com.dhkim.common.ImageType
 import com.dhkim.common.Language
 import com.dhkim.domain.movie.model.MovieDetail
 import com.dhkim.domain.movie.usecase.GetMovieDetailUseCase
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.combine
 
 class FakeGetMovieDetailUseCase : GetMovieDetailUseCase {
 
@@ -18,8 +18,20 @@ class FakeGetMovieDetailUseCase : GetMovieDetailUseCase {
     }
 
     override fun invoke(id: String, language: Language): Flow<MovieDetail> {
-        return flow {
-            emit(movieRepository.getMovieDetail(id, language).first())
+        return combine(
+            movieRepository.getMovieDetail(id, language),
+            movieRepository.getMovieVideos(id, language),
+            movieRepository.getMovieReviews(id),
+            movieRepository.getMovieActors(id, language),
+            movieRepository.getMovieImages(id)
+        ) { movieDetail, videos, reviews, actors, images ->
+
+            movieDetail.copy(
+                images = images.filter { it.imageType == ImageType.Landscape }.map { it.imageUrl },
+                videos = videos,
+                review = reviews,
+                actors = actors
+            )
         }
     }
 }

@@ -87,6 +87,7 @@ fun App() {
                         onBack = appState::onBack
                     )
                     seriesDetail(
+                        navigateToVideo = appState::navigateToVideo,
                         onBack = appState::onBack
                     )
                     seriesCollection(

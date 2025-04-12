@@ -50,7 +50,6 @@ data class MovieDetailDto(
             title = title,
             adult = adult,
             overview = overview,
-            imageUrl = "https://image.tmdb.org/t/p/original$posterPath",
             genre = genres.map { it.name },
             popularity = popularity,
             releasedDate = releaseDate,

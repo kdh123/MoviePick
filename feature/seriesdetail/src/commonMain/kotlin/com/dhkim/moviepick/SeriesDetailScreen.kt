@@ -3,7 +3,6 @@ package com.dhkim.moviepick
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,12 +12,14 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -36,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -61,6 +63,7 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun SeriesDetailScreen(
     uiState: SeriesDetailUiState,
+    navigateToVideo: (String) -> Unit,
     onBack: () -> Unit
 ) {
     val listState = rememberLazyListState()
@@ -131,9 +134,10 @@ fun SeriesDetailScreen(
                                     ContentTab(
                                         pagerState = pagerState,
                                         pages = pages.toImmutableList(),
-                                        videos = it.videos.toImmutableList(),
+                                        videos = it.videos,
                                         reviews = reviews,
-                                        showTabBar = showTabBar
+                                        showTabBar = showTabBar,
+                                        navigateToVideo = navigateToVideo
                                     )
                                 }
                             }
@@ -162,9 +166,10 @@ fun SeriesDetailScreen(
 fun ContentTab(
     pagerState: PagerState,
     pages: ImmutableList<String>,
-    videos: ImmutableList<Video>,
+    videos: ImmutableList<VideoItem>,
     reviews: LazyPagingItems<Review>,
-    showTabBar: Boolean
+    showTabBar: Boolean,
+    navigateToVideo: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -173,7 +178,7 @@ fun ContentTab(
         HorizontalPager(state = pagerState) {
             when (it) {
                 0 -> ReviewList(reviews, showTabBar)
-                1 -> VideoList(videos)
+                1 -> VideoList(videos, showTabBar, navigateToVideo)
             }
         }
     }
@@ -223,6 +228,18 @@ fun ReviewList(
         derivedStateOf { listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0 }
     }
 
+    if (reviews.itemCount <= 0) {
+        Text(
+            text = "리뷰가 존재하지 않습니다.",
+            style = MoviePickTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+        )
+        return
+    }
+
     LazyColumn(
         state = listState,
         userScrollEnabled = listState.isScrollInProgress || !isTopAt || showTabBar,
@@ -266,11 +283,31 @@ fun ReviewList(
 }
 
 @Composable
-fun VideoList(videos: ImmutableList<Video>) {
-    val scrollState = rememberLazyListState()
+fun VideoList(
+    videos: ImmutableList<VideoItem>,
+    showTabBar: Boolean,
+    navigateToVideo: (String) -> Unit,
+) {
+    val listState = rememberLazyListState()
+    val isTopAt by remember {
+        derivedStateOf { listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0 }
+    }
+
+    if (videos.isEmpty()) {
+        Text(
+            text = "동영상이 존재하지 않습니다.",
+            style = MoviePickTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+        )
+        return
+    }
 
     LazyColumn(
-        state = scrollState,
+        state = listState,
+        userScrollEnabled = listState.isScrollInProgress || !isTopAt || showTabBar,
         contentPadding = PaddingValues(10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier
@@ -278,10 +315,18 @@ fun VideoList(videos: ImmutableList<Video>) {
             .height(900.dp)
     ) {
         items(items = videos, key = { it.id }) {
-            Row {
-                Image(
-                    painter = painterResource(Resources.Icon.Play),
-                    contentDescription = null
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .noRippleClick { navigateToVideo(it.key) }
+            ) {
+                CoilImage(
+                    imageModel = { it.thumbnail },
+                    previewPlaceholder = painterResource(Resources.Icon.MoviePosterSample),
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(6.dp))
+                        .width(120.dp)
+                        .aspectRatio(1.3f)
                 )
                 Text(
                     text = it.type.type,

@@ -186,7 +186,6 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
                     title = movie.title,
                     adult = movie.adult,
                     overview = movie.overview,
-                    imageUrl = movie.imageUrl,
                     genre = movie.genre,
                     releasedDate = movie.releasedDate,
                     popularity = movie.popularity,

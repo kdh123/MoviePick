@@ -5,7 +5,7 @@ import app.cash.paging.PagingData
 interface SeriesDetail {
 
     val id: String
-    val imageUrl: String
+    val images: List<String>
     val title: String
     val adult: Boolean
     val overview: String

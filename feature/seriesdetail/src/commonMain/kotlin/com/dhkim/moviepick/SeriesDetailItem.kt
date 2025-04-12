@@ -1,12 +1,14 @@
 package com.dhkim.moviepick
 
+import androidx.compose.runtime.Stable
 import app.cash.paging.PagingData
 import com.dhkim.common.Review
 import com.dhkim.common.SeriesDetail
 import com.dhkim.common.SeriesType
-import com.dhkim.common.Video
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 
+@Stable
 sealed class SeriesDetailItem(open val group: Group) {
 
     data class AppBar(
@@ -26,7 +28,7 @@ sealed class SeriesDetailItem(open val group: Group) {
 
     data class ContentTab(
         override val group: Group = Group.ContentTab,
-        val videos: List<Video>,
+        val videos: ImmutableList<VideoItem>,
         val reviews: Flow<PagingData<Review>>
     ) : SeriesDetailItem(group)
 }

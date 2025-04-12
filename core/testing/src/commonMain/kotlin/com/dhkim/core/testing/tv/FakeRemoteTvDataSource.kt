@@ -185,7 +185,6 @@ class FakeRemoteTvDataSource : RemoteTvDataSource {
                     title = tv.title,
                     adult = tv.adult,
                     overview = tv.overview,
-                    imageUrl = tv.imageUrl,
                     country = tv.country,
                     genre = tv.genre,
                     popularity = tv.popularity,

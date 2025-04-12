@@ -18,6 +18,7 @@ const val SERIES_DETAIL_ROUTE = "series_detail"
 @ExperimentalSharedTransitionApi
 @KoinExperimentalAPI
 fun NavGraphBuilder.seriesDetail(
+    navigateToVideo: (String) -> Unit,
     onBack: () -> Unit
 ) {
     composable(
@@ -31,6 +32,7 @@ fun NavGraphBuilder.seriesDetail(
 
         SeriesDetailScreen(
             uiState = uiState,
+            navigateToVideo = navigateToVideo,
             onBack = onBack
         )
     }

@@ -7,7 +7,7 @@ import com.dhkim.common.Video
 
 data class MovieDetail(
     override val id: String,
-    override val imageUrl: String,
+    override val images: List<String> = listOf(),
     override val title: String,
     override val adult: Boolean,
     override val overview: String,

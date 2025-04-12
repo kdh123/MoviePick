@@ -7,7 +7,7 @@ import com.dhkim.common.Video
 
 data class TvDetail(
     override val id: String,
-    override val imageUrl: String,
+    override val images: List<String> = listOf(),
     override val title: String,
     override val adult: Boolean,
     override val overview: String,
@@ -21,5 +21,4 @@ data class TvDetail(
     val firstAirDate: String,
     val numberOfSeasons: Int,
     val numberOfEpisodes: Int,
-
 ) : SeriesDetail

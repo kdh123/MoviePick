@@ -1,4 +1,9 @@
+import android.content.res.Configuration
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -8,21 +13,49 @@ import com.dhkim.common.Review
 import com.dhkim.common.SeriesType
 import com.dhkim.common.Video
 import com.dhkim.common.VideoType
+import com.dhkim.core.designsystem.MoviePickTheme
 import com.dhkim.domain.movie.model.MovieDetail
 import com.dhkim.moviepick.SeriesDetailDisplayState
 import com.dhkim.moviepick.SeriesDetailItem
 import com.dhkim.moviepick.SeriesDetailScreen
 import com.dhkim.moviepick.SeriesDetailUiState
+import com.dhkim.moviepick.toVideoItem
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.flowOf
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun SeriesDetailScreenDarkPreview(@PreviewParameter(SeriesDetailItemPreviewParameter::class) uiState: SeriesDetailUiState) {
+    MoviePickTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            SeriesDetailScreen(
+                uiState = uiState,
+                navigateToVideo = {},
+                onBack = {}
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 private fun SeriesDetailScreenPreview(@PreviewParameter(SeriesDetailItemPreviewParameter::class) uiState: SeriesDetailUiState) {
-    SeriesDetailScreen(
-        uiState = uiState,
-        onBack = {}
-    )
+    MoviePickTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            SeriesDetailScreen(
+                uiState = uiState,
+                navigateToVideo = {},
+                onBack = {}
+            )
+        }
+    }
 }
 
 
@@ -60,7 +93,7 @@ class SeriesDetailItemPreviewParameter : PreviewParameterProvider<SeriesDetailUi
         title = "title",
         adult = false,
         overview = "눈보라가 몰아치던 겨울 밤 태어난 백설공주. 온정이 넘치던 왕국에서 모두의 사랑을 받았지만, 강력한 어둠의 힘으로 왕국을 빼앗은 여왕의 위협에 숲으로 도망친다. 마법의 숲에서 간신히 살아남은 백설공주는 신비로운 일곱 광부들과 만나게 되며 새로운 세상을 마주하고, 마음속 깊이 숨겨진 용기와 선한 힘을 깨닫게 된다. 그리고 마침내, 빼앗긴 왕국을 되찾기 위해 여왕과 맞서 싸우기로 결심하는데…",
-        imageUrl = "imageUrl",
+        images = listOf("imageUrl1", "imageUrl2", "imageUrl3"),
         genre = listOf(Genre.ANIMATION.genre),
         releasedDate = "2025-03-08",
         popularity = 35.8,
@@ -79,14 +112,31 @@ class SeriesDetailItemPreviewParameter : PreviewParameterProvider<SeriesDetailUi
                 displayState = SeriesDetailDisplayState.Contents(
                     series = persistentListOf(
                         SeriesDetailItem.AppBar(),
-                        SeriesDetailItem.SeriesDetailPoster(imageUrl = movieDetail.imageUrl),
+                        SeriesDetailItem.SeriesDetailPoster(imageUrl = movieDetail.images.firstOrNull() ?: ""),
                         SeriesDetailItem.Information(
                             seriesType = SeriesType.MOVIE,
                             series = movieDetail
                         ),
                         SeriesDetailItem.ContentTab(
-                            videos = movieDetail.videos,
+                            videos = movieDetail.videos.map { it.toVideoItem("thumbnail") }.toImmutableList(),
                             reviews = flowOf(movieDetail.review)
+                        )
+                    )
+                ),
+            ),
+            SeriesDetailUiState(
+                seriesType = SeriesType.MOVIE,
+                displayState = SeriesDetailDisplayState.Contents(
+                    series = persistentListOf(
+                        SeriesDetailItem.AppBar(),
+                        SeriesDetailItem.SeriesDetailPoster(imageUrl = movieDetail.images.firstOrNull() ?: ""),
+                        SeriesDetailItem.Information(
+                            seriesType = SeriesType.MOVIE,
+                            series = movieDetail
+                        ),
+                        SeriesDetailItem.ContentTab(
+                            videos = movieDetail.videos.map { it.toVideoItem("thumbnail") }.toImmutableList(),
+                            reviews = flowOf()
                         )
                     )
                 ),

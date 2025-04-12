@@ -21,7 +21,7 @@ class GetMovieDetailUseCaseImpl(
         ) { movieDetail, videos, reviews, actors, images ->
 
             movieDetail.copy(
-                imageUrl = images.firstOrNull { it.imageType == ImageType.Landscape }?.imageUrl ?: "",
+                images = images.filter { it.imageType == ImageType.Landscape }.map { it.imageUrl },
                 videos = videos,
                 review = reviews,
                 actors = actors
