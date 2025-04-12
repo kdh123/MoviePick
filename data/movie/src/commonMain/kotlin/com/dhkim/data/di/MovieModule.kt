@@ -20,6 +20,7 @@ import com.dhkim.domain.movie.usecase.GetTodayRecommendationMovieUseCase
 import com.dhkim.domain.movie.usecase.GetTodayTop10MoviesUseCase
 import com.dhkim.domain.movie.usecase.GetTopRatedMoviesUseCase
 import com.dhkim.domain.movie.usecase.GetUpcomingMoviesUseCase
+import com.dhkim.domain.movie.usecase.GetUpcomingMoviesUseCaseImpl
 import com.dhkim.domain.movie.usecase.NOW_PLAYING_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TODAY_RECOMMENDATION_MOVIE_KEY
 import com.dhkim.domain.movie.usecase.TODAY_TOP_10_MOVIES_KEY
@@ -40,10 +41,10 @@ val movieModule = module {
     factory<GetMoviesUseCase>(named(TODAY_TOP_10_MOVIES_KEY)) { GetTodayTop10MoviesUseCase(get()) }
     factory<GetMoviesUseCase>(named(TOP_RATED_MOVIES_KEY)) { GetTopRatedMoviesUseCase(get()) }
     factory<GetMoviesUseCase>(named(NOW_PLAYING_MOVIES_KEY)) { GetNowPlayingMoviesUseCase(get()) }
-    factory<GetMoviesUseCase>(named(UPCOMING_MOVIES_KEY)) { GetUpcomingMoviesUseCase(get()) }
     factoryOf(::GetMovieWithCategoryUseCaseImpl).bind<GetMovieWithCategoryUseCase>()
     factoryOf(::GetMovieDetailUseCaseImpl).bind<GetMovieDetailUseCase>()
     factoryOf(::GetMovieReviewsUseCaseImpl).bind<GetMovieReviewsUseCase>()
+    factoryOf(::GetUpcomingMoviesUseCaseImpl).bind<GetUpcomingMoviesUseCase>()
     factory {
         mapOf(
             TODAY_RECOMMENDATION_MOVIE_KEY to get<GetMoviesUseCase>(named(TODAY_RECOMMENDATION_MOVIE_KEY)),

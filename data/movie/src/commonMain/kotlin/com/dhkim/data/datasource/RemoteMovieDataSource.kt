@@ -15,7 +15,7 @@ interface RemoteMovieDataSource {
 
     fun getTopRatedMovies(language: Language, region: Region): Flow<PagingData<Movie>>
     fun getNowPlayingMovies(language: Language, region: Region): Flow<PagingData<Movie>>
-    fun getUpcomingMovies(language: Language, region: Region): Flow<PagingData<Movie>>
+    fun getUpcomingMovies(page: Int, language: Language, region: Region): Flow<List<Movie>>
     fun getMovieVideos(id: String, language: Language): Flow<List<Video>>
     fun getMovieWithCategory(language: Language, genre: Genre? = null, region: Region? = null): Flow<PagingData<Movie>>
     fun getMovieDetail(id: String, language: Language): Flow<MovieDetail>

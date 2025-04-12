@@ -15,7 +15,7 @@ interface MovieRepository {
 
     fun getTopRatedMovies(language: Language, region: Region): Flow<PagingData<Movie>>
     fun getNowPlayingMovies(language: Language, region: Region): Flow<PagingData<Movie>>
-    fun getUpcomingMovies(language: Language, region: Region): Flow<PagingData<Movie>>
+    fun getUpcomingMovies(page: Int, language: Language, region: Region): Flow<List<Movie>>
     fun getMovieWithCategory(language: Language, genre: Genre? = null, region: Region? = null): Flow<PagingData<Movie>>
     fun getMovieVideos(id: String, language: Language): Flow<List<Video>>
     fun getMovieDetail(id: String, language: Language): Flow<MovieDetail>

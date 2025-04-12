@@ -3,46 +3,47 @@ package com.dhkim.core.di
 import com.dhkim.core.network.di.networkModule
 import com.dhkim.core.network.di.platformModule
 import com.dhkim.data.datasource.RemoteMovieDataSource
+import com.dhkim.data.datasource.RemoteMovieDataSourceImpl
+import com.dhkim.data.repository.MovieRepositoryImpl
+import com.dhkim.data.tv.datasource.RemoteTvDataSource
 import com.dhkim.data.tv.datasource.RemoteTvDataSourceImpl
 import com.dhkim.data.tv.repository.TvRepositoryImpl
-import com.dhkim.domain.tv.usecase.GetAiringTodayTvsUseCase
-import com.dhkim.domain.tv.usecase.GetOnTheAirTvsUseCase
-import com.dhkim.domain.tv.usecase.GetTopRatedTvsUseCase
-import com.dhkim.data.tv.datasource.RemoteTvDataSource
-import com.dhkim.domain.tv.repository.TvRepository
-import com.dhkim.domain.tv.usecase.GetTvsUseCase
-import com.dhkim.domain.movie.usecase.GetNowPlayingMoviesUseCase
-import com.dhkim.domain.movie.usecase.GetTopRatedMoviesUseCase
-import com.dhkim.domain.movie.usecase.GetUpcomingMoviesUseCase
-import com.dhkim.data.repository.MovieRepositoryImpl
-import com.dhkim.data.datasource.RemoteMovieDataSourceImpl
-import com.dhkim.domain.movie.usecase.GetTodayRecommendationMovieUseCase
-import com.dhkim.domain.movie.usecase.GetMovieVideoUseCaseImpl
-import com.dhkim.domain.movie.usecase.GetTodayTop10MoviesUseCase
 import com.dhkim.domain.movie.repository.MovieRepository
 import com.dhkim.domain.movie.usecase.GetMovieDetailUseCase
 import com.dhkim.domain.movie.usecase.GetMovieDetailUseCaseImpl
 import com.dhkim.domain.movie.usecase.GetMovieReviewsUseCase
 import com.dhkim.domain.movie.usecase.GetMovieReviewsUseCaseImpl
 import com.dhkim.domain.movie.usecase.GetMovieVideoUseCase
+import com.dhkim.domain.movie.usecase.GetMovieVideoUseCaseImpl
 import com.dhkim.domain.movie.usecase.GetMovieWithCategoryUseCase
 import com.dhkim.domain.movie.usecase.GetMovieWithCategoryUseCaseImpl
 import com.dhkim.domain.movie.usecase.GetMoviesUseCase
+import com.dhkim.domain.movie.usecase.GetNowPlayingMoviesUseCase
+import com.dhkim.domain.movie.usecase.GetTodayRecommendationMovieUseCase
+import com.dhkim.domain.movie.usecase.GetTodayTop10MoviesUseCase
+import com.dhkim.domain.movie.usecase.GetTopRatedMoviesUseCase
+import com.dhkim.domain.movie.usecase.GetUpcomingMoviesUseCase
+import com.dhkim.domain.movie.usecase.GetUpcomingMoviesUseCaseImpl
 import com.dhkim.domain.movie.usecase.NOW_PLAYING_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TODAY_RECOMMENDATION_MOVIE_KEY
 import com.dhkim.domain.movie.usecase.TODAY_TOP_10_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TOP_RATED_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.UPCOMING_MOVIES_KEY
+import com.dhkim.domain.tv.repository.TvRepository
 import com.dhkim.domain.tv.usecase.AIRING_TODAY_TVS_KEY
+import com.dhkim.domain.tv.usecase.GetAiringTodayTvsUseCase
+import com.dhkim.domain.tv.usecase.GetOnTheAirTvsUseCase
 import com.dhkim.domain.tv.usecase.GetTodayRecommendationTvUseCase
+import com.dhkim.domain.tv.usecase.GetTopRatedTvsUseCase
 import com.dhkim.domain.tv.usecase.GetTvDetailUseCase
 import com.dhkim.domain.tv.usecase.GetTvDetailUseCaseImpl
 import com.dhkim.domain.tv.usecase.GetTvReviewsUseCase
 import com.dhkim.domain.tv.usecase.GetTvReviewsUseCaseImpl
 import com.dhkim.domain.tv.usecase.GetTvVideoUseCase
+import com.dhkim.domain.tv.usecase.GetTvVideoUseCaseImpl
 import com.dhkim.domain.tv.usecase.GetTvWithCategoryUseCase
 import com.dhkim.domain.tv.usecase.GetTvWithCategoryUseCaseImpl
-import com.dhkim.domain.tv.usecase.GetTvVideoUseCaseImpl
+import com.dhkim.domain.tv.usecase.GetTvsUseCase
 import com.dhkim.domain.tv.usecase.ON_THE_AIR_TVS_KEY
 import com.dhkim.domain.tv.usecase.TODAY_RECOMMENDATION_TV_KEY
 import com.dhkim.domain.tv.usecase.TOP_RATED_TVS_KEY
@@ -61,11 +62,11 @@ val coreModule = module {
     factory<GetMoviesUseCase>(named(TODAY_TOP_10_MOVIES_KEY)) { GetTodayTop10MoviesUseCase(get()) }
     factory<GetMoviesUseCase>(named(TOP_RATED_MOVIES_KEY)) { GetTopRatedMoviesUseCase(get()) }
     factory<GetMoviesUseCase>(named(NOW_PLAYING_MOVIES_KEY)) { GetNowPlayingMoviesUseCase(get()) }
-    factory<GetMoviesUseCase>(named(UPCOMING_MOVIES_KEY)) { GetUpcomingMoviesUseCase(get()) }
     factoryOf(::GetMovieVideoUseCaseImpl).bind<GetMovieVideoUseCase>()
     factoryOf(::GetMovieWithCategoryUseCaseImpl).bind<GetMovieWithCategoryUseCase>()
     factoryOf(::GetMovieDetailUseCaseImpl).bind<GetMovieDetailUseCase>()
     factoryOf(::GetMovieReviewsUseCaseImpl).bind<GetMovieReviewsUseCase>()
+    factoryOf(::GetUpcomingMoviesUseCaseImpl).bind<GetUpcomingMoviesUseCase>()
 
     singleOf(::RemoteTvDataSourceImpl).bind<RemoteTvDataSource>()
     singleOf(::TvRepositoryImpl).bind<TvRepository>()

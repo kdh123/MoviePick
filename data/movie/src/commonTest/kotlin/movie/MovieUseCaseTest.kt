@@ -17,11 +17,11 @@ import com.dhkim.domain.movie.usecase.GetMovieReviewsUseCase
 import com.dhkim.domain.movie.usecase.GetMovieVideoUseCase
 import com.dhkim.domain.movie.usecase.GetMovieWithCategoryUseCase
 import com.dhkim.domain.movie.usecase.GetMoviesUseCase
+import com.dhkim.domain.movie.usecase.GetUpcomingMoviesUseCase
 import com.dhkim.domain.movie.usecase.NOW_PLAYING_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TODAY_RECOMMENDATION_MOVIE_KEY
 import com.dhkim.domain.movie.usecase.TODAY_TOP_10_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TOP_RATED_MOVIES_KEY
-import com.dhkim.domain.movie.usecase.UPCOMING_MOVIES_KEY
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -110,15 +110,15 @@ class MovieUseCaseTest : KoinTest {
 
     @Test
     fun `Upcoming 영화 가져오기_Real - Only Android`() = runTest {
-        val moviesUseCase = get<GetMoviesUseCase>(named(UPCOMING_MOVIES_KEY))
-        moviesUseCase(Language.Korea, Region.Korea).asSnapshot().forEach {
+        val moviesUseCase = get<GetUpcomingMoviesUseCase>()
+        moviesUseCase(Language.Korea, Region.Korea).first().forEach {
             println(it)
         }
     }
 
     @Test
     fun `Upcoming 영화 가져오기 성공_Fake`() = runTest {
-        val data = FakeGetUpcomingMoviesUseCase().invoke(Language.Korea, Region.Korea).asSnapshot()
+        val data = FakeGetUpcomingMoviesUseCase().invoke(Language.Korea, Region.Korea).first()
         println(data)
     }
 

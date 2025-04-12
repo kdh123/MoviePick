@@ -145,14 +145,9 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
         }
     }
 
-    override fun getUpcomingMovies(language: Language, region: Region): Flow<PagingData<Movie>> {
+    override fun getUpcomingMovies(page: Int, language: Language, region: Region): Flow<List<Movie>> {
         return flow {
-            val pager = TestPager(PagingConfig(pageSize = 15), upcomingPagingSource)
-            val page = with(pager) {
-                refresh()
-                append()
-            } as PagingSource.LoadResult.Page
-            emit(PagingData.from(page.data))
+            emit(upcomingMovies)
         }
     }
 

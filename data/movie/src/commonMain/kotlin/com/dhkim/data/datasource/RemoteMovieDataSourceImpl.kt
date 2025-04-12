@@ -11,6 +11,7 @@ import com.dhkim.common.SeriesImage
 import com.dhkim.common.Video
 import com.dhkim.data.model.MovieCreditsDto
 import com.dhkim.data.model.MovieDetailDto
+import com.dhkim.data.model.MovieDto
 import com.dhkim.data.model.MovieImageDto
 import com.dhkim.data.model.MovieVideoDto
 import com.dhkim.domain.movie.model.Movie
@@ -39,10 +40,19 @@ class RemoteMovieDataSourceImpl(
         }.flow
     }
 
-    override fun getUpcomingMovies(language: Language, region: Region): Flow<PagingData<Movie>> {
-        return Pager(PagingConfig(pageSize = 15)) {
-            UpcomingMoviePagingSource(apiService, language, region)
-        }.flow
+    override fun getUpcomingMovies(page: Int, language: Language, region: Region): Flow<List<Movie>> {
+        return flow {
+            val response = apiService.get {
+                url {
+                    path("/3/movie/upcoming")
+                }
+                parameter("page", page)
+                parameter("language", language.code)
+                parameter("region", region.code)
+            }
+            val results = response.body<MovieDto>().results
+            emit(results.map { it.toMovie() })
+        }
     }
 
     override fun getMovieVideos(id: String, language: Language): Flow<List<Video>> {

@@ -25,8 +25,8 @@ class FakeMovieRepository : MovieRepository {
         return remoteMovieDataSource.getNowPlayingMovies(language, region)
     }
 
-    override fun getUpcomingMovies(language: Language, region: Region): Flow<PagingData<Movie>> {
-        return remoteMovieDataSource.getUpcomingMovies(language, region)
+    override fun getUpcomingMovies(page: Int, language: Language, region: Region): Flow<List<Movie>> {
+        return remoteMovieDataSource.getUpcomingMovies(page, language, region)
     }
 
     override fun getMovieVideos(id: String, language: Language): Flow<List<Video>> {
