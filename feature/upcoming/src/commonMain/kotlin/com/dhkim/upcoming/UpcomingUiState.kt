@@ -1,9 +1,9 @@
 package com.dhkim.upcoming
 
-import app.cash.paging.PagingData
-import com.dhkim.domain.movie.model.Movie
-import kotlinx.coroutines.flow.StateFlow
+import androidx.compose.runtime.Stable
+import kotlinx.collections.immutable.ImmutableList
 
+@Stable
 data class UpcomingUiState(
     val displayState: UpcomingDisplayState = UpcomingDisplayState.Loading
 )
@@ -11,5 +11,5 @@ data class UpcomingUiState(
 sealed interface UpcomingDisplayState {
     data object Loading : UpcomingDisplayState
     data class Error(val errorCode: String, val message: String) : UpcomingDisplayState
-    data class Contents(val movies: StateFlow<PagingData<Movie>>) : UpcomingDisplayState
+    data class Contents(val series: ImmutableList<FeaturedSeries>) : UpcomingDisplayState
 }

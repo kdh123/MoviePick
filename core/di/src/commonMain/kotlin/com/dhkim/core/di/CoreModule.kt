@@ -28,7 +28,6 @@ import com.dhkim.domain.movie.usecase.NOW_PLAYING_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TODAY_RECOMMENDATION_MOVIE_KEY
 import com.dhkim.domain.movie.usecase.TODAY_TOP_10_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TOP_RATED_MOVIES_KEY
-import com.dhkim.domain.movie.usecase.UPCOMING_MOVIES_KEY
 import com.dhkim.domain.tv.repository.TvRepository
 import com.dhkim.domain.tv.usecase.AIRING_TODAY_TVS_KEY
 import com.dhkim.domain.tv.usecase.GetAiringTodayTvsUseCase
@@ -85,7 +84,6 @@ val coreModule = module {
             TODAY_TOP_10_MOVIES_KEY to get<GetMoviesUseCase>(named(TODAY_TOP_10_MOVIES_KEY)),
             TOP_RATED_MOVIES_KEY to get<GetMoviesUseCase>(named(TOP_RATED_MOVIES_KEY)),
             NOW_PLAYING_MOVIES_KEY to get<GetMoviesUseCase>(named(NOW_PLAYING_MOVIES_KEY)),
-            UPCOMING_MOVIES_KEY to get<GetMoviesUseCase>(named(UPCOMING_MOVIES_KEY)),
             TODAY_RECOMMENDATION_TV_KEY to get<GetTvsUseCase>(named(TODAY_RECOMMENDATION_TV_KEY)),
             AIRING_TODAY_TVS_KEY to get<GetTvsUseCase>(named(AIRING_TODAY_TVS_KEY)),
             ON_THE_AIR_TVS_KEY to get<GetTvsUseCase>(named(ON_THE_AIR_TVS_KEY)),

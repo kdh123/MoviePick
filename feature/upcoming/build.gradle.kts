@@ -45,6 +45,8 @@ kotlin {
             implementation(projects.core.designsystem)
             implementation(projects.domain.movie)
             implementation(projects.data.movie)
+            implementation(projects.domain.tv)
+            implementation(projects.data.tv)
 
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -103,6 +105,9 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+    testOptions {
+        unitTests.isReturnDefaultValues = true
     }
 }
 

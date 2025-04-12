@@ -94,7 +94,9 @@ fun App() {
                         navigateToSeriesDetail = appState::navigateToSeriesDetail,
                         onBack = appState::onBack
                     )
-                    upcoming()
+                    upcoming(
+                        navigateToDetail = appState::navigateToSeriesDetail,
+                    )
                     video()
                 }
             }
