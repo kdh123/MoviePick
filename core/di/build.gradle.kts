@@ -32,11 +32,14 @@ kotlin {
     sourceSets {
 
         commonMain.dependencies {
+            implementation(projects.core.database)
             implementation(projects.core.network)
             implementation(projects.domain.movie)
             implementation(projects.data.movie)
             implementation(projects.domain.tv)
             implementation(projects.data.tv)
+            implementation(projects.domain.series)
+            implementation(projects.data.series)
 
             implementation(compose.runtime)
             implementation(compose.foundation)

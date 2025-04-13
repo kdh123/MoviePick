@@ -7,6 +7,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.dhkim.bookmark.navigation.BOOKMARK_ROUTE
 import com.dhkim.common.SeriesType
 import com.dhkim.home.navigation.HOME_ROUTE
 import com.dhkim.home.navigation.MOVIE_ROUTE
@@ -22,8 +23,8 @@ import org.jetbrains.compose.resources.DrawableResource
 
 @Stable
 class AppState(val navController: NavHostController) {
-    val bottomNavItems = listOf(Screen.Home, Screen.Upcoming)
-    private val routes = listOf(HOME_ROUTE, MOVIE_ROUTE, TV_ROUTE, UPCOMING_ROUTE)
+    val bottomNavItems = listOf(Screen.Home, Screen.Upcoming, Screen.Bookmark)
+    private val routes = listOf(HOME_ROUTE, MOVIE_ROUTE, TV_ROUTE, UPCOMING_ROUTE, BOOKMARK_ROUTE)
 
     val showBottomNavigation: Boolean
         @Composable get() {
@@ -73,5 +74,6 @@ fun rememberAppState(
 sealed class Screen(val title: String, val res: DrawableResource, val route: List<String>) {
     data object Home : Screen("홈", Res.drawable.ic_home, listOf(HOME_ROUTE, MOVIE_ROUTE, TV_ROUTE))
     data object Upcoming : Screen("NEW & HOT", Res.drawable.ic_upcoming, listOf(UPCOMING_ROUTE))
+    data object Bookmark : Screen("북마크", Res.drawable.ic_upcoming, listOf(BOOKMARK_ROUTE))
 }
 

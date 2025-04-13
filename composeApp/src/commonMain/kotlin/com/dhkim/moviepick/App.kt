@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
 import androidx.navigation.compose.NavHost
+import com.dhkim.bookmark.navigation.bookmark
 import com.dhkim.core.designsystem.MoviePickTheme
 import com.dhkim.home.navigation.home
 import com.dhkim.home.navigation.movie
@@ -101,6 +102,7 @@ fun App() {
                         navigateToDetail = appState::navigateToSeriesDetail,
                     )
                     video()
+                    bookmark()
                 }
             }
         }

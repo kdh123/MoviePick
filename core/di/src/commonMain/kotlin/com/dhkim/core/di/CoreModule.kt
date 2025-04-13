@@ -5,9 +5,13 @@ import com.dhkim.core.network.di.platformModule
 import com.dhkim.data.datasource.RemoteMovieDataSource
 import com.dhkim.data.datasource.RemoteMovieDataSourceImpl
 import com.dhkim.data.repository.MovieRepositoryImpl
+import com.dhkim.data.series.datasource.LocalSeriesDataSource
+import com.dhkim.data.series.datasource.LocalSeriesDataSourceImpl
+import com.dhkim.data.series.repository.SeriesRepositoryImpl
 import com.dhkim.data.tv.datasource.RemoteTvDataSource
 import com.dhkim.data.tv.datasource.RemoteTvDataSourceImpl
 import com.dhkim.data.tv.repository.TvRepositoryImpl
+import com.dhkim.database.di.databaseModule
 import com.dhkim.domain.movie.repository.MovieRepository
 import com.dhkim.domain.movie.usecase.GetMovieDetailUseCase
 import com.dhkim.domain.movie.usecase.GetMovieDetailUseCaseImpl
@@ -28,6 +32,13 @@ import com.dhkim.domain.movie.usecase.NOW_PLAYING_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TODAY_RECOMMENDATION_MOVIE_KEY
 import com.dhkim.domain.movie.usecase.TODAY_TOP_10_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TOP_RATED_MOVIES_KEY
+import com.dhkim.domain.series.repository.SeriesRepository
+import com.dhkim.domain.series.usecase.AddSeriesBookmarkUseCase
+import com.dhkim.domain.series.usecase.AddSeriesBookmarkUseCaseImpl
+import com.dhkim.domain.series.usecase.DeleteSeriesBookmarkUseCase
+import com.dhkim.domain.series.usecase.DeleteSeriesBookmarkUseCaseImpl
+import com.dhkim.domain.series.usecase.GetSeriesBookmarksUseCase
+import com.dhkim.domain.series.usecase.GetSeriesBookmarksUseCaseImpl
 import com.dhkim.domain.tv.repository.TvRepository
 import com.dhkim.domain.tv.usecase.AIRING_TODAY_TVS_KEY
 import com.dhkim.domain.tv.usecase.GetAiringTodayTvsUseCase
@@ -53,8 +64,10 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val coreModule = module {
-    includes(platformModule, networkModule)
+    includes(platformModule, networkModule, databaseModule)
 
+    singleOf(::LocalSeriesDataSourceImpl).bind<LocalSeriesDataSource>()
+    singleOf(::SeriesRepositoryImpl).bind<SeriesRepository>()
     singleOf(::RemoteMovieDataSourceImpl).bind<RemoteMovieDataSource>()
     singleOf(::MovieRepositoryImpl).bind<MovieRepository>()
     factory<GetMoviesUseCase>(named(TODAY_RECOMMENDATION_MOVIE_KEY)) { GetTodayRecommendationMovieUseCase(get(), get()) }
@@ -66,6 +79,9 @@ val coreModule = module {
     factoryOf(::GetMovieDetailUseCaseImpl).bind<GetMovieDetailUseCase>()
     factoryOf(::GetMovieReviewsUseCaseImpl).bind<GetMovieReviewsUseCase>()
     factoryOf(::GetUpcomingMoviesUseCaseImpl).bind<GetUpcomingMoviesUseCase>()
+    factoryOf(::GetSeriesBookmarksUseCaseImpl).bind<GetSeriesBookmarksUseCase>()
+    factoryOf(::AddSeriesBookmarkUseCaseImpl).bind<AddSeriesBookmarkUseCase>()
+    factoryOf(::DeleteSeriesBookmarkUseCaseImpl).bind<DeleteSeriesBookmarkUseCase>()
 
     singleOf(::RemoteTvDataSourceImpl).bind<RemoteTvDataSource>()
     singleOf(::TvRepositoryImpl).bind<TvRepository>()

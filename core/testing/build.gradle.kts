@@ -44,6 +44,8 @@ kotlin {
             implementation(projects.data.movie)
             implementation(projects.domain.tv)
             implementation(projects.data.tv)
+            implementation(projects.domain.series)
+            implementation(projects.data.series)
 
             implementation(compose.runtime)
             implementation(compose.foundation)

@@ -29,16 +29,20 @@ dependencyResolutionManagement {
     }
 }
 include(":core:common")
+include(":core:database")
 include(":core:designsystem")
 include(":core:di")
 
 include(":core:ui")
 include(":core:network")
 include(":data")
+include(":data:series")
 include(":data:movie")
 include(":data:tv")
 include(":domain")
+include(":domain:series")
 include(":domain:movie")
+include(":feature:bookmark")
 include(":domain:tv")
 include(":feature:seriesdetail")
 include(":core:testing")

@@ -1,5 +1,6 @@
 package com.dhkim.di
 
+import com.dhkim.bookmark.di.bookmarkModule
 import com.dhkim.core.di.coreModule
 import com.dhkim.home.di.homeModule
 import com.dhkim.moviepick.di.seriesDetailModule
@@ -12,6 +13,6 @@ import org.koin.dsl.KoinAppDeclaration
 fun initKoin(config: KoinAppDeclaration? = null) {
     startKoin {
         config?.invoke(this)
-        modules(coreModule, homeModule, seriesDetailModule, upcomingModule)
+        modules(coreModule, homeModule, seriesDetailModule, upcomingModule, bookmarkModule)
     }
 }

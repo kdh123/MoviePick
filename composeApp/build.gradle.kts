@@ -48,6 +48,7 @@ kotlin {
             implementation(projects.feature.home)
             implementation(projects.feature.seriesdetail)
             implementation(projects.feature.upcoming)
+            implementation(projects.feature.bookmark)
             implementation(projects.feature.video)
 
             implementation(compose.runtime)

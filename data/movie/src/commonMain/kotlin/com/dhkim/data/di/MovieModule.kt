@@ -5,6 +5,7 @@ import com.dhkim.core.network.di.platformModule
 import com.dhkim.data.datasource.RemoteMovieDataSource
 import com.dhkim.data.datasource.RemoteMovieDataSourceImpl
 import com.dhkim.data.repository.MovieRepositoryImpl
+import com.dhkim.database.di.databaseModule
 import com.dhkim.domain.movie.repository.MovieRepository
 import com.dhkim.domain.movie.usecase.GetMovieDetailUseCase
 import com.dhkim.domain.movie.usecase.GetMovieDetailUseCaseImpl
@@ -33,7 +34,8 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val movieModule = module {
-    includes(platformModule, networkModule)
+    includes(platformModule, networkModule, databaseModule)
+
     singleOf(::RemoteMovieDataSourceImpl).bind<RemoteMovieDataSource>()
     singleOf(::MovieRepositoryImpl).bind<MovieRepository>()
     factory<GetMovieVideoUseCase> { GetMovieVideoUseCaseImpl(get()) }
