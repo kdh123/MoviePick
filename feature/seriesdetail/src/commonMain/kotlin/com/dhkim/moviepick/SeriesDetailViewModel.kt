@@ -3,6 +3,7 @@ package com.dhkim.moviepick
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.dhkim.common.Date
 import com.dhkim.common.Language
 import com.dhkim.common.RestartableStateFlow
 import com.dhkim.common.SeriesDetail
@@ -70,7 +71,7 @@ class SeriesDetailViewModel(
 
         return SeriesDetailUiState(
             seriesType = SeriesType.entries.first { it.name == series },
-            displayState = SeriesDetailDisplayState.Contents(contents)
+            displayState = SeriesDetailDisplayState.Contents(isUpcoming = Date.isTodayAfter(seriesDetail.openDate), series = contents)
         )
     }
 }

@@ -16,4 +16,5 @@ interface SeriesDetail {
     val actors: List<String>
     val review: PagingData<Review>
     val videos: List<Video>
+    val openDate: String
 }

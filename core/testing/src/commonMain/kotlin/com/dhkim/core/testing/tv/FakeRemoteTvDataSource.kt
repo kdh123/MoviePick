@@ -188,7 +188,7 @@ class FakeRemoteTvDataSource : RemoteTvDataSource {
                     country = tv.country,
                     genre = tv.genre,
                     popularity = tv.popularity,
-                    firstAirDate = tv.firstAirDate,
+                    openDate = tv.firstAirDate,
                     productionCompany = "Netflix",
                     numberOfEpisodes = 10,
                     numberOfSeasons = 2,

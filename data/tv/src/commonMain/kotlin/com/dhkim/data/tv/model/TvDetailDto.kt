@@ -63,7 +63,7 @@ data class TvDetailDto(
             country = if (originCountry.isNotEmpty()) originCountry.first() else "",
             overview = overview,
             genre = genres.map { it.name },
-            firstAirDate = firstAirDate,
+            openDate = firstAirDate,
             popularity = popularity,
             productionCompany = productionCompanies?.firstOrNull()?.name ?: "",
             numberOfSeasons = numberOfSeasons,

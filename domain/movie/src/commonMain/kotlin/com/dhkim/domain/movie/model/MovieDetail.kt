@@ -18,6 +18,6 @@ data class MovieDetail(
     override val actors: List<String> = listOf(),
     override val review: PagingData<Review> = PagingData.empty(),
     override val videos: List<Video> = listOf(),
+    override val openDate: String,
     val runtime: Int,
-    val releasedDate: String,
 ) : SeriesDetail

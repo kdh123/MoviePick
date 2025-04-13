@@ -18,7 +18,7 @@ data class TvDetail(
     override val actors: List<String> = listOf(),
     override val review: PagingData<Review> = PagingData.empty(),
     override val videos: List<Video> = listOf(),
-    val firstAirDate: String,
+    override val openDate: String,
     val numberOfSeasons: Int,
     val numberOfEpisodes: Int,
 ) : SeriesDetail

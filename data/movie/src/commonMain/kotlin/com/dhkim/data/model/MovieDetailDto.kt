@@ -53,7 +53,7 @@ data class MovieDetailDto(
             overview = overview,
             genre = genres.map { it.name },
             popularity = popularity,
-            releasedDate = releaseDate,
+            openDate = releaseDate,
             runtime = runtime,
             productionCompany = productionCompanies.map { it.name }.firstOrNull() ?: "",
             country = originCountry?.firstOrNull() ?: ""

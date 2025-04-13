@@ -14,5 +14,5 @@ data class SeriesDetailUiState(
 sealed interface SeriesDetailDisplayState {
     data object Loading : SeriesDetailDisplayState
     data class Error(val errorCode: String, val message: String) : SeriesDetailDisplayState
-    data class Contents(val series: ImmutableList<SeriesDetailItem>) : SeriesDetailDisplayState
+    data class Contents(val isUpcoming: Boolean, val series: ImmutableList<SeriesDetailItem>) : SeriesDetailDisplayState
 }

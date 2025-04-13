@@ -183,7 +183,7 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
                     adult = movie.adult,
                     overview = movie.overview,
                     genre = movie.genre,
-                    releasedDate = movie.releasedDate,
+                    openDate = movie.releasedDate,
                     popularity = movie.popularity,
                     runtime = 90,
                     productionCompany = "Disney",

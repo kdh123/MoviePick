@@ -103,7 +103,7 @@ fun SeriesDetailScreen(
         when (uiState.displayState) {
             SeriesDetailDisplayState.Loading -> {}
             is SeriesDetailDisplayState.Contents -> {
-                val pages = listOf("리뷰", "비디오")
+                val pages = if (uiState.displayState.isUpcoming) listOf("비디오") else listOf("리뷰", "비디오")
                 val pagerState = rememberPagerState(initialPage = 0, pageCount = { pages.size })
                 Box(
                     modifier = Modifier
@@ -147,7 +147,6 @@ fun SeriesDetailScreen(
                             pagerState = pagerState,
                             pages = pages.toImmutableList(),
                             modifier = Modifier
-
                         )
                     }
                 }
@@ -175,9 +174,13 @@ fun ContentTab(
     ) {
         TabBar(pagerState, pages)
         HorizontalPager(state = pagerState) {
-            when (it) {
-                0 -> ReviewList(reviews, showTabBar)
-                1 -> VideoList(videos, showTabBar, navigateToVideo)
+            if (pages.size == 1) {
+                VideoList(videos, showTabBar, navigateToVideo)
+            } else {
+                when (it) {
+                    0 -> ReviewList(reviews, showTabBar)
+                    1 -> VideoList(videos, showTabBar, navigateToVideo)
+                }
             }
         }
     }
@@ -193,19 +196,22 @@ fun TabBar(
 
     TabRow(
         selectedTabIndex = pagerState.currentPage,
-        indicator = { tabPositions ->
-            TabRowDefaults.PrimaryIndicator(
-                modifier = Modifier
-                    .tabIndicatorOffset(currentTabPosition = tabPositions[pagerState.currentPage])
-                    .fillMaxWidth()
-            )
-        },
         modifier = modifier
             .fillMaxWidth()
     ) {
         pages.forEachIndexed { index, title ->
             Tab(
-                text = { Text(text = title) },
+                text = {
+                    Text(
+                        text = title,
+                        style = MoviePickTheme.typography.labelMedium,
+                        color = if (pagerState.currentPage == index) {
+                            MaterialTheme.colorScheme.onBackground
+                        } else {
+                            MaterialTheme.colorScheme.secondary
+                        }
+                    )
+                },
                 selected = pagerState.currentPage == index,
                 onClick = {
                     scope.launch {
@@ -362,7 +368,7 @@ fun MovieInformation(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = movie.releasedDate,
+                text = movie.openDate,
                 textAlign = TextAlign.Center,
                 style = MoviePickTheme.typography.bodyMedium
             )
@@ -403,7 +409,7 @@ fun TvInformation(tv: TvDetail) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = tv.firstAirDate,
+                text = tv.openDate,
                 textAlign = TextAlign.Center,
                 style = MoviePickTheme.typography.bodyMedium,
             )
