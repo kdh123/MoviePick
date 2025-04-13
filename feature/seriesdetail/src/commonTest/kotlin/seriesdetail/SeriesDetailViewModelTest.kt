@@ -51,6 +51,8 @@ class SeriesDetailViewModelTest {
                     println(it)
                 }
             }
+        } else {
+            println("${viewModel.uiState.value}")
         }
     }
 

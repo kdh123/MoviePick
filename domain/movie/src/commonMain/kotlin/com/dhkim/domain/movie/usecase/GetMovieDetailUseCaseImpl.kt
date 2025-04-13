@@ -19,9 +19,14 @@ class GetMovieDetailUseCaseImpl(
             movieRepository.getMovieActors(id, language),
             movieRepository.getMovieImages(id)
         ) { movieDetail, videos, reviews, actors, images ->
+            val detailImages = if (images.count { it.imageType == ImageType.Landscape } > 0) {
+                images.filter { it.imageType == ImageType.Landscape }.map { it.imageUrl }
+            } else {
+                movieDetail.images
+            }
 
             movieDetail.copy(
-                images = images.filter { it.imageType == ImageType.Landscape }.map { it.imageUrl },
+                images = detailImages,
                 videos = videos,
                 review = reviews,
                 actors = actors

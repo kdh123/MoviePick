@@ -157,9 +157,11 @@ class MovieUseCaseTest : KoinTest {
         //베테랑 : 995926
         //백설공주 : 447273
         //부산행 : 396535
+        //야당 : 1137179
+        //극장판 뱅드림 : 1231799
 
         val getMovieDetailUseCase = get<GetMovieDetailUseCase>()
-        val movie = getMovieDetailUseCase(id = "396535", language = Language.Korea).first()
+        val movie = getMovieDetailUseCase(id = "995926", language = Language.Korea).first()
         println(movie)
         movie.actors.forEach {
             println(it)

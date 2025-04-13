@@ -8,15 +8,15 @@ import kotlinx.serialization.Serializable
 data class MovieDetailDto(
     val adult: Boolean,
     @SerialName("backdrop_path")
-    val backdropPath: String,
+    val backdropPath: String?,
     val budget: Int,
     val genres: List<Genre>,
     val homepage: String,
     val id: Int,
     @SerialName("imdb_id")
-    val imdbId: String,
+    val imdbId: String?,
     @SerialName("origin_country")
-    val originCountry: List<String>,
+    val originCountry: List<String>?,
     @SerialName("original_language")
     val originalLanguage: String,
     @SerialName("original_title")
@@ -24,7 +24,7 @@ data class MovieDetailDto(
     val overview: String,
     val popularity: Double,
     @SerialName("poster_path")
-    val posterPath: String,
+    val posterPath: String?,
     @SerialName("production_companies")
     val productionCompanies: List<ProductionCompany>,
     @SerialName("production_countries")
@@ -47,6 +47,7 @@ data class MovieDetailDto(
     fun toMovieDetail(): MovieDetail {
         return MovieDetail(
             id = "$id",
+            images = listOf("https://image.tmdb.org/t/p/original${posterPath ?: ""}"),
             title = title,
             adult = adult,
             overview = overview,
@@ -55,7 +56,7 @@ data class MovieDetailDto(
             releasedDate = releaseDate,
             runtime = runtime,
             productionCompany = productionCompanies.map { it.name }.firstOrNull() ?: "",
-            country = originCountry.firstOrNull() ?: ""
+            country = originCountry?.firstOrNull() ?: ""
         )
     }
 }

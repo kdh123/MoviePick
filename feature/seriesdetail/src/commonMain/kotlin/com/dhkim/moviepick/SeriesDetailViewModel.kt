@@ -35,7 +35,7 @@ class SeriesDetailViewModel(
         }.flatMapLatest { series ->
             flowOf(createUiState(series))
         }.catch {
-            flowOf(
+            emit(
                 SeriesDetailUiState(
                     seriesType = SeriesType.entries.first { series == it.name },
                     displayState = SeriesDetailDisplayState.Error(errorCode = "", message = "${it.message}")

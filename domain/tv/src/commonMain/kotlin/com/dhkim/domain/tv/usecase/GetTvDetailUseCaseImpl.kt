@@ -19,8 +19,13 @@ class GetTvDetailUseCaseImpl(
             tvRepository.getTvCastMembers(id, language),
             tvRepository.getTvImages(id)
         ) { tvDetail, videos, reviews, castMembers, images ->
+            val detailImages = if (images.count{ it.imageType == ImageType.Landscape } > 0) {
+                images.filter { it.imageType == ImageType.Landscape }.map { it.imageUrl }
+            } else {
+                tvDetail.images
+            }
             tvDetail.copy(
-                images = images.filter { it.imageType == ImageType.Landscape }.map { it.imageUrl },
+                images = detailImages,
                 videos = videos,
                 review = reviews,
                 actors = castMembers

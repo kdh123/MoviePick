@@ -57,6 +57,7 @@ data class TvDetailDto(
     fun toTvDetail(): TvDetail {
         return TvDetail(
             id = id.toString(),
+            images = listOf("https://image.tmdb.org/t/p/original${posterPath ?: ""}"),
             title = name,
             adult = adult,
             country = if (originCountry.isNotEmpty()) originCountry.first() else "",
