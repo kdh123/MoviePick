@@ -221,7 +221,10 @@ private fun ContentsScreen(
                                 onUpdateRecommendationSeriesHeight = homeState::updateHeight
                             ) {
                                 Genre()
-                                RecommendationButtons(navigateToVideo = navigateToVideo)
+                                RecommendationButtons(
+                                    onBookmarkClick = { onAction(HomeAction.AddBookmark(it)) },
+                                    navigateToVideo = navigateToVideo
+                                )
                             }
                         }
                     }

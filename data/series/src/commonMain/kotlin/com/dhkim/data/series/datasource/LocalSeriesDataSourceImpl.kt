@@ -19,11 +19,11 @@ class LocalSeriesDataSourceImpl(
         }
     }
 
-    override fun addBookmark(seriesBookmark: SeriesBookmark) {
+    override suspend fun addBookmark(seriesBookmark: SeriesBookmark) {
         db.seriesBookmarkDao().insert(seriesBookmark.toSeriesBookmarkEntity())
     }
 
-    override fun deleteBookmark(seriesBookmark: SeriesBookmark) {
+    override suspend fun deleteBookmark(seriesBookmark: SeriesBookmark) {
         db.seriesBookmarkDao().delete(seriesBookmark.toSeriesBookmarkEntity())
     }
 }

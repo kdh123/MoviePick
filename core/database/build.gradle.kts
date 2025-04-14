@@ -26,13 +26,13 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "core.database"
             isStatic = true
+            linkerOpts.add("-lsqlite3")
         }
     }
 
     jvm("desktop")
 
     sourceSets {
-
         commonMain.dependencies {
             implementation(projects.core.network)
             implementation(compose.runtime)
@@ -58,6 +58,11 @@ kotlin {
             implementation(libs.navigation.compose)
             implementation(libs.bundles.paging)
 
+            implementation(libs.room.runtime)
+            implementation(libs.sqlite.bundled)
+        }
+
+        iosMain.dependencies {
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
         }

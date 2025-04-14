@@ -13,11 +13,11 @@ class SeriesRepositoryImpl(
         return localSeriesDataSource.getBookmarks()
     }
 
-    override fun addBookmark(seriesBookmark: SeriesBookmark) {
+    override suspend fun addBookmark(seriesBookmark: SeriesBookmark) {
         localSeriesDataSource.addBookmark(seriesBookmark)
     }
 
-    override fun deleteBookmark(seriesBookmark: SeriesBookmark) {
+    override suspend fun deleteBookmark(seriesBookmark: SeriesBookmark) {
         localSeriesDataSource.deleteBookmark(seriesBookmark)
     }
 }

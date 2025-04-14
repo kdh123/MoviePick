@@ -7,7 +7,7 @@ class DeleteSeriesBookmarkUseCaseImpl(
     private val seriesRepository: SeriesRepository
 ) : DeleteSeriesBookmarkUseCase {
 
-    override operator fun invoke(seriesBookmark: SeriesBookmark) {
+    override suspend operator fun invoke(seriesBookmark: SeriesBookmark) {
         seriesRepository.deleteBookmark(seriesBookmark)
     }
 }

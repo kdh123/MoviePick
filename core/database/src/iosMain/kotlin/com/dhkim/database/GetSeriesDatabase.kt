@@ -1,16 +1,17 @@
 package com.dhkim.database
 
 import androidx.room.Room
+import androidx.room.RoomDatabase
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSUserDomainMask
 
-fun getSeriesDatabase(): SeriesDatabase {
+fun getSeriesDatabase(): RoomDatabase.Builder<SeriesDatabase> {
     val dbFilePath = documentDirectory() + "/series.db"
     return Room.databaseBuilder<SeriesDatabase>(
         name = dbFilePath,
-    ).build()
+    )
 }
 
 @OptIn(ExperimentalForeignApi::class)

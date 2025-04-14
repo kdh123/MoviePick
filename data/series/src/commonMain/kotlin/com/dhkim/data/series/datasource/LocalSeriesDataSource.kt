@@ -6,6 +6,6 @@ import kotlinx.coroutines.flow.Flow
 interface LocalSeriesDataSource {
 
     fun getBookmarks(): Flow<List<SeriesBookmark>>
-    fun addBookmark(seriesBookmark: SeriesBookmark)
-    fun deleteBookmark(seriesBookmark: SeriesBookmark)
+    suspend fun addBookmark(seriesBookmark: SeriesBookmark)
+    suspend fun deleteBookmark(seriesBookmark: SeriesBookmark)
 }

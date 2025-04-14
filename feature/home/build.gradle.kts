@@ -48,6 +48,7 @@ kotlin {
             implementation(projects.core.network)
             implementation(projects.domain.movie)
             implementation(projects.domain.tv)
+            implementation(projects.domain.series)
 
             implementation(compose.runtime)
             implementation(compose.foundation)

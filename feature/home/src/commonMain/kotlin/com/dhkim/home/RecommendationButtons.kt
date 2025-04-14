@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.dhkim.common.Series
 import com.dhkim.core.designsystem.Black
 import com.dhkim.core.designsystem.DarkGray60
 import com.dhkim.core.designsystem.MoviePickTheme
@@ -24,7 +25,10 @@ import com.dhkim.domain.movie.model.MovieVideoType
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun RecommendationSeriesScope.RecommendationButtons(navigateToVideo: (String) -> Unit) {
+fun RecommendationSeriesScope.RecommendationButtons(
+    onBookmarkClick: (Series) -> Unit = {},
+    navigateToVideo: (String) -> Unit
+) {
     val hasVideo = series.video != null
 
     Row(
@@ -67,7 +71,7 @@ fun RecommendationSeriesScope.RecommendationButtons(navigateToVideo: (String) ->
 
         MoviePickButton(
             color = DarkGray60,
-            onClick = {},
+            onClick = { onBookmarkClick(series) },
             modifier = Modifier
                 .weight(1f)
         ) {

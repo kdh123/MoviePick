@@ -7,7 +7,7 @@ class FakeAddSeriesBookmarkUseCase : AddSeriesBookmarkUseCase {
 
     private val seriesRepository = FakeSeriesRepository()
 
-    override fun invoke(seriesBookmark: SeriesBookmark) {
+    override suspend fun invoke(seriesBookmark: SeriesBookmark) {
         seriesRepository.addBookmark(seriesBookmark)
     }
 }

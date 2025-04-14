@@ -44,9 +44,7 @@ kotlin {
             implementation(projects.core.ui)
             implementation(projects.core.designsystem)
             implementation(projects.domain.movie)
-            implementation(projects.data.movie)
             implementation(projects.domain.tv)
-            implementation(projects.data.tv)
 
             implementation(compose.runtime)
             implementation(compose.foundation)

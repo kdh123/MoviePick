@@ -12,6 +12,7 @@ import com.dhkim.data.tv.datasource.RemoteTvDataSource
 import com.dhkim.data.tv.datasource.RemoteTvDataSourceImpl
 import com.dhkim.data.tv.repository.TvRepositoryImpl
 import com.dhkim.database.di.databaseModule
+import com.dhkim.database.di.sharedModules
 import com.dhkim.domain.movie.repository.MovieRepository
 import com.dhkim.domain.movie.usecase.GetMovieDetailUseCase
 import com.dhkim.domain.movie.usecase.GetMovieDetailUseCaseImpl
@@ -64,7 +65,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val coreModule = module {
-    includes(platformModule, networkModule, databaseModule)
+    includes(platformModule, networkModule, databaseModule, sharedModules)
 
     singleOf(::LocalSeriesDataSourceImpl).bind<LocalSeriesDataSource>()
     singleOf(::SeriesRepositoryImpl).bind<SeriesRepository>()

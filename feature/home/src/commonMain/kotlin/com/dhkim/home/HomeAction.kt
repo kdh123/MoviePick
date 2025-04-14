@@ -1,6 +1,8 @@
 package com.dhkim.home
 
+import com.dhkim.common.Series
+
 sealed interface HomeAction {
 
-    data object BackToHome : HomeAction
+    data class AddBookmark(val series: Series) : HomeAction
 }

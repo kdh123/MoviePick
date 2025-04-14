@@ -7,7 +7,7 @@ class AddSeriesBookmarkUseCaseImpl(
     private val seriesRepository: SeriesRepository
 ) : AddSeriesBookmarkUseCase {
 
-    override operator fun invoke(seriesBookmark: SeriesBookmark) {
+    override suspend operator fun invoke(seriesBookmark: SeriesBookmark) {
         seriesRepository.addBookmark(seriesBookmark)
     }
 }

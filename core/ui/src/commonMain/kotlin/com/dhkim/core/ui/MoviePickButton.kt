@@ -1,6 +1,7 @@
 package com.dhkim.core.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,8 +24,8 @@ fun MoviePickButton(
         modifier = modifier
             .clip(RoundedCornerShape(6.dp))
             .background(color = color)
+            .clickable(onClick = onClick)
             .padding(vertical = 5.dp)
-            .noRippleClick(onClick)
     ) {
         Box(
             modifier = Modifier

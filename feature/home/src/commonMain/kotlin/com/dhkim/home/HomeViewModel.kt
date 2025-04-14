@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dhkim.common.Language
 import com.dhkim.common.Region
+import com.dhkim.common.SeriesBookmark
 import com.dhkim.common.SeriesType
 import com.dhkim.common.handle
 import com.dhkim.common.onetimeStateIn
@@ -12,26 +13,29 @@ import com.dhkim.domain.movie.usecase.NOW_PLAYING_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TODAY_RECOMMENDATION_MOVIE_KEY
 import com.dhkim.domain.movie.usecase.TODAY_TOP_10_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TOP_RATED_MOVIES_KEY
+import com.dhkim.domain.series.usecase.AddSeriesBookmarkUseCase
 import com.dhkim.domain.tv.usecase.AIRING_TODAY_TVS_KEY
 import com.dhkim.domain.tv.usecase.GetTvsUseCase
 import com.dhkim.domain.tv.usecase.ON_THE_AIR_TVS_KEY
 import com.dhkim.domain.tv.usecase.TOP_RATED_TVS_KEY
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 class HomeViewModel(
     private val getMoviesUseCase: Map<String, GetMoviesUseCase>,
     private val getTvsUseCase: Map<String, GetTvsUseCase>,
+    private val addSeriesBookmarkUseCase: AddSeriesBookmarkUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -96,22 +100,19 @@ class HomeViewModel(
 
     fun onAction(action: HomeAction) {
         when (action) {
-            is HomeAction.BackToHome -> {
-                _uiState.update {
-                    it.copy(
-                        displayState = HomeDisplayState.Contents(
-                            movies = getCurrentHomeMovies()
+            is HomeAction.AddBookmark -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    val seriesEntity = with(action.series) {
+                        SeriesBookmark(
+                            id = id,
+                            title = title,
+                            imageUrl = imageUrl
                         )
-                    )
+                    }
+                    addSeriesBookmarkUseCase(seriesEntity)
                 }
             }
         }
-    }
-
-    private fun getCurrentHomeMovies(): ImmutableList<SeriesItem> {
-        if (_uiState.value.displayState !is HomeDisplayState.Contents) return persistentListOf()
-
-        return (_uiState.value.displayState as HomeDisplayState.Contents).movies
     }
 }
 

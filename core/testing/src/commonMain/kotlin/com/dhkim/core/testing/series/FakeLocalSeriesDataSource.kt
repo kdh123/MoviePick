@@ -25,12 +25,12 @@ class FakeLocalSeriesDataSource : LocalSeriesDataSource {
         return bookmarkStateFlow
     }
 
-    override fun addBookmark(seriesBookmark: SeriesBookmark) {
+    override suspend fun addBookmark(seriesBookmark: SeriesBookmark) {
         bookmarks.add(seriesBookmark)
         bookmarkStateFlow.value = bookmarks
     }
 
-    override fun deleteBookmark(seriesBookmark: SeriesBookmark) {
+    override suspend fun deleteBookmark(seriesBookmark: SeriesBookmark) {
         bookmarks.remove(seriesBookmark)
         bookmarkStateFlow.value = bookmarks
     }
