@@ -95,7 +95,7 @@ class HomeViewModelTest {
         viewModel.uiState.collect {
             println("answer : ${it}")
             if (it.displayState is HomeDisplayState.Contents) {
-                val content = (it.displayState as HomeDisplayState.Contents).movies.first { it.group == Group.HomeGroup.MAIN_RECOMMENDATION_MOVIE }
+                val content = (it.displayState as HomeDisplayState.Contents).series.first { it.group == Group.HomeGroup.MAIN_RECOMMENDATION_MOVIE }
                 val series = flowOf((content as SeriesItem.Content).series.value).asSnapshot()
                 println(series)
             }

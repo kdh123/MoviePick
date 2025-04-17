@@ -45,6 +45,7 @@ import androidx.compose.ui.zIndex
 import com.dhkim.common.SeriesType
 import com.dhkim.core.designsystem.MoviePickTheme
 import com.dhkim.core.ui.Resources
+import com.dhkim.core.ui.ShimmerBrush
 import com.dhkim.domain.movie.model.Movie
 import com.dhkim.domain.tv.model.Tv
 import com.skydoves.landscapist.coil3.CoilImage
@@ -190,6 +191,14 @@ fun ContentScreen(
                     ) {
                         CoilImage(
                             imageModel = { it.series.imageUrl },
+                            loading = {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .aspectRatio(1.3f)
+                                        .background(brush = ShimmerBrush(targetValue = 1_300f))
+                                )
+                            },
                             previewPlaceholder = painterResource(Resources.Icon.TvPosterSample),
                             modifier = Modifier
                                 .fillMaxWidth()

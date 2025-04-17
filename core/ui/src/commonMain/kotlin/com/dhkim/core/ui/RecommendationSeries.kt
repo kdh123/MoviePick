@@ -56,6 +56,16 @@ fun RecommendationSeries(
         CoilImage(
             modifier = Modifier.fillMaxSize(),
             imageModel = { series.imageUrl },
+            loading = {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(7f / 9f)
+                        .padding(horizontal = 24.dp, vertical = 8.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(brush = ShimmerBrush(targetValue = 1_300f))
+                )
+            },
             failure = {},
             previewPlaceholder = painterResource(Resources.Icon.MoviePosterSample),
             imageOptions = ImageOptions(contentScale = ContentScale.FillBounds),

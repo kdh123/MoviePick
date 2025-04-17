@@ -4,5 +4,5 @@ import com.dhkim.common.SeriesBookmark
 
 interface DeleteSeriesBookmarkUseCase {
 
-    suspend fun invoke(seriesBookmark: SeriesBookmark)
+    suspend operator fun invoke(seriesBookmark: SeriesBookmark)
 }

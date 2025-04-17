@@ -60,7 +60,7 @@ class HomeViewModel(
             SeriesItem.Category(group = Group.HomeGroup.CATEGORY),
         ) + seriesItems
     }.map {
-        HomeUiState(displayState = HomeDisplayState.Contents(movies = it.toImmutableList()))
+        HomeUiState(displayState = HomeDisplayState.Contents(series = it.toImmutableList()))
     }.onetimeStateIn(
         scope = viewModelScope,
         initialValue = HomeUiState()
@@ -117,6 +117,19 @@ class HomeViewModel(
                         )
                     }
                     addSeriesBookmarkUseCase(seriesEntity)
+                }
+            }
+
+            is HomeAction.DeleteBookmark -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    val seriesEntity = with(action.series) {
+                        SeriesBookmark(
+                            id = id,
+                            title = title,
+                            imageUrl = imageUrl
+                        )
+                    }
+                    deleteSeriesBookmarkUseCase(seriesEntity)
                 }
             }
         }

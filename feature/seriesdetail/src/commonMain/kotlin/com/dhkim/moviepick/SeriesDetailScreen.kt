@@ -3,6 +3,7 @@ package com.dhkim.moviepick
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,8 +28,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -49,6 +48,7 @@ import com.dhkim.common.Review
 import com.dhkim.common.SeriesType
 import com.dhkim.core.designsystem.MoviePickTheme
 import com.dhkim.core.ui.Resources
+import com.dhkim.core.ui.ShimmerBrush
 import com.dhkim.core.ui.noRippleClick
 import com.dhkim.domain.movie.model.MovieDetail
 import com.dhkim.domain.tv.model.TvDetail
@@ -329,6 +329,15 @@ fun VideoList(
             ) {
                 CoilImage(
                     imageModel = { it.thumbnail },
+                    loading = {
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(6.dp))
+                                .width(120.dp)
+                                .aspectRatio(1.3f)
+                                .background(brush = ShimmerBrush(targetValue = 1_300f))
+                        )
+                    },
                     previewPlaceholder = painterResource(Resources.Icon.MoviePosterSample),
                     modifier = Modifier
                         .clip(RoundedCornerShape(6.dp))
@@ -437,6 +446,14 @@ private fun Poster(
 ) {
     CoilImage(
         imageModel = { imageUrl },
+        loading = {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1.3f)
+                    .background(brush = ShimmerBrush(targetValue = 1_300f))
+            )
+        },
         previewPlaceholder = painterResource(Resources.Icon.MoviePosterSample),
         modifier = Modifier
             .fillMaxWidth()

@@ -40,6 +40,7 @@ import com.dhkim.core.ui.ContentItem
 import com.dhkim.core.ui.RecommendationSeries
 import com.dhkim.core.ui.Resources
 import com.dhkim.core.ui.SeriesList
+import com.dhkim.core.ui.ShimmerBrush
 import com.dhkim.core.ui.noRippleClick
 import com.dhkim.domain.movie.model.Movie
 import com.dhkim.domain.tv.model.Tv
@@ -63,7 +64,7 @@ fun HomeScreen(
     navigateToTv: () -> Unit,
     onBack: () -> Unit
 ) {
-    val homeState = (uiState.displayState as? HomeDisplayState.Contents)?.movies?.let { homeMovieItems ->
+    val homeState = (uiState.displayState as? HomeDisplayState.Contents)?.series?.let { homeMovieItems ->
         rememberHomeState(seriesItems = homeMovieItems, mainRecommendationSeriesGroup = Group.HomeGroup.MAIN_RECOMMENDATION_MOVIE)
     } ?: rememberHomeState(seriesItems = persistentListOf(), mainRecommendationSeriesGroup = Group.HomeGroup.MAIN_RECOMMENDATION_MOVIE)
 
@@ -83,7 +84,7 @@ fun HomeScreen(
             }
 
             is HomeDisplayState.Contents -> {
-                val movies = uiState.displayState.movies
+                val movies = uiState.displayState.series
                 ContentsScreen(
                     homeState = homeState,
                     homeSeriesItems = movies,
@@ -228,7 +229,13 @@ private fun ContentsScreen(
                                 Genre()
                                 RecommendationButtons(
                                     isBookmarked = isBookmarked,
-                                    onBookmarkClick = { onAction(HomeAction.AddBookmark(it)) },
+                                    onBookmarkClick = {
+                                        if (isBookmarked) {
+                                            onAction(HomeAction.DeleteBookmark(it))
+                                        } else {
+                                            onAction(HomeAction.AddBookmark(it))
+                                        }
+                                    },
                                     navigateToVideo = navigateToVideo
                                 )
                             }
@@ -245,6 +252,7 @@ private fun ContentsScreen(
                             )
                         }
                     }
+
                     Group.HomeGroup.NOW_PLAYING_MOVIE,
                     Group.HomeGroup.TOP_RATED_MOVIE -> {
                         val movies = (item as SeriesItem.Content).series.collectAsLazyPagingItems()
@@ -257,6 +265,7 @@ private fun ContentsScreen(
                             )
                         }
                     }
+
                     Group.HomeGroup.AIRING_TODAY_TV,
                     Group.HomeGroup.ON_THE_AIR_TV,
                     Group.HomeGroup.TOP_RATED_TV -> {
@@ -319,13 +328,22 @@ private fun Top10MovieItem(
                 .align(Alignment.CenterVertically)
         )
         CoilImage(
+            imageModel = { movie.imageUrl },
+            loading = {
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(12f))
+                        .width(108.dp)
+                        .aspectRatio(7f / 10f)
+                        .background(brush = ShimmerBrush(targetValue = 1_300f))
+                )
+            },
+            failure = {},
             modifier = Modifier
                 .clip(RoundedCornerShape(12f))
                 .width(108.dp)
                 .aspectRatio(7f / 10f),
-            imageModel = { movie.imageUrl },
-            failure = {},
-            previewPlaceholder = painterResource(Resources.Icon.MoviePosterSample)
+            previewPlaceholder = painterResource(Resources.Icon.MoviePosterSample),
         )
     }
 }
