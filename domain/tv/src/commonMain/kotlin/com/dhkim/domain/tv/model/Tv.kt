@@ -15,6 +15,7 @@ data class Tv(
     override val popularity: Double,
     override val voteAverage: Double,
     override val video: Video? = null,
+    override val isBookmarked: Boolean = false,
     val country: String,
     val firstAirDate: String,
 ) : Series

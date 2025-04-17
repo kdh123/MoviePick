@@ -178,6 +178,7 @@ private fun HomeScreenDarkPreview() {
                 AnimatedContent(targetState = false, label = "") {
                     HomeScreen(
                         uiState = HomeUiState(displayState = HomeDisplayState.Contents(series)),
+                        bookmarks = persistentListOf(),
                         sharedTransitionScope = this@SharedTransitionLayout,
                         animatedVisibilityScope = this@AnimatedContent,
                         onAction = {},
@@ -219,6 +220,7 @@ private fun HomeScreenPreview() {
                 AnimatedContent(targetState = false, label = "") {
                     HomeScreen(
                         uiState = HomeUiState(displayState = HomeDisplayState.Contents(series)),
+                        bookmarks = persistentListOf(),
                         sharedTransitionScope = this@SharedTransitionLayout,
                         animatedVisibilityScope = this@AnimatedContent,
                         onAction = {},

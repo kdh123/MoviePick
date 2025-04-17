@@ -59,13 +59,13 @@ class MovieViewModel(
                 val genres = Genre.entries.filter { shouldShowMovieGenres.contains(it.genre) }
                 val mainRecommendationMovie = async {
                     getMainRecommendationMoviesUseCase(language, region)
-                        .toContent(group = Group.MovieGroup.MAIN_RECOMMENDATION_MOVIE, viewModelScope)
+                        .toContent(group = Group.MovieGroup.MAIN_RECOMMENDATION_MOVIE, scope = viewModelScope)
                 }
                 jobs.add(mainRecommendationMovie)
                 for (genre in genres) {
                     val movieSeriesItem = async {
                         getMovieWithCategoryUseCase(language, genre, region)
-                            .toContent(group = Group.MovieGroup.entries.first { it.genre == genre }, viewModelScope)
+                            .toContent(group = Group.MovieGroup.entries.first { it.genre == genre }, scope = viewModelScope)
                     }
                     jobs.add(movieSeriesItem)
                 }

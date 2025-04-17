@@ -33,8 +33,11 @@ fun NavGraphBuilder.home(
     composable(HOME_ROUTE) {
         val viewModel = koinViewModel<HomeViewModel>()
         val uiState: HomeUiState by viewModel.uiState.collectAsStateWithLifecycle()
+        val bookmarks by viewModel.bookmarks.collectAsStateWithLifecycle()
+
         HomeScreen(
             uiState = uiState,
+            bookmarks = bookmarks,
             sharedTransitionScope = sharedTransitionScope,
             animatedVisibilityScope = this@composable,
             onAction = viewModel::onAction,

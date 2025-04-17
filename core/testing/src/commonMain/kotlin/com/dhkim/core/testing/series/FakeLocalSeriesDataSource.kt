@@ -8,10 +8,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class FakeLocalSeriesDataSource : LocalSeriesDataSource {
 
     private val bookmarks = mutableListOf<SeriesBookmark>().apply {
-        repeat(10) {
+        repeat(50) {
             add(
                 SeriesBookmark(
-                    id = "id$it",
+                    id = "nowPlayingId$it",
                     title = "title$it",
                     imageUrl = "imageUrl$it"
                 )

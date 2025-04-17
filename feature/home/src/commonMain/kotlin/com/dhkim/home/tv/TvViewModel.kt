@@ -59,14 +59,14 @@ class TvViewModel(
                 val genres = Genre.entries.filter { shouldShowTvGenres.contains(it.genre) }
                 val mainRecommendationTv = async {
                     getTvsUseCase[TODAY_RECOMMENDATION_TV_KEY]!!.invoke(language)
-                        .toContent(group = Group.TvGroup.MAIN_RECOMMENDATION_TV, viewModelScope)
+                        .toContent(group = Group.TvGroup.MAIN_RECOMMENDATION_TV, scope = viewModelScope)
                 }
                 jobs.add(mainRecommendationTv)
 
                 for (genre in genres) {
                     val tvsSeriesItem = async {
                         getTvWithCategoryUseCase(language, genre, region)
-                            .toContent(group = Group.TvGroup.entries.first { it.genre == genre }, viewModelScope)
+                            .toContent(group = Group.TvGroup.entries.first { it.genre == genre }, scope = viewModelScope)
                     }
                     jobs.add(tvsSeriesItem)
                 }
@@ -77,7 +77,7 @@ class TvViewModel(
                     TOP_RATED_TVS_KEY to Group.TvGroup.TOP_RATED_TV
                 ).map {
                     async {
-                        getTvsUseCase[it.first]!!(language).toContent(group = it.second, viewModelScope)
+                        getTvsUseCase[it.first]!!(language).toContent(group = it.second, scope = viewModelScope)
                     }
                 }.forEach { job ->
                     jobs.add(job)

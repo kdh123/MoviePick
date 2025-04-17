@@ -26,6 +26,7 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun RecommendationSeriesScope.RecommendationButtons(
+    isBookmarked: Boolean = false,
     onBookmarkClick: (Series) -> Unit = {},
     navigateToVideo: (String) -> Unit
 ) {
@@ -79,7 +80,11 @@ fun RecommendationSeriesScope.RecommendationButtons(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    painter = painterResource(Resources.Icon.Add),
+                    painter = if (isBookmarked) {
+                        painterResource(Resources.Icon.Search)
+                    } else {
+                        painterResource(Resources.Icon.Add)
+                    },
                     tint = White,
                     contentDescription = null,
                     modifier = Modifier

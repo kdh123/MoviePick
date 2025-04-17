@@ -15,7 +15,8 @@ data class Movie(
     override val popularity: Double,
     override val voteAverage: Double,
     override val video: Video? = null,
-    val releasedDate: String,
+    override val isBookmarked: Boolean = false,
+    val releasedDate: String
 ) : Series {
 
     fun hasVideo() = video != null

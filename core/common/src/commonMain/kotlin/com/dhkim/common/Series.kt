@@ -12,4 +12,5 @@ interface Series {
     val popularity: Double
     val voteAverage: Double
     val video: Video?
+    val isBookmarked: Boolean
 }

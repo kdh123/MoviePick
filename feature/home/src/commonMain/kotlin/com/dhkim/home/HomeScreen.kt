@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.cash.paging.compose.collectAsLazyPagingItems
+import com.dhkim.common.SeriesBookmark
 import com.dhkim.common.SeriesType
 import com.dhkim.core.designsystem.MoviePickTheme
 import com.dhkim.core.ui.Chip
@@ -52,6 +53,7 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun HomeScreen(
     uiState: HomeUiState,
+    bookmarks: ImmutableList<SeriesBookmark>,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     onAction: (HomeAction) -> Unit,
@@ -85,6 +87,7 @@ fun HomeScreen(
                 ContentsScreen(
                     homeState = homeState,
                     homeSeriesItems = movies,
+                    bookmarks = bookmarks,
                     sharedTransitionScope = sharedTransitionScope,
                     animatedVisibilityScope = animatedVisibilityScope,
                     onAction = onAction,
@@ -176,6 +179,7 @@ private fun HomeCategoryChips(
 private fun ContentsScreen(
     homeState: HomeState,
     homeSeriesItems: ImmutableList<SeriesItem>,
+    bookmarks: ImmutableList<SeriesBookmark>,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     onAction: (HomeAction) -> Unit,
@@ -215,6 +219,7 @@ private fun ContentsScreen(
                         val movies = (item as SeriesItem.Content).series.collectAsLazyPagingItems()
                         if (movies.itemCount > 0) {
                             val series = movies[0] as Movie
+                            val isBookmarked = bookmarks.any { it.id == series.id }
                             RecommendationSeries(
                                 series = series,
                                 onClick = { navigateToSeriesDetail(SeriesType.MOVIE, series.id) },
@@ -222,6 +227,7 @@ private fun ContentsScreen(
                             ) {
                                 Genre()
                                 RecommendationButtons(
+                                    isBookmarked = isBookmarked,
                                     onBookmarkClick = { onAction(HomeAction.AddBookmark(it)) },
                                     navigateToVideo = navigateToVideo
                                 )

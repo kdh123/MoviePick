@@ -89,7 +89,6 @@ class OneTimeSharingStarted(
                     hasCollected.value = true
                 } else {
                     delay(stopTimeOut)
-                    emit(SharingCommand.STOP)
                     if (replayExpiration > 0) {
                         delay(replayExpiration)
                         emit(SharingCommand.STOP_AND_RESET_REPLAY_CACHE)
@@ -102,6 +101,7 @@ class OneTimeSharingStarted(
     }
 
     override fun restart() {
+        restartFlow.tryEmit(SharingCommand.STOP_AND_RESET_REPLAY_CACHE)
         restartFlow.tryEmit(SharingCommand.START)
     }
 }

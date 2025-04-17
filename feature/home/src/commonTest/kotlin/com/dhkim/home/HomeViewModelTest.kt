@@ -1,8 +1,12 @@
+import androidx.paging.testing.asSnapshot
 import com.dhkim.core.testing.movie.FakeGetNowPlayingMoviesUseCase
 import com.dhkim.core.testing.movie.FakeGetTodayRecommendationMovieUseCase
 import com.dhkim.core.testing.movie.FakeGetTodayTop10MoviesUseCase
 import com.dhkim.core.testing.movie.FakeGetTopRatedMoviesUseCase
 import com.dhkim.core.testing.movie.MovieStatus
+import com.dhkim.core.testing.series.FakeAddSeriesBookmarkUseCase
+import com.dhkim.core.testing.series.FakeDeleteSeriesBookmarkUseCase
+import com.dhkim.core.testing.series.FakeGetSeriesBookmarksUseCase
 import com.dhkim.core.testing.tv.FakeGetAiringTodayTvsUseCase
 import com.dhkim.core.testing.tv.FakeGetOnTheAirTvsUseCase
 import com.dhkim.core.testing.tv.FakeGetTopRatedTvsUseCase
@@ -11,14 +15,21 @@ import com.dhkim.domain.movie.usecase.NOW_PLAYING_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TODAY_RECOMMENDATION_MOVIE_KEY
 import com.dhkim.domain.movie.usecase.TODAY_TOP_10_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TOP_RATED_MOVIES_KEY
+import com.dhkim.domain.series.usecase.AddSeriesBookmarkUseCase
+import com.dhkim.domain.series.usecase.DeleteSeriesBookmarkUseCase
+import com.dhkim.domain.series.usecase.GetSeriesBookmarksUseCase
 import com.dhkim.domain.tv.usecase.AIRING_TODAY_TVS_KEY
 import com.dhkim.domain.tv.usecase.GetTvsUseCase
 import com.dhkim.domain.tv.usecase.ON_THE_AIR_TVS_KEY
 import com.dhkim.domain.tv.usecase.TOP_RATED_TVS_KEY
+import com.dhkim.home.Group
+import com.dhkim.home.HomeDisplayState
 import com.dhkim.home.HomeViewModel
+import com.dhkim.home.SeriesItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -31,6 +42,9 @@ import kotlin.test.Test
 class HomeViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
+    private lateinit var getSeriesBookmarksUseCase: GetSeriesBookmarksUseCase
+    private lateinit var addSeriesBookmarkUseCase: AddSeriesBookmarkUseCase
+    private lateinit var deleteSeriesBookmarkUseCase: DeleteSeriesBookmarkUseCase
     private lateinit var getTodayRecommendationMovieUseCase: GetMoviesUseCase
     private lateinit var getTodayTop10MoviesUseCase: GetMoviesUseCase
     private lateinit var getTopRatedMoviesUseCase: GetMoviesUseCase
@@ -54,6 +68,9 @@ class HomeViewModelTest {
         getAiringTodayTvsUseCase = FakeGetAiringTodayTvsUseCase()
         getOnTheAirTvsUseCase = FakeGetOnTheAirTvsUseCase()
         getTopRatedTvsUseCase = FakeGetTopRatedTvsUseCase()
+        getSeriesBookmarksUseCase = FakeGetSeriesBookmarksUseCase()
+        addSeriesBookmarkUseCase = FakeAddSeriesBookmarkUseCase()
+        deleteSeriesBookmarkUseCase = FakeDeleteSeriesBookmarkUseCase()
 
         viewModel = HomeViewModel(
             mapOf(
@@ -67,10 +84,22 @@ class HomeViewModelTest {
                 ON_THE_AIR_TVS_KEY to getOnTheAirTvsUseCase,
                 TOP_RATED_TVS_KEY to getTopRatedTvsUseCase
             ),
+            getSeriesBookmarksUseCase,
+            addSeriesBookmarkUseCase,
+            deleteSeriesBookmarkUseCase
         )
 
-        viewModel.uiState.first()
-        println("answer : ${viewModel.uiState.value}")
+        val isContain = getSeriesBookmarksUseCase.invoke().first().map { it.id }.contains("nowPlayingId45")
+        println(isContain)
+
+        viewModel.uiState.collect {
+            println("answer : ${it}")
+            if (it.displayState is HomeDisplayState.Contents) {
+                val content = (it.displayState as HomeDisplayState.Contents).movies.first { it.group == Group.HomeGroup.MAIN_RECOMMENDATION_MOVIE }
+                val series = flowOf((content as SeriesItem.Content).series.value).asSnapshot()
+                println(series)
+            }
+        }
     }
 
     @Test
@@ -84,6 +113,9 @@ class HomeViewModelTest {
         getAiringTodayTvsUseCase = FakeGetAiringTodayTvsUseCase()
         getOnTheAirTvsUseCase = FakeGetOnTheAirTvsUseCase()
         getTopRatedTvsUseCase = FakeGetTopRatedTvsUseCase()
+        getSeriesBookmarksUseCase = FakeGetSeriesBookmarksUseCase()
+        addSeriesBookmarkUseCase = FakeAddSeriesBookmarkUseCase()
+        deleteSeriesBookmarkUseCase = FakeDeleteSeriesBookmarkUseCase()
 
         viewModel = HomeViewModel(
             mapOf(
@@ -97,11 +129,14 @@ class HomeViewModelTest {
                 ON_THE_AIR_TVS_KEY to getOnTheAirTvsUseCase,
                 TOP_RATED_TVS_KEY to getTopRatedTvsUseCase
             ),
+            getSeriesBookmarksUseCase,
+            addSeriesBookmarkUseCase,
+            deleteSeriesBookmarkUseCase
         )
 
         viewModel.uiState.first()
 
-        println("answer : ${viewModel.uiState.value}")
+        println("answer2 : ${viewModel.uiState.value}")
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
