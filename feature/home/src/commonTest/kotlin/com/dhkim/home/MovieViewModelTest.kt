@@ -2,8 +2,14 @@ package com.dhkim.home
 
 import com.dhkim.core.testing.movie.FakeGetMovieWithCategoryUseCase
 import com.dhkim.core.testing.movie.FakeGetTodayRecommendationMovieUseCase
+import com.dhkim.core.testing.series.FakeAddSeriesBookmarkUseCase
+import com.dhkim.core.testing.series.FakeDeleteSeriesBookmarkUseCase
+import com.dhkim.core.testing.series.FakeGetSeriesBookmarksUseCase
 import com.dhkim.domain.movie.usecase.GetMovieWithCategoryUseCase
 import com.dhkim.domain.movie.usecase.GetMoviesUseCase
+import com.dhkim.domain.series.usecase.AddSeriesBookmarkUseCase
+import com.dhkim.domain.series.usecase.DeleteSeriesBookmarkUseCase
+import com.dhkim.domain.series.usecase.GetSeriesBookmarksUseCase
 import com.dhkim.home.movie.MovieViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,6 +27,9 @@ class MovieViewModelTest {
     private lateinit var viewModel: MovieViewModel
     private lateinit var getMovieWithCategoryUseCase: GetMovieWithCategoryUseCase
     private lateinit var getTodayRecommendationMovieUseCase: GetMoviesUseCase
+    private lateinit var getSeriesBookmarksUseCase: GetSeriesBookmarksUseCase
+    private lateinit var addSeriesBookmarkUseCase: AddSeriesBookmarkUseCase
+    private lateinit var deleteSeriesBookmarkUseCase: DeleteSeriesBookmarkUseCase
 
     @BeforeTest
     fun setup() {
@@ -28,7 +37,16 @@ class MovieViewModelTest {
 
         getTodayRecommendationMovieUseCase = FakeGetTodayRecommendationMovieUseCase()
         getMovieWithCategoryUseCase = FakeGetMovieWithCategoryUseCase()
-        viewModel = MovieViewModel(getTodayRecommendationMovieUseCase, getMovieWithCategoryUseCase)
+        getSeriesBookmarksUseCase = FakeGetSeriesBookmarksUseCase()
+        addSeriesBookmarkUseCase = FakeAddSeriesBookmarkUseCase()
+        deleteSeriesBookmarkUseCase = FakeDeleteSeriesBookmarkUseCase()
+        viewModel = MovieViewModel(
+            getTodayRecommendationMovieUseCase,
+            getMovieWithCategoryUseCase,
+            getSeriesBookmarksUseCase,
+            addSeriesBookmarkUseCase,
+            deleteSeriesBookmarkUseCase
+        )
     }
 
     @Test

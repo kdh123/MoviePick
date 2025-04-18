@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.cash.paging.compose.collectAsLazyPagingItems
+import com.dhkim.common.SeriesBookmark
 import com.dhkim.common.SeriesType
 import com.dhkim.core.designsystem.MoviePickTheme
 import com.dhkim.core.ui.Chip
@@ -53,6 +54,7 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun MovieScreen(
     uiState: MovieUiState,
+    bookmarks: ImmutableList<SeriesBookmark>,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedContentScope,
     onAction: (MovieAction) -> Unit,
@@ -85,6 +87,7 @@ fun MovieScreen(
                 ContentsScreen(
                     homeState = homeState,
                     movieSeriesItems = movies,
+                    bookmarks = bookmarks,
                     sharedTransitionScope = sharedTransitionScope,
                     animatedVisibilityScope = animatedVisibilityScope,
                     onAction = onAction,
@@ -106,6 +109,7 @@ fun MovieScreen(
 @Composable
 fun ContentsScreen(
     homeState: HomeState,
+    bookmarks: ImmutableList<SeriesBookmark>,
     movieSeriesItems: ImmutableList<SeriesItem>,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
@@ -150,13 +154,24 @@ fun ContentsScreen(
                         val movies = (item as SeriesItem.Content).series.collectAsLazyPagingItems()
                         if (movies.itemCount > 0) {
                             val series = movies[0] as Movie
+                            val isBookmarked = bookmarks.any { it.id == series.id }
                             RecommendationSeries(
                                 series = series,
                                 onClick = { navigateToSeriesDetail(SeriesType.MOVIE, series.id) },
                                 onUpdateRecommendationSeriesHeight = homeState::updateHeight
                             ) {
                                 Genre()
-                                RecommendationButtons(navigateToVideo = navigateToVideo)
+                                RecommendationButtons(
+                                    isBookmarked = isBookmarked,
+                                    onBookmarkClick = {
+                                        if (isBookmarked) {
+                                            onAction(MovieAction.DeleteBookmark(it, SeriesType.MOVIE))
+                                        } else {
+                                            onAction(MovieAction.AddBookmark(it, SeriesType.MOVIE))
+                                        }
+                                    },
+                                    navigateToVideo = navigateToVideo
+                                )
                             }
                         }
                     }

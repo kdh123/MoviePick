@@ -14,8 +14,8 @@ import org.koin.dsl.module
 @ExperimentalCoroutinesApi
 val homeModule = module {
     viewModel { HomeViewModel(get(), get(), get(), get(), get()) }
-    viewModel { MovieViewModel(get(named(TODAY_RECOMMENDATION_MOVIE_KEY)), get()) }
-    viewModel { TvViewModel(get(), get()) }
+    viewModel { MovieViewModel(get(named(TODAY_RECOMMENDATION_MOVIE_KEY)), get(), get(), get(), get()) }
+    viewModel { TvViewModel(get(), get(), get(), get(), get()) }
     viewModel { parametersHolder ->
         SeriesCollectionViewModel(
             parametersHolder.get(),

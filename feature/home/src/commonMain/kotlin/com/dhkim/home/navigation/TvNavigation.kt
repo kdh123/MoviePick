@@ -29,9 +29,11 @@ fun NavGraphBuilder.tv(
     composable(TV_ROUTE) {
         val viewModel = koinViewModel<TvViewModel>()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+        val bookmarks by viewModel.bookmarks.collectAsStateWithLifecycle()
 
         TvScreen(
             uiState = uiState,
+            bookmarks = bookmarks,
             sharedTransitionScope = sharedTransitionScope,
             animatedVisibilityScope = this@composable,
             onAction = viewModel::onAction,

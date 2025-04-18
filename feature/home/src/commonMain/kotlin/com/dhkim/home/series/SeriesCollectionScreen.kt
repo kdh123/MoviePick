@@ -26,7 +26,6 @@ import com.dhkim.common.SeriesType
 import com.dhkim.core.designsystem.MoviePickTheme
 import com.dhkim.core.ui.ContentItem
 import com.dhkim.domain.movie.model.Movie
-import com.diamondedge.logging.logging
 
 @Composable
 fun SeriesCollectionScreen(

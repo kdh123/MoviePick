@@ -82,6 +82,7 @@ private fun MovieScreenDarkPreview(
                 AnimatedContent(targetState = false, label = "") {
                     MovieScreen(
                         uiState = uiState,
+                        bookmarks = persistentListOf(),
                         sharedTransitionScope = this@SharedTransitionLayout,
                         animatedVisibilityScope = this@AnimatedContent,
                         onAction = {},
@@ -112,6 +113,7 @@ private fun MovieScreenPreview(
                 AnimatedContent(targetState = false, label = "") {
                     MovieScreen(
                         uiState = uiState,
+                        bookmarks = persistentListOf(),
                         sharedTransitionScope = this@SharedTransitionLayout,
                         animatedVisibilityScope = this@AnimatedContent,
                         onAction = {},

@@ -31,9 +31,11 @@ fun NavGraphBuilder.movie(
     composable(MOVIE_ROUTE) {
         val viewModel = koinViewModel<MovieViewModel>()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+        val bookmarks by viewModel.bookmarks.collectAsStateWithLifecycle()
 
         MovieScreen(
             uiState = uiState,
+            bookmarks = bookmarks,
             sharedTransitionScope = sharedTransitionScope,
             animatedVisibilityScope = this@composable,
             onAction = viewModel::onAction,

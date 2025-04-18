@@ -9,6 +9,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.dhkim.bookmark.navigation.BOOKMARK_ROUTE
 import com.dhkim.common.SeriesType
+import com.dhkim.core.ui.Resources
 import com.dhkim.home.navigation.HOME_ROUTE
 import com.dhkim.home.navigation.MOVIE_ROUTE
 import com.dhkim.home.navigation.SERIES_COLLECTION_ROUTE
@@ -74,6 +75,6 @@ fun rememberAppState(
 sealed class Screen(val title: String, val res: DrawableResource, val route: List<String>) {
     data object Home : Screen("홈", Res.drawable.ic_home, listOf(HOME_ROUTE, MOVIE_ROUTE, TV_ROUTE))
     data object Upcoming : Screen("NEW & HOT", Res.drawable.ic_upcoming, listOf(UPCOMING_ROUTE))
-    data object Bookmark : Screen("북마크", Res.drawable.ic_upcoming, listOf(BOOKMARK_ROUTE))
+    data object Bookmark : Screen("북마크", Resources.Icon.Favorite, listOf(BOOKMARK_ROUTE))
 }
 

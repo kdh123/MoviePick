@@ -1,19 +1,19 @@
 package com.dhkim.home
 
-import app.cash.paging.testing.asSnapshot
 import com.dhkim.core.testing.movie.FakeGetTodayRecommendationTvUseCase
 import com.dhkim.core.testing.tv.FakeGetAiringTodayTvsUseCase
 import com.dhkim.core.testing.tv.FakeGetOnTheAirTvsUseCase
 import com.dhkim.core.testing.tv.FakeGetTopRatedTvsUseCase
 import com.dhkim.core.testing.tv.FakeGetTvWithCategoryUseCase
+import com.dhkim.domain.series.usecase.AddSeriesBookmarkUseCase
+import com.dhkim.domain.series.usecase.DeleteSeriesBookmarkUseCase
+import com.dhkim.domain.series.usecase.GetSeriesBookmarksUseCase
 import com.dhkim.domain.tv.usecase.AIRING_TODAY_TVS_KEY
 import com.dhkim.domain.tv.usecase.GetTvWithCategoryUseCase
 import com.dhkim.domain.tv.usecase.GetTvsUseCase
 import com.dhkim.domain.tv.usecase.ON_THE_AIR_TVS_KEY
 import com.dhkim.domain.tv.usecase.TODAY_RECOMMENDATION_TV_KEY
 import com.dhkim.domain.tv.usecase.TOP_RATED_TVS_KEY
-import com.dhkim.home.tv.TvAction
-import com.dhkim.home.tv.TvDisplayState
 import com.dhkim.home.tv.TvViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -35,6 +35,9 @@ class TvViewModelTest {
     private lateinit var getOnTheAirTvsUseCase: GetTvsUseCase
     private lateinit var getTopRatedTvsUseCase: GetTvsUseCase
     private lateinit var getTvWithCategoryUseCase: GetTvWithCategoryUseCase
+    private lateinit var getSeriesBookmarksUseCase: GetSeriesBookmarksUseCase
+    private lateinit var addSeriesBookmarkUseCase: AddSeriesBookmarkUseCase
+    private lateinit var deleteSeriesBookmarkUseCase: DeleteSeriesBookmarkUseCase
 
     @BeforeTest
     fun setup() {
@@ -51,7 +54,11 @@ class TvViewModelTest {
                 AIRING_TODAY_TVS_KEY to getAiringTodayTvsUseCase,
                 ON_THE_AIR_TVS_KEY to getOnTheAirTvsUseCase,
                 TOP_RATED_TVS_KEY to getTopRatedTvsUseCase
-            ), getTvWithCategoryUseCase
+            ),
+            getTvWithCategoryUseCase,
+            getSeriesBookmarksUseCase,
+            addSeriesBookmarkUseCase,
+            deleteSeriesBookmarkUseCase
         )
     }
 
