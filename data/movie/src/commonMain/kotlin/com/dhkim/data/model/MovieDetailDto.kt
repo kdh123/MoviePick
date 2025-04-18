@@ -47,6 +47,7 @@ data class MovieDetailDto(
     fun toMovieDetail(): MovieDetail {
         return MovieDetail(
             id = "$id",
+            posterUrl = "https://image.tmdb.org/t/p/original${posterPath ?: ""}",
             images = listOf("https://image.tmdb.org/t/p/original${posterPath ?: ""}"),
             title = title,
             adult = adult,

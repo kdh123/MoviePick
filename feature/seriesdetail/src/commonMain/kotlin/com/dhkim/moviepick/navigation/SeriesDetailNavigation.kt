@@ -29,9 +29,12 @@ fun NavGraphBuilder.seriesDetail(
         val parametersHolder = { parametersOf(series, seriesId) }
         val viewModel = koinViewModel<SeriesDetailViewModel>(parameters = parametersHolder)
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+        val bookmarks by viewModel.bookmarks.collectAsStateWithLifecycle()
 
         SeriesDetailScreen(
             uiState = uiState,
+            bookmarks = bookmarks,
+            onAction = viewModel::onAction,
             navigateToVideo = navigateToVideo,
             onBack = onBack
         )

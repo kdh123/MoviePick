@@ -9,6 +9,6 @@ import org.koin.dsl.module
 @ExperimentalCoroutinesApi
 val seriesDetailModule = module {
     viewModel { parametersHolder ->
-        SeriesDetailViewModel(parametersHolder.get(), parametersHolder.get(), get(), get())
+        SeriesDetailViewModel(parametersHolder.get(), parametersHolder.get(), get(), get(), get(), get(), get())
     }
 }

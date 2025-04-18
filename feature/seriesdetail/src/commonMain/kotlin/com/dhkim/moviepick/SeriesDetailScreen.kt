@@ -5,6 +5,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -13,7 +14,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -57,7 +57,9 @@ import app.cash.paging.compose.LazyPagingItems
 import app.cash.paging.compose.collectAsLazyPagingItems
 import app.cash.paging.compose.itemContentType
 import app.cash.paging.compose.itemKey
+import com.dhkim.common.Region
 import com.dhkim.common.Review
+import com.dhkim.common.SeriesBookmark
 import com.dhkim.common.SeriesType
 import com.dhkim.core.designsystem.MoviePickTheme
 import com.dhkim.core.ui.Resources
@@ -75,6 +77,8 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun SeriesDetailScreen(
     uiState: SeriesDetailUiState,
+    bookmarks: ImmutableList<SeriesBookmark>,
+    onAction: (SeriesDetailAction) -> Unit,
     navigateToVideo: (String) -> Unit,
     onBack: () -> Unit
 ) {
@@ -128,10 +132,10 @@ fun SeriesDetailScreen(
                 }
 
                 BoxWithConstraints {
-                    val screenHeight = maxHeight
+                    val screenHeight = maxHeight - paddingValues.calculateTopPadding()
                     Column(
                         modifier = Modifier
-                            .fillMaxSize()
+                            .fillMaxWidth()
                             .padding(top = paddingValues.calculateTopPadding())
                             .verticalScroll(state = scrollState)
                     ) {
@@ -149,9 +153,22 @@ fun SeriesDetailScreen(
                                     }
 
                                     is SeriesDetailItem.Information -> {
+                                        val isBookmarked = bookmarks.any { bookmark -> bookmark.id == it.series.id }
                                         when (it.seriesType) {
-                                            SeriesType.MOVIE -> MovieInformation(movie = it.series as MovieDetail)
-                                            SeriesType.TV -> TvInformation(it.series as TvDetail)
+                                            SeriesType.MOVIE -> {
+                                                MovieInformation(
+                                                    movie = it.series as MovieDetail,
+                                                    isBookmarked = isBookmarked,
+                                                    onAction = onAction
+                                                )
+                                            }
+                                            SeriesType.TV -> {
+                                                TvInformation(
+                                                    tv = it.series as TvDetail,
+                                                    isBookmarked = isBookmarked,
+                                                    onAction = onAction
+                                                )
+                                            }
                                         }
                                     }
 
@@ -171,7 +188,7 @@ fun SeriesDetailScreen(
                             navigateToVideo = navigateToVideo,
                             modifier = Modifier
                                 .height(screenHeight)
-                                .padding(top = paddingValues.calculateTopPadding())
+                                //.padding(top = paddingValues.calculateTopPadding())
                         )
                     }
                 }
@@ -202,6 +219,7 @@ fun ContentTab(
         HorizontalPager(
             state = pagerState,
             modifier = Modifier
+
                 .fillMaxHeight()
                 .nestedScroll(remember {
                     object : NestedScrollConnection {
@@ -383,7 +401,9 @@ fun VideoList(
 
 @Composable
 fun MovieInformation(
-    movie: MovieDetail
+    movie: MovieDetail,
+    isBookmarked: Boolean,
+    onAction: (SeriesDetailAction) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -404,12 +424,43 @@ fun MovieInformation(
             Text(
                 text = movie.openDate,
                 textAlign = TextAlign.Center,
-                style = MoviePickTheme.typography.bodyMedium
+                style = MoviePickTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.secondary
             )
             Text(
                 text = "${movie.runtime}분",
                 style = MoviePickTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .padding(bottom = 2.dp)
+            )
+            Text(
+                text = Region.entries.firstOrNull { it.code == movie.country }?.country ?: "",
+                style = MoviePickTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.secondary,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .padding(bottom = 2.dp)
+            )
+        }
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            Text(
+                text = "출연",
+                textAlign = TextAlign.Center,
+                style = MoviePickTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.secondary,
+            )
+
+            Text(
+                text = movie.actors.take(5).joinToString(", "),
+                style = MoviePickTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .padding(bottom = 2.dp)
@@ -421,11 +472,45 @@ fun MovieInformation(
             style = MoviePickTheme.typography.bodyMedium,
             lineHeight = 22.sp
         )
+
+        Column(
+            modifier = Modifier
+                .width(42.dp)
+                .clickable {
+                    if (isBookmarked) {
+                        onAction(SeriesDetailAction.DeleteBookmark(series = movie, seriesType = SeriesType.MOVIE))
+                    } else {
+                        onAction(SeriesDetailAction.AddBookmark(series = movie, seriesType = SeriesType.MOVIE))
+                    }
+
+                }
+        ) {
+            Icon(
+                painter = if (isBookmarked) painterResource(Resources.Icon.Done) else painterResource(Resources.Icon.Add),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f)
+            )
+            Text(
+                text = "찜",
+                style = MoviePickTheme.typography.labelMedium,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+        }
     }
 }
 
 @Composable
-fun TvInformation(tv: TvDetail) {
+fun TvInformation(
+    tv: TvDetail,
+    isBookmarked: Boolean,
+    onAction: (SeriesDetailAction) -> Unit
+) {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
@@ -462,6 +547,36 @@ fun TvInformation(tv: TvDetail) {
             style = MoviePickTheme.typography.bodyMedium,
             lineHeight = 22.sp
         )
+
+        Column(
+            modifier = Modifier
+                .width(42.dp)
+                .clickable {
+                    if (isBookmarked) {
+                        onAction(SeriesDetailAction.DeleteBookmark(series = tv, seriesType = SeriesType.MOVIE))
+                    } else {
+                        onAction(SeriesDetailAction.AddBookmark(series = tv, seriesType = SeriesType.MOVIE))
+                    }
+
+                }
+        ) {
+            Icon(
+                painter = if (isBookmarked) painterResource(Resources.Icon.Done) else painterResource(Resources.Icon.Add),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f)
+            )
+            Text(
+                text = "찜",
+                style = MoviePickTheme.typography.labelMedium,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+        }
     }
 }
 

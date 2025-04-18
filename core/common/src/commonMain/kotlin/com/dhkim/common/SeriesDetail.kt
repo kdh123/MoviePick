@@ -5,6 +5,7 @@ import app.cash.paging.PagingData
 interface SeriesDetail {
 
     val id: String
+    val posterUrl: String
     val images: List<String>
     val title: String
     val adult: Boolean
@@ -17,4 +18,5 @@ interface SeriesDetail {
     val review: PagingData<Review>
     val videos: List<Video>
     val openDate: String
+    val isBookmarked: Boolean
 }

@@ -57,6 +57,7 @@ data class TvDetailDto(
     fun toTvDetail(): TvDetail {
         return TvDetail(
             id = id.toString(),
+            posterUrl = "https://image.tmdb.org/t/p/original${posterPath ?: ""}",
             images = listOf("https://image.tmdb.org/t/p/original${posterPath ?: ""}"),
             title = name,
             adult = adult,

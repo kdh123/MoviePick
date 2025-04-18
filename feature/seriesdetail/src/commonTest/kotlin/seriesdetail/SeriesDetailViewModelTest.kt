@@ -2,8 +2,14 @@ package seriesdetail
 
 import com.dhkim.common.SeriesType
 import com.dhkim.core.testing.movie.FakeGetMovieDetailUseCase
+import com.dhkim.core.testing.series.FakeAddSeriesBookmarkUseCase
+import com.dhkim.core.testing.series.FakeDeleteSeriesBookmarkUseCase
+import com.dhkim.core.testing.series.FakeGetSeriesBookmarksUseCase
 import com.dhkim.core.testing.tv.FakeGetTvDetailUseCase
 import com.dhkim.domain.movie.usecase.GetMovieDetailUseCase
+import com.dhkim.domain.series.usecase.AddSeriesBookmarkUseCase
+import com.dhkim.domain.series.usecase.DeleteSeriesBookmarkUseCase
+import com.dhkim.domain.series.usecase.GetSeriesBookmarksUseCase
 import com.dhkim.domain.tv.usecase.GetTvDetailUseCase
 import com.dhkim.moviepick.SeriesDetailDisplayState
 import com.dhkim.moviepick.SeriesDetailItem
@@ -26,6 +32,9 @@ class SeriesDetailViewModelTest {
     private lateinit var viewModel: SeriesDetailViewModel
     private lateinit var getMovieDetailUseCase: GetMovieDetailUseCase
     private lateinit var getTvDetailUseCase: GetTvDetailUseCase
+    private lateinit var getSeriesBookmarksUseCase: GetSeriesBookmarksUseCase
+    private lateinit var addSeriesBookmarkUseCase: AddSeriesBookmarkUseCase
+    private lateinit var deleteSeriesBookmarkUseCase: DeleteSeriesBookmarkUseCase
 
     @BeforeTest
     fun setup() {
@@ -36,11 +45,17 @@ class SeriesDetailViewModelTest {
     fun `영화 상세화면 가져오기`() = runTest {
         getMovieDetailUseCase = FakeGetMovieDetailUseCase()
         getTvDetailUseCase = FakeGetTvDetailUseCase()
+        getSeriesBookmarksUseCase = FakeGetSeriesBookmarksUseCase()
+        addSeriesBookmarkUseCase = FakeAddSeriesBookmarkUseCase()
+        deleteSeriesBookmarkUseCase = FakeDeleteSeriesBookmarkUseCase()
         viewModel = SeriesDetailViewModel(
             series = SeriesType.MOVIE.name,
             seriesId = "topRatedId7",
             getMovieDetailUseCase = getMovieDetailUseCase,
-            getTvDetailUseCase = getTvDetailUseCase
+            getTvDetailUseCase = getTvDetailUseCase,
+            getSeriesBookmarksUseCase = getSeriesBookmarksUseCase,
+            addSeriesBookmarkUseCase = addSeriesBookmarkUseCase,
+            deleteSeriesBookmarkUseCase = deleteSeriesBookmarkUseCase
         )
         viewModel.uiState.first()
         if (viewModel.uiState.value.displayState is SeriesDetailDisplayState.Contents) {
@@ -60,11 +75,17 @@ class SeriesDetailViewModelTest {
     fun `TV 상세화면 가져오기`() = runTest {
         getMovieDetailUseCase = FakeGetMovieDetailUseCase()
         getTvDetailUseCase = FakeGetTvDetailUseCase()
+        getSeriesBookmarksUseCase = FakeGetSeriesBookmarksUseCase()
+        addSeriesBookmarkUseCase = FakeAddSeriesBookmarkUseCase()
+        deleteSeriesBookmarkUseCase = FakeDeleteSeriesBookmarkUseCase()
         viewModel = SeriesDetailViewModel(
             series = SeriesType.TV.name,
             seriesId = "airingTodayId8",
             getMovieDetailUseCase = getMovieDetailUseCase,
-            getTvDetailUseCase = getTvDetailUseCase
+            getTvDetailUseCase = getTvDetailUseCase,
+            getSeriesBookmarksUseCase = getSeriesBookmarksUseCase,
+            addSeriesBookmarkUseCase = addSeriesBookmarkUseCase,
+            deleteSeriesBookmarkUseCase = deleteSeriesBookmarkUseCase
         )
         viewModel.uiState.first()
         if (viewModel.uiState.value.displayState is SeriesDetailDisplayState.Contents) {

@@ -34,6 +34,8 @@ private fun SeriesDetailScreenDarkPreview(@PreviewParameter(SeriesDetailItemPrev
         ) {
             SeriesDetailScreen(
                 uiState = uiState,
+                bookmarks = persistentListOf(),
+                onAction = {},
                 navigateToVideo = {},
                 onBack = {}
             )
@@ -51,6 +53,8 @@ private fun SeriesDetailScreenPreview(@PreviewParameter(SeriesDetailItemPreviewP
         ) {
             SeriesDetailScreen(
                 uiState = uiState,
+                bookmarks = persistentListOf(),
+                onAction = {},
                 navigateToVideo = {},
                 onBack = {}
             )
@@ -99,6 +103,7 @@ class SeriesDetailItemPreviewParameter : PreviewParameterProvider<SeriesDetailUi
         popularity = 35.8,
         runtime = 90,
         productionCompany = "Disney",
+        actors = listOf("배우1", "배우2", "배우3", "배우4", "배우5", "배우6"),
         country = "미국",
         videos = movieVideos,
         review = PagingData.from(movieReviews)

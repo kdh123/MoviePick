@@ -6,17 +6,27 @@ import androidx.paging.cachedIn
 import com.dhkim.common.Date
 import com.dhkim.common.Language
 import com.dhkim.common.RestartableStateFlow
+import com.dhkim.common.SeriesBookmark
 import com.dhkim.common.SeriesDetail
 import com.dhkim.common.SeriesType
 import com.dhkim.common.onetimeStateIn
 import com.dhkim.domain.movie.usecase.GetMovieDetailUseCase
+import com.dhkim.domain.series.usecase.AddSeriesBookmarkUseCase
+import com.dhkim.domain.series.usecase.DeleteSeriesBookmarkUseCase
+import com.dhkim.domain.series.usecase.GetSeriesBookmarksUseCase
 import com.dhkim.domain.tv.usecase.GetTvDetailUseCase
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 class SeriesDetailViewModel(
@@ -24,8 +34,18 @@ class SeriesDetailViewModel(
     private val seriesId: String,
     private val getMovieDetailUseCase: GetMovieDetailUseCase,
     private val getTvDetailUseCase: GetTvDetailUseCase,
+    private val getSeriesBookmarksUseCase: GetSeriesBookmarksUseCase,
+    private val addSeriesBookmarkUseCase: AddSeriesBookmarkUseCase,
+    private val deleteSeriesBookmarkUseCase: DeleteSeriesBookmarkUseCase
 ) : ViewModel() {
 
+    val bookmarks = getSeriesBookmarksUseCase()
+        .map { it.toImmutableList() }
+        .stateIn(
+            scope = viewModelScope,
+            initialValue = persistentListOf(),
+            started = SharingStarted.WhileSubscribed(5_000)
+        )
     val uiState: RestartableStateFlow<SeriesDetailUiState> = flowOf(series)
         .flatMapLatest {
             when (series) {
@@ -73,5 +93,37 @@ class SeriesDetailViewModel(
             seriesType = SeriesType.entries.first { it.name == series },
             displayState = SeriesDetailDisplayState.Contents(isUpcoming = Date.isTodayAfter(seriesDetail.openDate), series = contents)
         )
+    }
+
+    fun onAction(action: SeriesDetailAction) {
+        when (action) {
+            is SeriesDetailAction.AddBookmark -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    val seriesEntity = with(action) {
+                        SeriesBookmark(
+                            id = series.id,
+                            title = series.title,
+                            imageUrl = series.posterUrl,
+                            seriesType = seriesType
+                        )
+                    }
+                    addSeriesBookmarkUseCase(seriesEntity)
+                }
+            }
+
+            is SeriesDetailAction.DeleteBookmark -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    val seriesEntity = with(action) {
+                        SeriesBookmark(
+                            id = series.id,
+                            title = series.title,
+                            imageUrl = series.posterUrl,
+                            seriesType = seriesType
+                        )
+                    }
+                    deleteSeriesBookmarkUseCase(seriesEntity)
+                }
+            }
+        }
     }
 }

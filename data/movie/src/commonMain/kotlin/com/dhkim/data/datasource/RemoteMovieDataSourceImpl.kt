@@ -99,7 +99,7 @@ class RemoteMovieDataSourceImpl(
                 url {
                     path("/3/movie/$id/credits")
                 }
-                parameter("language", language)
+                parameter("language", language.code)
             }
             val movieCreditsDto = response.body<MovieCreditsDto>()
             val actors = movieCreditsDto.cast.map { it.name }.distinctBy { it }
