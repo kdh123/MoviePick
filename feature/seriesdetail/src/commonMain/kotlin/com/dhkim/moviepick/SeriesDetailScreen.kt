@@ -3,24 +3,29 @@ package com.dhkim.moviepick
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -30,13 +35,21 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -65,8 +78,7 @@ fun SeriesDetailScreen(
     navigateToVideo: (String) -> Unit,
     onBack: () -> Unit
 ) {
-    val listState = rememberLazyListState()
-    val showTabBar by remember { derivedStateOf { listState.firstVisibleItemIndex >= 3 } }
+    var showTabBar by remember { mutableStateOf(false) }
     val seriesInformation = (uiState.displayState as? SeriesDetailDisplayState.Contents)
         ?.series
         ?.firstOrNull { it.group == Group.Information } as? SeriesDetailItem.Information
@@ -105,48 +117,61 @@ fun SeriesDetailScreen(
             is SeriesDetailDisplayState.Contents -> {
                 val pages = if (uiState.displayState.isUpcoming) listOf("비디오") else listOf("리뷰", "비디오")
                 val pagerState = rememberPagerState(initialPage = 0, pageCount = { pages.size })
-                Box(
-                    modifier = Modifier
-                        .padding(top = paddingValues.calculateTopPadding())
-                        .fillMaxWidth()
-                ) {
-                    LazyColumn(
-                        state = listState,
+                val scrollState = rememberScrollState()
+                var informationHeight by remember { mutableStateOf(0) }
+
+                LaunchedEffect(Unit) {
+                    snapshotFlow { scrollState.value }
+                        .collect {
+                            showTabBar = it >= informationHeight
+                        }
+                }
+
+                BoxWithConstraints {
+                    val screenHeight = maxHeight
+                    Column(
                         modifier = Modifier
+                            .fillMaxSize()
+                            .padding(top = paddingValues.calculateTopPadding())
+                            .verticalScroll(state = scrollState)
                     ) {
-                        items(items = uiState.displayState.series, key = { it.group }) {
-                            when (it) {
-                                is SeriesDetailItem.AppBar -> {}
-                                is SeriesDetailItem.SeriesDetailPoster -> {
-                                    Poster(imageUrl = it.imageUrl)
+                        Column(
+                            modifier = Modifier
+                                .onGloballyPositioned {
+                                    informationHeight = it.size.height
                                 }
-
-                                is SeriesDetailItem.Information -> {
-                                    when (it.seriesType) {
-                                        SeriesType.MOVIE -> MovieInformation(movie = it.series as MovieDetail)
-                                        SeriesType.TV -> TvInformation(it.series as TvDetail)
+                        ) {
+                            uiState.displayState.series.forEach {
+                                when (it) {
+                                    is SeriesDetailItem.AppBar -> Unit
+                                    is SeriesDetailItem.SeriesDetailPoster -> {
+                                        Poster(imageUrl = it.imageUrl)
                                     }
-                                }
 
-                                is SeriesDetailItem.ContentTab -> {
-                                    val reviews = it.reviews.collectAsLazyPagingItems()
-                                    ContentTab(
-                                        pagerState = pagerState,
-                                        pages = pages.toImmutableList(),
-                                        videos = it.videos,
-                                        reviews = reviews,
-                                        showTabBar = showTabBar,
-                                        navigateToVideo = navigateToVideo
-                                    )
+                                    is SeriesDetailItem.Information -> {
+                                        when (it.seriesType) {
+                                            SeriesType.MOVIE -> MovieInformation(movie = it.series as MovieDetail)
+                                            SeriesType.TV -> TvInformation(it.series as TvDetail)
+                                        }
+                                    }
+
+                                    else -> Unit
                                 }
                             }
                         }
-                    }
-                    if (showTabBar) {
-                        TabBar(
+
+                        val contentTabItem = uiState.displayState.series.find { it is SeriesDetailItem.ContentTab } as SeriesDetailItem.ContentTab
+                        val reviews = contentTabItem.reviews.collectAsLazyPagingItems()
+                        ContentTab(
                             pagerState = pagerState,
+                            scrollState = scrollState,
                             pages = pages.toImmutableList(),
+                            videos = contentTabItem.videos,
+                            reviews = reviews,
+                            navigateToVideo = navigateToVideo,
                             modifier = Modifier
+                                .height(screenHeight)
+                                .padding(top = paddingValues.calculateTopPadding())
                         )
                     }
                 }
@@ -163,23 +188,41 @@ fun SeriesDetailScreen(
 @Composable
 fun ContentTab(
     pagerState: PagerState,
+    scrollState: ScrollState,
     pages: ImmutableList<String>,
     videos: ImmutableList<VideoItem>,
     reviews: LazyPagingItems<Review>,
-    showTabBar: Boolean,
-    navigateToVideo: (String) -> Unit
+    navigateToVideo: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
     ) {
         TabBar(pagerState, pages)
-        HorizontalPager(state = pagerState) {
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier
+                .fillMaxHeight()
+                .nestedScroll(remember {
+                    object : NestedScrollConnection {
+                        override fun onPreScroll(
+                            available: Offset,
+                            source: NestedScrollSource
+                        ): Offset {
+                            return if (available.y > 0) Offset.Zero else Offset(
+                                x = 0f,
+                                y = -scrollState.dispatchRawDelta(-available.y)
+                            )
+                        }
+                    }
+                })
+        ) {
             if (pages.size == 1) {
-                VideoList(videos, showTabBar, navigateToVideo)
+                VideoList(videos, navigateToVideo)
             } else {
                 when (it) {
-                    0 -> ReviewList(reviews, showTabBar)
-                    1 -> VideoList(videos, showTabBar, navigateToVideo)
+                    0 -> ReviewList(reviews)
+                    1 -> VideoList(videos, navigateToVideo)
                 }
             }
         }
@@ -224,15 +267,7 @@ fun TabBar(
 }
 
 @Composable
-fun ReviewList(
-    reviews: LazyPagingItems<Review>,
-    showTabBar: Boolean,
-) {
-    val listState = rememberLazyListState()
-    val isTopAt by remember {
-        derivedStateOf { listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0 }
-    }
-
+fun ReviewList(reviews: LazyPagingItems<Review>) {
     if (reviews.itemCount <= 0) {
         Text(
             text = "리뷰가 존재하지 않습니다.",
@@ -247,8 +282,6 @@ fun ReviewList(
     }
 
     LazyColumn(
-        state = listState,
-        userScrollEnabled = listState.isScrollInProgress || !isTopAt || showTabBar,
         modifier = Modifier
             .fillMaxWidth()
             .height(900.dp)
@@ -291,14 +324,8 @@ fun ReviewList(
 @Composable
 fun VideoList(
     videos: ImmutableList<VideoItem>,
-    showTabBar: Boolean,
     navigateToVideo: (String) -> Unit,
 ) {
-    val listState = rememberLazyListState()
-    val isTopAt by remember {
-        derivedStateOf { listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0 }
-    }
-
     if (videos.isEmpty()) {
         Text(
             text = "동영상이 존재하지 않습니다.",
@@ -313,8 +340,6 @@ fun VideoList(
     }
 
     LazyColumn(
-        state = listState,
-        userScrollEnabled = listState.isScrollInProgress || !isTopAt || showTabBar,
         contentPadding = PaddingValues(10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier
