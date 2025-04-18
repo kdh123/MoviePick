@@ -1,6 +1,7 @@
 package com.dhkim.core.testing.series
 
 import com.dhkim.common.SeriesBookmark
+import com.dhkim.common.SeriesType
 import com.dhkim.data.series.datasource.LocalSeriesDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +14,8 @@ class FakeLocalSeriesDataSource : LocalSeriesDataSource {
                 SeriesBookmark(
                     id = "nowPlayingId$it",
                     title = "title$it",
-                    imageUrl = "imageUrl$it"
+                    imageUrl = "imageUrl$it",
+                    seriesType = SeriesType.MOVIE
                 )
             )
         }

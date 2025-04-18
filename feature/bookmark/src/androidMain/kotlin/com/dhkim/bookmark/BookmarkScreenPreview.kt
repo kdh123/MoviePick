@@ -10,6 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.dhkim.common.SeriesBookmark
+import com.dhkim.common.SeriesType
 import com.dhkim.core.designsystem.MoviePickTheme
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -24,7 +25,10 @@ fun BookmarkScreenDarkPreview(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            BookmarkScreen(uiState = uiState)
+            BookmarkScreen(
+                uiState = uiState,
+                navigateToDetail = { _, _ -> }
+            )
         }
     }
 }
@@ -39,7 +43,10 @@ fun BookmarkScreenPreview(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            BookmarkScreen(uiState = uiState)
+            BookmarkScreen(
+                uiState = uiState,
+                navigateToDetail = { _, _ -> }
+            )
         }
     }
 }
@@ -47,12 +54,17 @@ fun BookmarkScreenPreview(
 class BookmarkPreviewProvider : PreviewParameterProvider<BookmarkUiState> {
 
     private val bookmarks = mutableListOf<SeriesBookmark>().apply {
-        repeat(10) {
+        repeat(20) {
             add(
                 SeriesBookmark(
                     id = "id$it",
-                    title = "title$it",
-                    imageUrl = "imageUrl$it"
+                    title = if (it == 4) {
+                        "titletitletitletitletitletitletitletitletitletitle$it"
+                    } else {
+                        "title$it"
+                    },
+                    imageUrl = "imageUrl$it",
+                    seriesType = SeriesType.MOVIE
                 )
             )
         }

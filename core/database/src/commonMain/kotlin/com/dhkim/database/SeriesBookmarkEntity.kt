@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 data class SeriesBookmarkEntity(
     @PrimaryKey val id: String,
     val title: String,
-    val imageUrl: String
+    val imageUrl: String,
+    val seriesType: String
 )

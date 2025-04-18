@@ -231,9 +231,9 @@ private fun ContentsScreen(
                                     isBookmarked = isBookmarked,
                                     onBookmarkClick = {
                                         if (isBookmarked) {
-                                            onAction(HomeAction.DeleteBookmark(it))
+                                            onAction(HomeAction.DeleteBookmark(it, SeriesType.MOVIE))
                                         } else {
-                                            onAction(HomeAction.AddBookmark(it))
+                                            onAction(HomeAction.AddBookmark(it, SeriesType.MOVIE))
                                         }
                                     },
                                     navigateToVideo = navigateToVideo

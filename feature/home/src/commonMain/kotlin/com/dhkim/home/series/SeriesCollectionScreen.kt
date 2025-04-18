@@ -98,7 +98,6 @@ fun SeriesCollectionContent(
             ) { index ->
                 val item = series[index]
                 if (item != null) {
-                    logging().info { item.imageUrl }
                     ContentItem(
                         series = item,
                         onClick = {

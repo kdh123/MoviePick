@@ -8,7 +8,7 @@ import com.dhkim.database.dao.SeriesBookmarkDao
 
 @Database(
     entities = [SeriesBookmarkEntity::class],
-    version = 1
+    version = 2
 )
 @ConstructedBy(SeriesDatabaseConstructor::class)
 abstract class SeriesDatabase: RoomDatabase() {

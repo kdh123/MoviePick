@@ -81,7 +81,7 @@ fun RecommendationSeriesScope.RecommendationButtons(
             ) {
                 Icon(
                     painter = if (isBookmarked) {
-                        painterResource(Resources.Icon.Search)
+                        painterResource(Resources.Icon.Done)
                     } else {
                         painterResource(Resources.Icon.Add)
                     },

@@ -109,11 +109,12 @@ class HomeViewModel(
         when (action) {
             is HomeAction.AddBookmark -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    val seriesEntity = with(action.series) {
+                    val seriesEntity = with(action) {
                         SeriesBookmark(
-                            id = id,
-                            title = title,
-                            imageUrl = imageUrl
+                            id = series.id,
+                            title = series.title,
+                            imageUrl = series.imageUrl,
+                            seriesType = seriesType
                         )
                     }
                     addSeriesBookmarkUseCase(seriesEntity)
@@ -122,11 +123,12 @@ class HomeViewModel(
 
             is HomeAction.DeleteBookmark -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    val seriesEntity = with(action.series) {
+                    val seriesEntity = with(action) {
                         SeriesBookmark(
-                            id = id,
-                            title = title,
-                            imageUrl = imageUrl
+                            id = series.id,
+                            title = series.title,
+                            imageUrl = series.imageUrl,
+                            seriesType = seriesType
                         )
                     }
                     deleteSeriesBookmarkUseCase(seriesEntity)

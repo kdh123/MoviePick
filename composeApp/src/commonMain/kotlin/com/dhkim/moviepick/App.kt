@@ -102,7 +102,7 @@ fun App() {
                         navigateToDetail = appState::navigateToSeriesDetail,
                     )
                     video()
-                    bookmark()
+                    bookmark(navigateToDetail = appState::navigateToSeriesDetail)
                 }
             }
         }

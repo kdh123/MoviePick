@@ -2,6 +2,7 @@ package com.dhkim.core.ui
 
 import moviepick.core.ui.generated.resources.Res
 import moviepick.core.ui.generated.resources.ic_add
+import moviepick.core.ui.generated.resources.ic_done
 import moviepick.core.ui.generated.resources.ic_drop_down
 import moviepick.core.ui.generated.resources.ic_play
 import moviepick.core.ui.generated.resources.ic_search
@@ -16,5 +17,6 @@ object Resources {
         val Add = Res.drawable.ic_add
         val Search = Res.drawable.ic_search
         val DropDown = Res.drawable.ic_drop_down
+        val Done = Res.drawable.ic_done
     }
 }
