@@ -178,7 +178,7 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
             if (movie != null) {
                 val movieDetail = MovieDetail(
                     id = movie.id,
-                    images = listOf(movie.imageUrl),
+                    images = listOf(movie.imageUrl ?: ""),
                     title = movie.title,
                     adult = movie.adult,
                     overview = movie.overview,

@@ -61,7 +61,6 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
 
-            implementation(libs.bundles.ktor)
             implementation(libs.coil)
 
             api(libs.koin.core)
@@ -77,7 +76,6 @@ kotlin {
             implementation(libs.assertk)
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.uiTest)
-            implementation(projects.domain.movie)
         }
     }
 }
