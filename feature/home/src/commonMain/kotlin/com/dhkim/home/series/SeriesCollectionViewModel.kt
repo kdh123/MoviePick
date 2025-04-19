@@ -44,13 +44,16 @@ class SeriesCollectionViewModel(
         getTvWithCategoryUseCase(language = Language.Korea, genre = genre, region = region)
     }.map { pagingData ->
         pagingData.map { it as com.dhkim.common.Series }
-    }.catch { }
-        .cachedIn(viewModelScope)
+    }.catch {
+        throw Exception("정보를 불러올 수 없습니다.")
+    }.cachedIn(viewModelScope)
         .map {
             it.toUiState()
+        }.catch {
+            emit(SeriesCollectionUiState(displayState = SeriesCollectionDisplayState.Error(message = it.message ?: "정보를 불러올 수 없습니다.")))
         }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.WhileSubscribed(5_000),
             initialValue = SeriesCollectionUiState()
         )
 

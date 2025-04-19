@@ -49,7 +49,7 @@ class UpcomingViewModel(
         val featuredSeries = (upcomingSeries + topRatedMovies + topRatedTvs).toImmutableList()
         UpcomingUiState(displayState = UpcomingDisplayState.Contents(featuredSeries))
     }.catch {
-        emit(UpcomingUiState(displayState = UpcomingDisplayState.Error(errorCode = "300", message = it.message ?: "")))
+        emit(UpcomingUiState(displayState = UpcomingDisplayState.Error(errorCode = "", message = it.message ?: "정보를 불러올 수 없습니다.")))
     }.onetimeStateIn(
         scope = viewModelScope,
         initialValue = UpcomingUiState()

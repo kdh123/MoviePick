@@ -2,9 +2,14 @@ package com.dhkim.home.tv
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.cash.paging.PagingData
+import app.cash.paging.cachedIn
+import app.cash.paging.filter
+import app.cash.paging.map
 import com.dhkim.common.Genre
 import com.dhkim.common.Language
 import com.dhkim.common.Region
+import com.dhkim.common.Series
 import com.dhkim.common.SeriesBookmark
 import com.dhkim.common.handle
 import com.dhkim.common.onetimeStateIn
@@ -19,18 +24,20 @@ import com.dhkim.domain.tv.usecase.TODAY_RECOMMENDATION_TV_KEY
 import com.dhkim.domain.tv.usecase.TOP_RATED_TVS_KEY
 import com.dhkim.home.Group
 import com.dhkim.home.SeriesItem
-import com.dhkim.home.toContent
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
@@ -148,5 +155,27 @@ class TvViewModel(
                 }
             }
         }
+    }
+
+    private suspend fun Flow<PagingData<out Series>>.toContent(group: Group, scope: CoroutineScope): SeriesItem.Content {
+        return SeriesItem.Content(
+            group = group,
+            series = map { pagingData ->
+                val seenIds = mutableSetOf<String>()
+                pagingData.filter { seenIds.add(it.id) }.map { it as Series }
+            }
+                .catch { error ->
+                    _uiState.update {
+                        TvUiState(
+                            displayState = TvDisplayState.Error(
+                                errorCode = "",
+                                message = error.message ?: "TV 정보를 불러올 수 없습니다."
+                            )
+                        )
+                    }
+                }
+                .cachedIn(scope)
+                .stateIn(scope)
+        )
     }
 }

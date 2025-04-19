@@ -237,5 +237,6 @@ class HomeUiStatePreviewProvider : PreviewParameterProvider<HomeUiState> {
         get() = sequenceOf(
             HomeUiState(displayState = HomeDisplayState.Loading),
             HomeUiState(displayState = HomeDisplayState.Contents(series)),
+            HomeUiState(displayState = HomeDisplayState.Error("300", message = "영화 정보를 불러올 수 없습니다."))
         )
 }

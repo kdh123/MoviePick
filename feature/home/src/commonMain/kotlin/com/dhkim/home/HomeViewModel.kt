@@ -2,8 +2,13 @@ package com.dhkim.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.cash.paging.PagingData
+import app.cash.paging.cachedIn
+import app.cash.paging.filter
+import app.cash.paging.map
 import com.dhkim.common.Language
 import com.dhkim.common.Region
+import com.dhkim.common.Series
 import com.dhkim.common.SeriesBookmark
 import com.dhkim.common.SeriesType
 import com.dhkim.common.onetimeStateIn
@@ -22,6 +27,7 @@ import com.dhkim.domain.tv.usecase.TOP_RATED_TVS_KEY
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,7 +36,10 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -46,6 +55,7 @@ class HomeViewModel(
     private val deleteSeriesBookmarkUseCase: DeleteSeriesBookmarkUseCase
 ) : ViewModel() {
 
+    private val errorFlow = MutableStateFlow<Throwable?>(null)
     val bookmarks: StateFlow<ImmutableList<SeriesBookmark>> = getSeriesBookmarksUseCase()
         .map { it.toImmutableList() }
         .stateIn(
@@ -54,13 +64,17 @@ class HomeViewModel(
             initialValue = persistentListOf()
         )
 
-    val uiState: StateFlow<HomeUiState> = getSeriesItems().map { seriesItems ->
-        listOf(
-            SeriesItem.AppBar(group = Group.HomeGroup.APP_BAR),
-            SeriesItem.Category(group = Group.HomeGroup.CATEGORY),
-        ) + seriesItems
-    }.map {
-        HomeUiState(displayState = HomeDisplayState.Contents(series = it.toImmutableList()))
+    val uiState: StateFlow<HomeUiState> = combine(
+        errorFlow,
+        getSeriesItems()
+    ) { error, seriesItems ->
+        if (error == null) {
+            HomeUiState(displayState = HomeDisplayState.Contents(series = seriesItems.toImmutableList()))
+        } else {
+            throw Exception(error.message ?: "정보를 불러올 수 없습니다.")
+        }
+    }.catch {
+        emit(HomeUiState(displayState = HomeDisplayState.Error(errorCode = "", message = it.message ?: "정보를 불러올 수 없습니다.")))
     }.onetimeStateIn(
         scope = viewModelScope,
         initialValue = HomeUiState()
@@ -100,7 +114,10 @@ class HomeViewModel(
                 }
             }
 
-            val seriesItems = jobs.awaitAll().map { SeriesItem.Content(it.group, it.series) }
+            val seriesItems = listOf(
+                SeriesItem.AppBar(group = Group.HomeGroup.APP_BAR),
+                SeriesItem.Category(group = Group.HomeGroup.CATEGORY),
+            ) + jobs.awaitAll().map { SeriesItem.Content(it.group, it.series) }
             emit(seriesItems)
         }
     }
@@ -135,6 +152,22 @@ class HomeViewModel(
                 }
             }
         }
+    }
+
+    private suspend fun Flow<PagingData<out Series>>.toContent(group: Group, scope: CoroutineScope): SeriesItem.Content {
+        return SeriesItem.Content(
+            group = group,
+            series = map { pagingData ->
+                val seenIds = mutableSetOf<String>()
+                pagingData.filter { seenIds.add(it.id) }.map { it as Series }
+            }
+                .catch {
+                    errorFlow.value = it
+                    emit(PagingData.empty())
+                }
+                .cachedIn(scope)
+                .stateIn(scope)
+        )
     }
 }
 

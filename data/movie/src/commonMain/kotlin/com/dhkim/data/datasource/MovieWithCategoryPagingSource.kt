@@ -47,13 +47,13 @@ internal class MovieWithCategoryPagingSource(
                 } else null
             )
         } catch (e: UnresolvedAddressException) {
-            return LoadResult.Error(AppException(errorCode = 1001, message = "네트워크 연결 상태가 좋지 않습니다."))
+            return LoadResult.Error(AppException(errorCode = 1001, message = "영화 정보를 불러올 수 없습니다."))
         } catch (e: SerializationException) {
-            return LoadResult.Error(AppException(errorCode = 1002, message = "네트워크 연결 상태가 좋지 않습니다."))
+            return LoadResult.Error(AppException(errorCode = 1002, message = "영화 정보를 불러올 수 없습니다."))
         } catch (e: IOException) {
             return LoadResult.Error(AppException(errorCode = 1003, message = "네트워크 연결 상태가 좋지 않습니다."))
         } catch (e: Exception) {
-            return LoadResult.Error(AppException(errorCode = -1, message = "${e.message}"))
+            return LoadResult.Error(AppException(errorCode = -1, message = "영화 정보를 불러올 수 없습니다."))
         }
     }
 

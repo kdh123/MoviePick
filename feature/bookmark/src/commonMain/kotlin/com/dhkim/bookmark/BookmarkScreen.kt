@@ -67,7 +67,14 @@ fun BookmarkScreen(
             }
 
             is BookmarkDisplayState.Error -> {
-
+                Text(
+                    text = uiState.displayState.message,
+                    style = MoviePickTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp)
+                )
             }
         }
     }

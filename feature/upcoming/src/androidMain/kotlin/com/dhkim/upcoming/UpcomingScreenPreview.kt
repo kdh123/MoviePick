@@ -57,8 +57,7 @@ class UpcomingUiStatePreviewParameter : PreviewParameterProvider<UpcomingUiState
     override val values: Sequence<UpcomingUiState>
         get() = sequenceOf(
             UpcomingUiState(displayState = UpcomingDisplayState.Loading),
-            UpcomingUiState(
-                displayState = UpcomingDisplayState.Contents(series = upcomingMovies)
-            )
+            UpcomingUiState(displayState = UpcomingDisplayState.Contents(series = upcomingMovies)),
+            UpcomingUiState(displayState = UpcomingDisplayState.Error(errorCode = "404", message = "정보를 불러올 수 없습니다."))
         )
 }
