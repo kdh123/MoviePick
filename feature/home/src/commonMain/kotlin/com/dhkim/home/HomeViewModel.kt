@@ -12,6 +12,7 @@ import com.dhkim.common.Series
 import com.dhkim.common.SeriesBookmark
 import com.dhkim.common.SeriesType
 import com.dhkim.common.onetimeStateIn
+import com.dhkim.common.toAppException
 import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import com.dhkim.domain.movie.usecase.NOW_PLAYING_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TODAY_RECOMMENDATION_MOVIE_KEY
@@ -71,10 +72,11 @@ class HomeViewModel(
         if (error == null) {
             HomeUiState(displayState = HomeDisplayState.Contents(series = seriesItems.toImmutableList()))
         } else {
-            throw Exception(error.message ?: "정보를 불러올 수 없습니다.")
+            throw error
         }
     }.catch {
-        emit(HomeUiState(displayState = HomeDisplayState.Error(errorCode = "", message = it.message ?: "정보를 불러올 수 없습니다.")))
+        val e = it.toAppException()
+        emit(HomeUiState(displayState = HomeDisplayState.Error(code = e.code, message = e.message ?: "정보를 불러올 수 없습니다.")))
     }.onetimeStateIn(
         scope = viewModelScope,
         initialValue = HomeUiState()
@@ -160,12 +162,10 @@ class HomeViewModel(
             series = map { pagingData ->
                 val seenIds = mutableSetOf<String>()
                 pagingData.filter { seenIds.add(it.id) }.map { it as Series }
-            }
-                .catch {
-                    errorFlow.value = it
-                    emit(PagingData.empty())
-                }
-                .cachedIn(scope)
+            }.catch {
+                errorFlow.value = it.toAppException()
+                emit(PagingData.empty())
+            }.cachedIn(scope)
                 .stateIn(scope)
         )
     }

@@ -13,6 +13,7 @@ import com.dhkim.common.Series
 import com.dhkim.common.SeriesBookmark
 import com.dhkim.common.handle
 import com.dhkim.common.onetimeStateIn
+import com.dhkim.common.toAppException
 import com.dhkim.domain.series.usecase.AddSeriesBookmarkUseCase
 import com.dhkim.domain.series.usecase.DeleteSeriesBookmarkUseCase
 import com.dhkim.domain.series.usecase.GetSeriesBookmarksUseCase
@@ -163,18 +164,17 @@ class TvViewModel(
             series = map { pagingData ->
                 val seenIds = mutableSetOf<String>()
                 pagingData.filter { seenIds.add(it.id) }.map { it as Series }
-            }
-                .catch { error ->
-                    _uiState.update {
-                        TvUiState(
-                            displayState = TvDisplayState.Error(
-                                errorCode = "",
-                                message = error.message ?: "TV 정보를 불러올 수 없습니다."
-                            )
+            }.catch {
+                val error = it.toAppException()
+                _uiState.update {
+                    TvUiState(
+                        displayState = TvDisplayState.Error(
+                            code = error.code,
+                            message = error.message ?: "TV 정보를 불러올 수 없습니다."
                         )
-                    }
+                    )
                 }
-                .cachedIn(scope)
+            }.cachedIn(scope)
                 .stateIn(scope)
         )
     }

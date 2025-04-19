@@ -220,7 +220,7 @@ fun SeriesDetailScreen(
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(10.dp)
+                        .padding(top = paddingValues.calculateTopPadding())
                 )
             }
         }

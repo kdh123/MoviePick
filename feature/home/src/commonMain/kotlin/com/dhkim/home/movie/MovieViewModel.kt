@@ -13,6 +13,7 @@ import com.dhkim.common.Series
 import com.dhkim.common.SeriesBookmark
 import com.dhkim.common.handle
 import com.dhkim.common.onetimeStateIn
+import com.dhkim.common.toAppException
 import com.dhkim.domain.movie.usecase.GetMovieWithCategoryUseCase
 import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import com.dhkim.domain.series.usecase.AddSeriesBookmarkUseCase
@@ -75,6 +76,9 @@ class MovieViewModel(
     private val _uiState = MutableStateFlow(MovieUiState())
     val uiState: StateFlow<MovieUiState> = _uiState.onStart {
         init()
+    }.catch {
+        val error = it.toAppException()
+        _uiState.update { MovieUiState(displayState = MovieDisplayState.Error(code = error.code, message = error.message ?: "영화 정보를 불러올 수 없습니다.")) }
     }.onetimeStateIn(
         scope = viewModelScope,
         initialValue = MovieUiState(displayState = MovieDisplayState.Contents(appBarItems))
@@ -108,7 +112,15 @@ class MovieViewModel(
                 _uiState.update { MovieUiState(displayState = MovieDisplayState.Contents(series.toImmutableList())) }
             },
             error = {
-                _uiState.update { MovieUiState(displayState = MovieDisplayState.Error(errorCode = "", message = "정보를 불러올 수 없습니다.")) }
+                val error = it.toAppException()
+                _uiState.update {
+                    MovieUiState(
+                        displayState = MovieDisplayState.Error(
+                            code = error.code,
+                            message = error.message ?: "영화 정보를 불러올 수 없습니다."
+                        )
+                    )
+                }
             }
         )
     }
@@ -151,18 +163,17 @@ class MovieViewModel(
             series = map { pagingData ->
                 val seenIds = mutableSetOf<String>()
                 pagingData.filter { seenIds.add(it.id) }.map { it as Series }
-            }
-                .catch { error ->
-                    _uiState.update {
-                        MovieUiState(
-                            displayState = MovieDisplayState.Error(
-                                errorCode = "",
-                                message = error.message ?: "영화 정보를 불러올 수 없습니다."
-                            )
+            }.catch {
+                val error = it.toAppException()
+                _uiState.update {
+                    MovieUiState(
+                        displayState = MovieDisplayState.Error(
+                            code = error.code,
+                            message = error.message ?: "영화 정보를 불러올 수 없습니다."
                         )
-                    }
+                    )
                 }
-                .cachedIn(scope)
+            }.cachedIn(scope)
                 .stateIn(scope)
         )
     }

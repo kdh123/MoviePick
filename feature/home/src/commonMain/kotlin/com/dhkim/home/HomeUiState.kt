@@ -11,6 +11,6 @@ data class HomeUiState(
 @Stable
 sealed interface HomeDisplayState {
     data object Loading : HomeDisplayState
-    data class Error(val errorCode: String, val message: String) : HomeDisplayState
+    data class Error(val code: Int, val message: String) : HomeDisplayState
     data class Contents(val series: ImmutableList<SeriesItem>) : HomeDisplayState
 }

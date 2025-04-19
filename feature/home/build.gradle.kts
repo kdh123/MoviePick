@@ -45,7 +45,6 @@ kotlin {
             implementation(projects.core.common)
             implementation(projects.core.ui)
             implementation(projects.core.designsystem)
-            implementation(projects.core.network)
             implementation(projects.domain.movie)
             implementation(projects.domain.tv)
             implementation(projects.domain.series)

@@ -10,6 +10,7 @@ import com.dhkim.common.SeriesBookmark
 import com.dhkim.common.SeriesDetail
 import com.dhkim.common.SeriesType
 import com.dhkim.common.onetimeStateIn
+import com.dhkim.common.toAppException
 import com.dhkim.domain.movie.usecase.GetMovieDetailUseCase
 import com.dhkim.domain.series.usecase.AddSeriesBookmarkUseCase
 import com.dhkim.domain.series.usecase.DeleteSeriesBookmarkUseCase
@@ -56,10 +57,11 @@ class SeriesDetailViewModel(
         }.flatMapLatest { series ->
             flowOf(createUiState(series))
         }.catch {
+            val e = it.toAppException()
             emit(
                 SeriesDetailUiState(
-                    seriesType = SeriesType.entries.first { series == it.name },
-                    displayState = SeriesDetailDisplayState.Error(errorCode = "", message = "${it.message}")
+                    seriesType = SeriesType.entries.first { type -> series == type.name },
+                    displayState = SeriesDetailDisplayState.Error(errorCode = e.code, message = e.message ?: "정보를 불러올 수 없습니다.")
                 )
             )
         }

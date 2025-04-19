@@ -9,6 +9,7 @@ import com.dhkim.common.Genre
 import com.dhkim.common.Language
 import com.dhkim.common.Region
 import com.dhkim.common.SeriesType
+import com.dhkim.common.toAppException
 import com.dhkim.domain.movie.usecase.GetMovieWithCategoryUseCase
 import com.dhkim.domain.tv.usecase.GetTvWithCategoryUseCase
 import kotlinx.coroutines.flow.SharingStarted
@@ -45,12 +46,13 @@ class SeriesCollectionViewModel(
     }.map { pagingData ->
         pagingData.map { it as com.dhkim.common.Series }
     }.catch {
-        throw Exception("정보를 불러올 수 없습니다.")
+        throw it
     }.cachedIn(viewModelScope)
         .map {
             it.toUiState()
         }.catch {
-            emit(SeriesCollectionUiState(displayState = SeriesCollectionDisplayState.Error(message = it.message ?: "정보를 불러올 수 없습니다.")))
+            val error = it.toAppException()
+            emit(SeriesCollectionUiState(displayState = SeriesCollectionDisplayState.Error(message = error.message ?: "정보를 불러올 수 없습니다.")))
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),

@@ -9,6 +9,6 @@ data class TvUiState(
 
 sealed interface TvDisplayState {
     data object Loading : TvDisplayState
-    data class Error(val errorCode: String, val message: String) : TvDisplayState
+    data class Error(val code: Int, val message: String) : TvDisplayState
     data class Contents(val tvs: ImmutableList<SeriesItem>) : TvDisplayState
 }

@@ -2,8 +2,8 @@ package com.dhkim.data.tv.datasource
 
 import app.cash.paging.PagingSource
 import app.cash.paging.PagingState
+import com.dhkim.common.AppException
 import com.dhkim.common.Language
-import com.dhkim.core.network.AppException
 import com.dhkim.data.tv.model.TvDto
 import com.dhkim.domain.tv.model.Tv
 import io.ktor.client.HttpClient
@@ -41,13 +41,13 @@ internal class TopRatedTvPagingSource(
                 } else null
             )
         } catch (e: UnresolvedAddressException) {
-            return LoadResult.Error(AppException(errorCode = 1001, message = "TV 프로그램 정보를 불러올 수 없습니다."))
+            return LoadResult.Error(AppException(code = 1001, message = "TV 프로그램 정보를 불러올 수 없습니다."))
         } catch (e: SerializationException) {
-            return LoadResult.Error(AppException(errorCode = 1002, message = "TV 프로그램 정보를 불러올 수 없습니다."))
+            return LoadResult.Error(AppException(code = 1002, message = "TV 프로그램 정보를 불러올 수 없습니다."))
         } catch (e: IOException) {
-            return LoadResult.Error(AppException(errorCode = 1003, message = "네트워크 연결 상태가 좋지 않습니다."))
+            return LoadResult.Error(AppException(code = 1003, message = "네트워크 연결 상태가 좋지 않습니다."))
         } catch (e: Exception) {
-            return LoadResult.Error(AppException(errorCode = -1, message = "TV 프로그램 정보를 불러올 수 없습니다."))
+            return LoadResult.Error(AppException(code = -1, message = "TV 프로그램 정보를 불러올 수 없습니다."))
         }
     }
 
