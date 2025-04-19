@@ -42,28 +42,13 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodel)
-            implementation(libs.androidx.lifecycle.runtime.compose)
-
-            implementation(libs.kotlinx.collections.immutable)
-            implementation(compose.components.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodel)
-            implementation(libs.androidx.lifecycle.runtime.compose)
-
-            implementation(libs.bundles.ktor)
-            implementation(libs.coil)
-
-            api(libs.koin.core)
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
-            implementation(libs.navigation.compose)
             implementation(libs.bundles.paging)
+            implementation(compose.components.uiToolingPreview)
+            implementation(libs.coil)
         }
 
         commonTest.dependencies {
-            implementation(libs.koin.test)
             implementation(libs.bundles.paging)
-            implementation(projects.core.testing)
             implementation(libs.kotlin.test)
             implementation(kotlin("test-annotations-common"))
             implementation(libs.assertk)
