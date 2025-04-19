@@ -178,7 +178,7 @@ fun ContentsScreen(
 
                     Group.MovieGroup.ACTION_MOVIE,
                     Group.MovieGroup.MUSIC_MOVIE,
-                    Group.MovieGroup.DRAMA_MOVIE,
+                    Group.MovieGroup.FANTASY_MOVIE,
                     Group.MovieGroup.THRILLER_MOVIE,
                     Group.MovieGroup.ADVENTURE_MOVIE,
                     Group.MovieGroup.ANIMATION_MOVIE -> {

@@ -12,7 +12,7 @@ enum class Genre(val id: Int, val genre: String) {
     FANTASY(14, "판타지"),
     HISTORY(36, "역사"),
     HORROR(27, "공포"),
-    MUSIC(10402, "뮤지컬"),
+    MUSIC(10402, "음악"),
     MYSTERY(9648, "미스테리"),
     ROMANCE(10749, "로맨스"),
     SCIENCE_FICTION(878, "SF"),

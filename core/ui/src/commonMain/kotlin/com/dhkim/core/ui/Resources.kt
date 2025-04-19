@@ -6,6 +6,7 @@ import moviepick.core.ui.generated.resources.ic_done
 import moviepick.core.ui.generated.resources.ic_drop_down
 import moviepick.core.ui.generated.resources.ic_favorite
 import moviepick.core.ui.generated.resources.ic_play
+import moviepick.core.ui.generated.resources.ic_profile
 import moviepick.core.ui.generated.resources.ic_search
 import moviepick.core.ui.generated.resources.movie_sample_poster
 import moviepick.core.ui.generated.resources.tv_sample_poster
@@ -20,5 +21,6 @@ object Resources {
         val DropDown = Res.drawable.ic_drop_down
         val Done = Res.drawable.ic_done
         val Favorite = Res.drawable.ic_favorite
+        val Profile = Res.drawable.ic_profile
     }
 }

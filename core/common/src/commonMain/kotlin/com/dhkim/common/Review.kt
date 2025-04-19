@@ -5,5 +5,6 @@ data class Review(
     val author: String,
     val createdAt: String,
     val content: String,
-    val rating: Double
+    val rating: Double,
+    val profilePath: String? = null,
 )

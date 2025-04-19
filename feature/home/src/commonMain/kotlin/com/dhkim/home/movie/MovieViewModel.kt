@@ -46,7 +46,7 @@ class MovieViewModel(
     private val shouldShowMovieGenres = listOf(
         Genre.ACTION,
         Genre.MUSIC,
-        Genre.DRAMA,
+        Genre.FANTASY,
         Genre.THRILLER,
         Genre.ADVENTURE,
         Genre.ANIMATION

@@ -96,7 +96,7 @@ class SeriesDetailItemPreviewParameter : PreviewParameterProvider<SeriesDetailUi
         id = "movieId",
         title = "title",
         adult = false,
-        overview = "눈보라가 몰아치던 겨울 밤 태어난 백설공주. 온정이 넘치던 왕국에서 모두의 사랑을 받았지만, 강력한 어둠의 힘으로 왕국을 빼앗은 여왕의 위협에 숲으로 도망친다. 마법의 숲에서 간신히 살아남은 백설공주는 신비로운 일곱 광부들과 만나게 되며 새로운 세상을 마주하고, 마음속 깊이 숨겨진 용기와 선한 힘을 깨닫게 된다. 그리고 마침내, 빼앗긴 왕국을 되찾기 위해 여왕과 맞서 싸우기로 결심하는데…",
+        overview = "눈보라가 몰아치던 겨울 밤 태어난 백설공주. 온정이 넘치던 왕국에서 모두의 사랑을 받았지만, 강력한 어둠의 힘으로 왕국을 빼앗은 여왕의 위협에 숲으로 도망친다.",
         images = listOf("imageUrl1", "imageUrl2", "imageUrl3"),
         genre = listOf(Genre.ANIMATION.genre),
         openDate = "2025-03-08",

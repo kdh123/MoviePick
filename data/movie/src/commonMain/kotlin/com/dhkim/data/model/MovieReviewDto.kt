@@ -1,6 +1,7 @@
 package com.dhkim.data.model
 
 import com.dhkim.common.Review
+import com.dhkim.common.toDate
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -32,9 +33,14 @@ data class ReviewResult(
         return Review(
             id = id,
             author = author,
-            createdAt = createdAt,
+            createdAt = createdAt.toDate(),
             content = content,
             rating = authorDetails.rating ?: 0.0,
+            profilePath = if (authorDetails.avatarPath != null) {
+                "https://image.tmdb.org/t/p/original${authorDetails.avatarPath}"
+            } else {
+                null
+            }
         )
     }
 }

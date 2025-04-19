@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -24,6 +25,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -188,7 +190,6 @@ fun SeriesDetailScreen(
                             navigateToVideo = navigateToVideo,
                             modifier = Modifier
                                 .height(screenHeight)
-                                //.padding(top = paddingValues.calculateTopPadding())
                         )
                     }
                 }
@@ -219,7 +220,6 @@ fun ContentTab(
         HorizontalPager(
             state = pagerState,
             modifier = Modifier
-
                 .fillMaxHeight()
                 .nestedScroll(remember {
                     object : NestedScrollConnection {
@@ -319,7 +319,28 @@ fun ReviewList(reviews: LazyPagingItems<Review>) {
                 ) {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
+                        if (item.profilePath != null) {
+                            CoilImage(
+                                imageModel = { item.profilePath },
+                                failure = { painterResource(Resources.Icon.Profile) },
+                                previewPlaceholder = painterResource(Resources.Icon.Profile),
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .size(36.dp)
+                            )
+                        } else {
+                            Icon(
+                                painter = painterResource(Resources.Icon.Profile),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onBackground,
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .size(36.dp)
+                            )
+                        }
+
                         Text(
                             text = item.author,
                             style = MoviePickTheme.typography.bodyMediumBold
@@ -331,7 +352,9 @@ fun ReviewList(reviews: LazyPagingItems<Review>) {
                     }
                     Text(
                         text = item.content,
-                        style = MoviePickTheme.typography.bodyMedium
+                        style = MoviePickTheme.typography.bodyMedium,
+                        modifier = Modifier
+                            .padding(start = 42.dp)
                     )
                 }
             }
