@@ -112,6 +112,7 @@ class SeriesDetailItemPreviewParameter : PreviewParameterProvider<SeriesDetailUi
 
     override val values: Sequence<SeriesDetailUiState>
         get() = sequenceOf(
+            SeriesDetailUiState(seriesType = SeriesType.MOVIE, displayState = SeriesDetailDisplayState.Loading),
             SeriesDetailUiState(
                 seriesType = SeriesType.MOVIE,
                 displayState = SeriesDetailDisplayState.Contents(

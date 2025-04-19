@@ -14,8 +14,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -79,7 +81,14 @@ fun TvScreen(
     ) {
         when (uiState.displayState) {
             TvDisplayState.Loading -> {
-
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .padding(top = 10.dp)
+                        .width(64.dp)
+                        .align(Alignment.Center),
+                    color = Color.White.copy(alpha = 0.6f),
+                    trackColor = MaterialTheme.colorScheme.primary,
+                )
             }
 
             is TvDisplayState.Contents -> {

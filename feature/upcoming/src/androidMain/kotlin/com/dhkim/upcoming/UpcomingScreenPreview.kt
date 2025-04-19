@@ -56,10 +56,9 @@ class UpcomingUiStatePreviewParameter : PreviewParameterProvider<UpcomingUiState
 
     override val values: Sequence<UpcomingUiState>
         get() = sequenceOf(
+            UpcomingUiState(displayState = UpcomingDisplayState.Loading),
             UpcomingUiState(
-                displayState = UpcomingDisplayState.Contents(
-                    series = upcomingMovies
-                )
+                displayState = UpcomingDisplayState.Contents(series = upcomingMovies)
             )
         )
 }

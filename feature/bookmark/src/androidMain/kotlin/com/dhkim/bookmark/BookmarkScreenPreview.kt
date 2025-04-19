@@ -73,6 +73,9 @@ class BookmarkPreviewProvider : PreviewParameterProvider<BookmarkUiState> {
     override val values: Sequence<BookmarkUiState>
         get() = sequenceOf(
             BookmarkUiState(
+                displayState = BookmarkDisplayState.Loading
+            ),
+            BookmarkUiState(
                 displayState = BookmarkDisplayState.Contents(bookmarks.toImmutableList())
             ),
             BookmarkUiState(

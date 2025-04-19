@@ -30,6 +30,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -48,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -119,7 +121,22 @@ fun SeriesDetailScreen(
         }
     ) { paddingValues ->
         when (uiState.displayState) {
-            SeriesDetailDisplayState.Loading -> {}
+            SeriesDetailDisplayState.Loading -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    CircularProgressIndicator(
+                        color = Color.White.copy(alpha = 0.6f),
+                        trackColor = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .padding(top = paddingValues.calculateTopPadding())
+                            .width(64.dp)
+                            .align(Alignment.Center),
+                    )
+                }
+            }
+
             is SeriesDetailDisplayState.Contents -> {
                 val pages = if (uiState.displayState.isUpcoming) listOf("비디오") else listOf("리뷰", "비디오")
                 val pagerState = rememberPagerState(initialPage = 0, pageCount = { pages.size })
@@ -164,6 +181,7 @@ fun SeriesDetailScreen(
                                                     onAction = onAction
                                                 )
                                             }
+
                                             SeriesType.TV -> {
                                                 TvInformation(
                                                     tv = it.series as TvDetail,

@@ -23,6 +23,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
@@ -58,20 +59,32 @@ fun UpcomingScreen(
     uiState: UpcomingUiState,
     navigateToDetail: (seriesType: SeriesType, seriesId: String) -> Unit
 ) {
-    when (uiState.displayState) {
-        UpcomingDisplayState.Loading -> {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        when (uiState.displayState) {
+            UpcomingDisplayState.Loading -> {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .padding(top = 10.dp)
+                        .width(64.dp)
+                        .align(Alignment.Center),
+                    color = Color.White.copy(alpha = 0.6f),
+                    trackColor = MaterialTheme.colorScheme.primary,
+                )
+            }
 
-        }
+            is UpcomingDisplayState.Contents -> {
+                ContentScreen(
+                    series = uiState.displayState.series,
+                    navigateToDetail = navigateToDetail
+                )
+            }
 
-        is UpcomingDisplayState.Contents -> {
-            ContentScreen(
-                series = uiState.displayState.series,
-                navigateToDetail = navigateToDetail
-            )
-        }
+            is UpcomingDisplayState.Error -> {
 
-        is UpcomingDisplayState.Error -> {
-
+            }
         }
     }
 }

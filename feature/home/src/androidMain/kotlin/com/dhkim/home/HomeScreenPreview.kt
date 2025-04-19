@@ -11,6 +11,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import app.cash.paging.PagingData
 import com.dhkim.common.Genre
 import com.dhkim.common.Region
@@ -156,18 +158,9 @@ val topRatedTvsItem = SeriesItem.Content(Group.HomeGroup.ON_THE_AIR_TV, topRated
 @ExperimentalSharedTransitionApi
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun HomeScreenDarkPreview() {
-    val series = persistentListOf(
-        SeriesItem.AppBar(group = Group.HomeGroup.APP_BAR),
-        SeriesItem.Category(group = Group.HomeGroup.CATEGORY),
-        todayRecommendationSeriesItem,
-        todayTop10SeriesItem,
-        topRatedMoviesItem,
-        nowPlayingMoviesItem,
-        airingTodayTvsItem,
-        onTheAirTvsItem,
-        topRatedTvsItem
-    )
+private fun HomeScreenDarkPreview(
+    @PreviewParameter(HomeUiStatePreviewProvider::class) uiState: HomeUiState
+) {
 
     MoviePickTheme {
         Surface(
@@ -177,7 +170,7 @@ private fun HomeScreenDarkPreview() {
             SharedTransitionLayout {
                 AnimatedContent(targetState = false, label = "") {
                     HomeScreen(
-                        uiState = HomeUiState(displayState = HomeDisplayState.Contents(series)),
+                        uiState = uiState,
                         bookmarks = persistentListOf(),
                         sharedTransitionScope = this@SharedTransitionLayout,
                         animatedVisibilityScope = this@AnimatedContent,
@@ -198,19 +191,9 @@ private fun HomeScreenDarkPreview() {
 @ExperimentalSharedTransitionApi
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-private fun HomeScreenPreview() {
-    val series = persistentListOf(
-        SeriesItem.AppBar(group = Group.HomeGroup.APP_BAR),
-        SeriesItem.Category(group = Group.HomeGroup.CATEGORY),
-        todayRecommendationSeriesItem,
-        todayTop10SeriesItem,
-        topRatedMoviesItem,
-        nowPlayingMoviesItem,
-        airingTodayTvsItem,
-        onTheAirTvsItem,
-        topRatedTvsItem
-    )
-
+private fun HomeScreenPreview(
+    @PreviewParameter(HomeUiStatePreviewProvider::class) uiState: HomeUiState
+) {
     MoviePickTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -219,7 +202,7 @@ private fun HomeScreenPreview() {
             SharedTransitionLayout {
                 AnimatedContent(targetState = false, label = "") {
                     HomeScreen(
-                        uiState = HomeUiState(displayState = HomeDisplayState.Contents(series)),
+                        uiState = uiState,
                         bookmarks = persistentListOf(),
                         sharedTransitionScope = this@SharedTransitionLayout,
                         animatedVisibilityScope = this@AnimatedContent,
@@ -234,4 +217,25 @@ private fun HomeScreenPreview() {
             }
         }
     }
+}
+
+class HomeUiStatePreviewProvider : PreviewParameterProvider<HomeUiState> {
+
+    private val series = persistentListOf(
+        SeriesItem.AppBar(group = Group.HomeGroup.APP_BAR),
+        SeriesItem.Category(group = Group.HomeGroup.CATEGORY),
+        todayRecommendationSeriesItem,
+        todayTop10SeriesItem,
+        topRatedMoviesItem,
+        nowPlayingMoviesItem,
+        airingTodayTvsItem,
+        onTheAirTvsItem,
+        topRatedTvsItem
+    )
+
+    override val values: Sequence<HomeUiState>
+        get() = sequenceOf(
+            HomeUiState(displayState = HomeDisplayState.Loading),
+            HomeUiState(displayState = HomeDisplayState.Contents(series)),
+        )
 }

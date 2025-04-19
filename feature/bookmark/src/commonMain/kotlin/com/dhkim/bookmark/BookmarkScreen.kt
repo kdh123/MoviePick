@@ -55,9 +55,7 @@ fun BookmarkScreen(
         }
     ) { paddingValues ->
         when (uiState.displayState) {
-            BookmarkDisplayState.Loading -> {
-
-            }
+            BookmarkDisplayState.Loading -> Unit
 
             is BookmarkDisplayState.Contents -> {
                 Contents(
