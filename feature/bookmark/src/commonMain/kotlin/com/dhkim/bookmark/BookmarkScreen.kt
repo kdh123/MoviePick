@@ -134,14 +134,12 @@ fun BookmarkItem(
         CoilImage(
             modifier = Modifier
                 .clip(RoundedCornerShape(12f))
-                .width(108.dp)
                 .aspectRatio(7f / 10f)
                 .noRippleClick(onClick),
             loading = {
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(12f))
-                        .width(108.dp)
                         .aspectRatio(7f / 10f)
                         .background(brush = ShimmerBrush(targetValue = 1_300f))
                 )
