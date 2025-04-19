@@ -515,11 +515,13 @@ fun MovieInformation(
             )
         }
 
-        Text(
-            text = movie.overview,
-            style = MoviePickTheme.typography.bodyMedium,
-            lineHeight = 22.sp
-        )
+        if (movie.overview.isNotEmpty()) {
+            Text(
+                text = movie.overview,
+                style = MoviePickTheme.typography.bodyMedium,
+                lineHeight = 22.sp
+            )
+        }
 
         Column(
             modifier = Modifier
@@ -590,11 +592,13 @@ fun TvInformation(
             )
         }
 
-        Text(
-            text = tv.overview,
-            style = MoviePickTheme.typography.bodyMedium,
-            lineHeight = 22.sp
-        )
+        if (tv.overview.isNotEmpty()) {
+            Text(
+                text = tv.overview,
+                style = MoviePickTheme.typography.bodyMedium,
+                lineHeight = 22.sp
+            )
+        }
 
         Column(
             modifier = Modifier

@@ -121,7 +121,7 @@ class MovieViewModel(
                         SeriesBookmark(
                             id = series.id,
                             title = series.title,
-                            imageUrl = series.imageUrl,
+                            imageUrl = series.imageUrl ?: "",
                             seriesType = seriesType
                         )
                     }
@@ -135,7 +135,7 @@ class MovieViewModel(
                         SeriesBookmark(
                             id = series.id,
                             title = series.title,
-                            imageUrl = series.imageUrl,
+                            imageUrl = series.imageUrl ?: "",
                             seriesType = seriesType
                         )
                     }

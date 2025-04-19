@@ -6,7 +6,7 @@ import kotlinx.datetime.Clock
 
 data class Tv(
     override val id: String,
-    override val imageUrl: String,
+    override val imageUrl: String?,
     override val key: String = "${Clock.System.now().toEpochMilliseconds()}",
     override val title: String,
     override val adult: Boolean,

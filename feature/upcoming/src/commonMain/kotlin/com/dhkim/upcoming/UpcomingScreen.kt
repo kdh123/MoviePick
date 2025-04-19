@@ -237,12 +237,14 @@ fun ContentScreen(
                             modifier = Modifier
                                 .padding(horizontal = 10.dp)
                         )
-                        Text(
-                            text = it.series.overview,
-                            fontSize = 12.sp,
-                            modifier = Modifier
-                                .padding(horizontal = 10.dp)
-                        )
+                        if (it.series.overview.isNotEmpty()) {
+                            Text(
+                                text = it.series.overview,
+                                fontSize = 12.sp,
+                                modifier = Modifier
+                                    .padding(horizontal = 10.dp)
+                            )
+                        }
                     }
                 }
             }

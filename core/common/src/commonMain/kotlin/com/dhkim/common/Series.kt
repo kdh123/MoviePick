@@ -3,7 +3,7 @@ package com.dhkim.common
 interface Series {
 
     val id: String
-    val imageUrl: String
+    val imageUrl: String?
     val key: String
     val title: String
     val adult: Boolean

@@ -24,8 +24,8 @@ class GetUpcomingMoviesUseCaseImpl(
             movieRepository.getUpcomingMovies(page = 1, language, region),
             movieRepository.getUpcomingMovies(page = 2, language, region),
         ) { movies1, movies2 ->
-            val m1 = movies1.filter { now < Instant.parse("${it.releasedDate}T12:00:00Z") }
-            val m2 = movies2.filter { now < Instant.parse("${it.releasedDate}T12:00:00Z") }
+            val m1 = movies1.filter { now < Instant.parse("${it.releasedDate}T12:00:00Z") && !it.imageUrl.isNullOrEmpty() }
+            val m2 = movies2.filter { now < Instant.parse("${it.releasedDate}T12:00:00Z") && !it.imageUrl.isNullOrEmpty() }
 
             m1 + m2
         }

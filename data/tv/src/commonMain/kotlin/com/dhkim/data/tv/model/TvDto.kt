@@ -53,7 +53,11 @@ internal data class TvResult(
                 Region.Unknown.country
             },
             overview = overview,
-            imageUrl = "https://image.tmdb.org/t/p/original${posterPath}",
+            imageUrl = if (posterPath != null) {
+                "https://image.tmdb.org/t/p/original${posterPath}"
+            } else {
+                null
+            },
             genre = genreIds.map { Genre.seriesGenre(it)?.genre ?: Genre.Unknown.genre },
             voteAverage = voteAverage,
             firstAirDate = firstAirDate,
