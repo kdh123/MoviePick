@@ -590,6 +590,14 @@ fun TvInformation(
                     .align(Alignment.CenterVertically)
                     .padding(bottom = 2.dp)
             )
+            Text(
+                text = "에피소드 ${tv.numberOfEpisodes}개",
+                style = MoviePickTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .padding(bottom = 2.dp)
+            )
         }
 
         if (tv.overview.isNotEmpty()) {
@@ -605,11 +613,10 @@ fun TvInformation(
                 .width(42.dp)
                 .clickable {
                     if (isBookmarked) {
-                        onAction(SeriesDetailAction.DeleteBookmark(series = tv, seriesType = SeriesType.MOVIE))
+                        onAction(SeriesDetailAction.DeleteBookmark(series = tv, seriesType = SeriesType.TV))
                     } else {
-                        onAction(SeriesDetailAction.AddBookmark(series = tv, seriesType = SeriesType.MOVIE))
+                        onAction(SeriesDetailAction.AddBookmark(series = tv, seriesType = SeriesType.TV))
                     }
-
                 }
         ) {
             Icon(
