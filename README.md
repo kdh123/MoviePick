@@ -18,7 +18,7 @@ MOVIK(Movie Pick)은 영화 및 TV 프로그램 정보를 제공하는 애플리
 - AGP : 8.5.2
 
 ## Including in your project
-- MOVIC은 [TMDB](https://www.themoviedb.org/) API를 사용합니다. TMDB로부터 발급 받은 Access Token을 다음 파일에 추가하여 Root 경로에 위치시켜 주세요.
+- MOVIK은 [TMDB](https://www.themoviedb.org/) API를 사용합니다. TMDB로부터 발급 받은 Access Token을 다음 파일에 추가하여 Root 경로에 위치시켜 주세요.
 - local.properties
 ```kotlin
 TMDB_API_KEY="YOUR_ACCESS_TOKEN"
