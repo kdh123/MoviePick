@@ -2,14 +2,17 @@
 MOVIK(Movie Pick)은 영화 및 TV 프로그램 정보를 제공하는 애플리케이션입니다. Kotlin Multiplatform(KMP)을 기반으로 하며 Android, iOS, Desktop 플랫폼을 지원합니다.
 
 ## Android & iOS
-<img width="225" alt="image" src="https://github.com/user-attachments/assets/05fa281c-ccfe-4fea-8cf0-560b68c9eb15">   <img width="225" alt="image" src="https://github.com/user-attachments/assets/06c8b0be-e3d2-406c-af7b-93b2b7b4dc64">  <img width="225" alt="image" src="https://github.com/user-attachments/assets/87fd2ee3-db6d-4cfc-a43e-eba3bf3c26d4">  <img width="225" alt="image" src="https://github.com/user-attachments/assets/cbdfc3ea-44f4-4085-896f-4b2a45aa13f4">
+<img width="225" height="460" alt="image" src="https://github.com/user-attachments/assets/05fa281c-ccfe-4fea-8cf0-560b68c9eb15">   <img width="225" height="460" alt="image" src="https://github.com/user-attachments/assets/b36f7bff-b8e9-4b9b-ae00-6a29c8dfc01d">  <img width="225" height="460" alt="image" src="https://github.com/user-attachments/assets/1eae2457-b999-4934-8442-f24179cac3cd">  <img width="225" height="460" alt="image" src="https://github.com/user-attachments/assets/06c8b0be-e3d2-406c-af7b-93b2b7b4dc64">  <img width="225" height="460" alt="image" src="https://github.com/user-attachments/assets/12f300cf-45bb-4df2-afab-9e7d88f9544d">  <img width="225" height="460" alt="image" src="https://github.com/user-attachments/assets/cbdfc3ea-44f4-4085-896f-4b2a45aa13f4"> 
+
+
 
 ## Desktop
-<img width="400" alt="image" src="https://github.com/user-attachments/assets/54f0093d-f177-41b5-89d9-1ae8056a26e7">  <img width="400" alt="image" src="https://github.com/user-attachments/assets/12dd4458-3d42-4e06-b5cf-bce8606e90f6">
-<img width="400" alt="image" src="https://github.com/user-attachments/assets/ecc9e3ae-1b10-4aa7-8895-0b0d5bb20583">  <img width="400" alt="image" src="https://github.com/user-attachments/assets/f79ce70f-b42d-4c4c-b09a-80eb0a104d92">
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/edf46877-4699-4d3d-b7f0-b57e756f2d29">  <img width="400" alt="image" src="https://github.com/user-attachments/assets/39457554-2fca-4265-b5fd-f9ab4ec86cc2">  <img width="400" alt="image" src="https://github.com/user-attachments/assets/571130d1-d7bb-4327-ba4b-99948300c796">
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/96bd8b4a-579a-4531-a4f3-73c3029b48c4">  <img width="400" alt="image" src="https://github.com/user-attachments/assets/a01b0e7f-fd83-4e48-b479-2187611384e1">  <img width="400" alt="image" src="https://github.com/user-attachments/assets/0d3d8470-cd06-4020-a72c-fb2de6399700"> 
+
 
 ## Non-dark Mode & Dark Mode
-<img width="225" alt="image" src="https://github.com/user-attachments/assets/2b300996-0ae7-4797-850b-c731662ccbdc">   <img width="225" alt="image" src="https://github.com/user-attachments/assets/1a00d9f7-acbe-40ba-ade9-0171f3f693ab">
+<img width="225" height="460" alt="image" src="https://github.com/user-attachments/assets/2b300996-0ae7-4797-850b-c731662ccbdc">   <img width="225" height="460" alt="image" src="https://github.com/user-attachments/assets/1a00d9f7-acbe-40ba-ade9-0171f3f693ab">
 
 ## Development environment
 - IDE : Android Studio Koala | 2024.1.1 Patch 1 & Xcode 16.2
@@ -43,6 +46,8 @@ TMDB_API_KEY="YOUR_ACCESS_TOKEN"
   - [Landscapist](https://github.com/skydoves/landscapist)
 - Media Player
   - [ComposeMultiplatformMediaPlayer](https://github.com/Chaintech-Network/ComposeMultiplatformMediaPlayer)
+- Pallete
+  - [Kmppalette](https://github.com/jordond/kmpalette)
 - Test
   - Junit
  
@@ -52,4 +57,3 @@ TMDB_API_KEY="YOUR_ACCESS_TOKEN"
 - Mutli Module
 
 ![Untitled](https://github.com/user-attachments/assets/a3e3bf58-d401-447c-bfcb-be283ce76612)
-
