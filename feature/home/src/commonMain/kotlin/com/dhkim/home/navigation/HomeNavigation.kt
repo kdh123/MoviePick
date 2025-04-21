@@ -4,7 +4,6 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.dhkim.common.SeriesType
@@ -17,8 +16,6 @@ import org.koin.core.annotation.KoinExperimentalAPI
 
 const val HOME_ROUTE = "home_route"
 
-fun NavController.navigateToHome() = navigate(HOME_ROUTE)
-
 @ExperimentalSharedTransitionApi
 @ExperimentalCoroutinesApi
 @KoinExperimentalAPI
@@ -28,7 +25,6 @@ fun NavGraphBuilder.home(
     navigateToVideo: (String) -> Unit,
     navigateToMovie: () -> Unit,
     navigateToTv: () -> Unit,
-    onBack: () -> Unit
 ) {
     composable(HOME_ROUTE) {
         val viewModel = koinViewModel<HomeViewModel>()
@@ -45,7 +41,6 @@ fun NavGraphBuilder.home(
             navigateToVideo = navigateToVideo,
             navigateToMovie = navigateToMovie,
             navigateToTv = navigateToTv,
-            onBack = onBack
         )
     }
 }

@@ -179,7 +179,6 @@ private fun HomeScreenDarkPreview(
                         navigateToVideo = {},
                         navigateToMovie = {},
                         navigateToTv = {},
-                        onBack = {}
                     )
                 }
             }
@@ -211,7 +210,6 @@ private fun HomeScreenPreview(
                         navigateToVideo = {},
                         navigateToMovie = {},
                         navigateToTv = {},
-                        onBack = {}
                     )
                 }
             }

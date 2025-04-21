@@ -4,7 +4,6 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.dhkim.common.SeriesType
@@ -14,8 +13,6 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
 const val TV_ROUTE = "tv_route"
-
-fun NavController.navigateToTv() = navigate(TV_ROUTE)
 
 @ExperimentalSharedTransitionApi
 @KoinExperimentalAPI
