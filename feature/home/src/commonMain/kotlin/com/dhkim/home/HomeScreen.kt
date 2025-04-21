@@ -63,7 +63,6 @@ fun HomeScreen(
     navigateToVideo: (String) -> Unit,
     navigateToMovie: () -> Unit,
     navigateToTv: () -> Unit,
-    onBack: () -> Unit
 ) {
     val homeState = (uiState.displayState as? HomeDisplayState.Contents)?.series?.let { homeMovieItems ->
         rememberHomeState(seriesItems = homeMovieItems, mainRecommendationSeriesGroup = Group.HomeGroup.MAIN_RECOMMENDATION_MOVIE)
@@ -141,7 +140,6 @@ private fun HomeCategoryChips(
     chipColor: Color,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    onAction: (HomeAction) -> Unit,
     navigateToMovie: () -> Unit,
     navigateToTv: () -> Unit
 ) {
@@ -225,7 +223,6 @@ private fun ContentsScreen(
                             chipColor = homeState.onBackgroundColor,
                             sharedTransitionScope = sharedTransitionScope,
                             animatedVisibilityScope = animatedVisibilityScope,
-                            onAction = onAction,
                             navigateToMovie = navigateToMovie,
                             navigateToTv = navigateToTv
                         )
@@ -313,7 +310,6 @@ private fun ContentsScreen(
                         chipColor = onBackgroundColor,
                         sharedTransitionScope = sharedTransitionScope,
                         animatedVisibilityScope = animatedVisibilityScope,
-                        onAction = {},
                         navigateToMovie = navigateToMovie,
                         navigateToTv = navigateToTv
                     )

@@ -22,10 +22,7 @@ import io.ktor.http.Url
 import kotlinx.collections.immutable.ImmutableList
 
 @Stable
-class HomeState(
-    private val series: ImmutableList<SeriesItem>,
-    val listState: LazyListState
-) {
+class HomeState(val listState: LazyListState) {
     var showCategoryModal by mutableStateOf(false)
 
     val showCategory by derivedStateOf {
@@ -62,14 +59,10 @@ class HomeState(
 
     companion object {
 
-        fun Saver(
-            series: ImmutableList<SeriesItem>,
-            listState: LazyListState,
-        ): Saver<HomeState, *> = Saver(
+        fun Saver(listState: LazyListState, ): Saver<HomeState, *> = Saver(
             save = { listOf(it.showCategory) },
             restore = {
                 HomeState(
-                    series = series,
                     listState = listState,
                 )
             }
@@ -83,8 +76,8 @@ fun rememberHomeState(
     mainRecommendationSeriesGroup: Group,
     listState: LazyListState = rememberLazyListState()
 ): HomeState {
-    val state = rememberSaveable(seriesItems, listState, saver = HomeState.Saver(series = seriesItems, listState = listState)) {
-        HomeState(series = seriesItems, listState = listState)
+    val state = rememberSaveable(seriesItems, listState, saver = HomeState.Saver(listState = listState)) {
+        HomeState(listState = listState)
     }
     val recommendationSeries = seriesItems
         .firstOrNull { it.group == mainRecommendationSeriesGroup }

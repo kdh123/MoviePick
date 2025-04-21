@@ -74,7 +74,6 @@ fun App() {
                         navigateToVideo = appState::navigateToVideo,
                         navigateToMovie = appState::navigateToMovie,
                         navigateToTv = appState::navigateToTv,
-                        onBack = appState::onBack
                     )
                     movie(
                         sharedTransitionScope = this@SharedTransitionLayout,
