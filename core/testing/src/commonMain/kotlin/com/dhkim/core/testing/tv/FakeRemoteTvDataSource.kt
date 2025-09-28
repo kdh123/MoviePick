@@ -223,4 +223,10 @@ class FakeRemoteTvDataSource : RemoteTvDataSource {
             emit(tvImages)
         }
     }
+
+    override fun searchTv(query: String, language: Language): Flow<List<Tv>> {
+        return flow {
+            emit(topRatedTvs.filter { it.title.contains(query) })
+        }
+    }
 }

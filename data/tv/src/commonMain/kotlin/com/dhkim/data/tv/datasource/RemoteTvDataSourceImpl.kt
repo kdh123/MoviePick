@@ -11,6 +11,7 @@ import com.dhkim.common.SeriesImage
 import com.dhkim.common.Video
 import com.dhkim.data.tv.model.TvCreditsDto
 import com.dhkim.data.tv.model.TvDetailDto
+import com.dhkim.data.tv.model.TvDto
 import com.dhkim.data.tv.model.TvImageDto
 import com.dhkim.data.tv.model.TvVideoDto
 import com.dhkim.domain.tv.model.Tv
@@ -107,6 +108,20 @@ class RemoteTvDataSourceImpl(
             val tvImageDto = response.body<TvImageDto>()
             val images = tvImageDto.toSeriesImages()
             emit(images)
+        }
+    }
+
+    override fun searchTv(query: String, language: Language): Flow<List<Tv>> {
+        return flow {
+            val response = apiService.get {
+                url {
+                    path("/3/search/tv")
+                }
+                parameter("query", query)
+                parameter("language", language.code)
+            }
+            val results = response.body<TvDto>().results
+            emit(results.map { it.toTv() })
         }
     }
 }

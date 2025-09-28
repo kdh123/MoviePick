@@ -57,6 +57,7 @@ import com.dhkim.domain.tv.usecase.GetTvWithCategoryUseCase
 import com.dhkim.domain.tv.usecase.GetTvWithCategoryUseCaseImpl
 import com.dhkim.domain.tv.usecase.GetTvsUseCase
 import com.dhkim.domain.tv.usecase.ON_THE_AIR_TVS_KEY
+import com.dhkim.domain.tv.usecase.SearchTvUseCase
 import com.dhkim.domain.tv.usecase.TODAY_RECOMMENDATION_TV_KEY
 import com.dhkim.domain.tv.usecase.TOP_RATED_TVS_KEY
 import org.koin.core.module.dsl.factoryOf
@@ -97,6 +98,7 @@ val coreModule = module {
     factoryOf(::GetTvVideoUseCaseImpl).bind<GetTvVideoUseCase>()
     factoryOf(::GetTvDetailUseCaseImpl).bind<GetTvDetailUseCase>()
     factoryOf(::GetTvReviewsUseCaseImpl).bind<GetTvReviewsUseCase>()
+    factory<SearchTvUseCase> { SearchTvUseCase(get()) }
 
     factory {
         mapOf(
