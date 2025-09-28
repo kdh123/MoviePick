@@ -22,6 +22,7 @@ import com.dhkim.domain.movie.usecase.GetTopRatedMoviesUseCase
 import com.dhkim.domain.movie.usecase.GetUpcomingMoviesUseCase
 import com.dhkim.domain.movie.usecase.GetUpcomingMoviesUseCaseImpl
 import com.dhkim.domain.movie.usecase.NOW_PLAYING_MOVIES_KEY
+import com.dhkim.domain.movie.usecase.SearchMovieUseCase
 import com.dhkim.domain.movie.usecase.TODAY_RECOMMENDATION_MOVIE_KEY
 import com.dhkim.domain.movie.usecase.TODAY_TOP_10_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TOP_RATED_MOVIES_KEY
@@ -46,6 +47,7 @@ val movieModule = module {
     factoryOf(::GetMovieDetailUseCaseImpl).bind<GetMovieDetailUseCase>()
     factoryOf(::GetMovieReviewsUseCaseImpl).bind<GetMovieReviewsUseCase>()
     factoryOf(::GetUpcomingMoviesUseCaseImpl).bind<GetUpcomingMoviesUseCase>()
+    factory<SearchMovieUseCase> { SearchMovieUseCase(get()) }
     factory {
         mapOf(
             TODAY_RECOMMENDATION_MOVIE_KEY to get<GetMoviesUseCase>(named(TODAY_RECOMMENDATION_MOVIE_KEY)),

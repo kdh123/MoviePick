@@ -54,6 +54,10 @@ class MovieRepositoryImpl(
         return remoteMovieDataSource.getMovieImages(id)
     }
 
+    override fun searchMovies(query: String, language: Language): Flow<List<Movie>> {
+        return remoteMovieDataSource.searchMovies(query, language)
+    }
+
     override fun getMovieWithCategory(language: Language, genre: Genre?, region: Region?): Flow<PagingData<Movie>> {
         return remoteMovieDataSource.getMovieWithCategory(language, genre, region)
     }

@@ -218,4 +218,10 @@ class FakeRemoteMovieDataSource : RemoteMovieDataSource {
             emit(movieImages)
         }
     }
+
+    override fun searchMovies(query: String, language: Language): Flow<List<Movie>> {
+        return flow {
+            emit(topRatedMovies.filter { it.title.contains(query) })
+        }
+    }
 }
