@@ -15,7 +15,7 @@ MOVIK(Movie Pick)은 영화 및 TV 프로그램 정보를 제공하는 애플리
 <img width="225" height="460" alt="image" src="https://github.com/user-attachments/assets/2b300996-0ae7-4797-850b-c731662ccbdc">   <img width="225" height="460" alt="image" src="https://github.com/user-attachments/assets/1a00d9f7-acbe-40ba-ade9-0171f3f693ab">
 
 ## Development environment
-- IDE : Android Studio Koala | 2024.1.1 Patch 1 & Xcode 16.2
+- IDE : Android Studio Narwhal 3 Feature Drop & Xcode 16.2
 - JDK : 17
 - Kotlin : 2.1.0
 - AGP : 8.5.2
