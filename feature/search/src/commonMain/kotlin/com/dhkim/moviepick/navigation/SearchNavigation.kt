@@ -18,8 +18,7 @@ const val SEARCH_ROUTE = "search_route"
 
 @OptIn(KoinExperimentalAPI::class)
 fun NavGraphBuilder.search(
-    navigateToSeriesDetail: (seriesType: SeriesType, seriesId: String) -> Unit,
-    onBack: () -> Unit
+    navigateToSeriesDetail: (seriesType: SeriesType, seriesId: String) -> Unit
 ) {
     composable(SEARCH_ROUTE) {
         val viewModel = koinViewModel<SearchViewModel>()
@@ -47,7 +46,6 @@ fun NavGraphBuilder.search(
             movieListState = movieListState,
             tvListState = tvListState,
             onAction = viewModel::onAction,
-            onBack = onBack,
             navigateToSeriesDetail = navigateToSeriesDetail
         )
     }
