@@ -47,30 +47,12 @@ fun SearchScreen(
     tvListState: LazyListState,
     onAction: (SearchAction) -> Unit,
     navigateToSeriesDetail: (seriesType: SeriesType, seriesId: String) -> Unit,
-    onBack: () -> Unit
 ) {
-    Scaffold(
-        topBar = {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier
-                        .noRippleClick(onBack)
-                )
-            }
-        }
-    ) { paddingValues ->
+    Scaffold { paddingValues ->
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
-                .padding(paddingValues)
+                .padding(bottom = paddingValues.calculateBottomPadding())
                 .fillMaxWidth()
         ) {
             QueryInputField(
@@ -111,7 +93,7 @@ fun QueryInputField(
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp)
+            .padding(top = 10.dp, start = 10.dp, end = 10.dp)
     )
 }
 

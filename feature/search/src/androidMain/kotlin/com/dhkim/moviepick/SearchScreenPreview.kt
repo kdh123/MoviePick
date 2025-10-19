@@ -31,7 +31,6 @@ fun SearchScreenPreview(@PreviewParameter(SearchScreenPreviewParameter::class) u
                 tvListState = rememberLazyListState(),
                 onAction = {},
                 navigateToSeriesDetail = { _, _ -> },
-                onBack = {}
             )
         }
     }

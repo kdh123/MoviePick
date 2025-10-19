@@ -104,8 +104,7 @@ fun App() {
                     video()
                     bookmark(navigateToDetail = appState::navigateToSeriesDetail)
                     search(
-                        navigateToSeriesDetail = appState::navigateToSeriesDetail,
-                        onBack = appState::onBack
+                        navigateToSeriesDetail = appState::navigateToSeriesDetail
                     )
                 }
             }
