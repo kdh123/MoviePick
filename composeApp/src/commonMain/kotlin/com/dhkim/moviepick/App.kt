@@ -31,6 +31,7 @@ import com.dhkim.home.navigation.home
 import com.dhkim.home.navigation.movie
 import com.dhkim.home.navigation.seriesCollection
 import com.dhkim.home.navigation.tv
+import com.dhkim.moviepick.navigation.search
 import com.dhkim.moviepick.navigation.seriesDetail
 import com.dhkim.upcoming.navigation.upcoming
 import com.dhkim.video.navigation.video
@@ -102,6 +103,10 @@ fun App() {
                     )
                     video()
                     bookmark(navigateToDetail = appState::navigateToSeriesDetail)
+                    search(
+                        navigateToSeriesDetail = appState::navigateToSeriesDetail,
+                        onBack = appState::onBack
+                    )
                 }
             }
         }

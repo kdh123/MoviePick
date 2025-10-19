@@ -28,30 +28,34 @@ class SearchViewModel(
 
     private val loadingFlow = MutableStateFlow(false)
     private val searchQueryFlow = MutableStateFlow("")
-    val uiState: StateFlow<SearchUiState> = combine(
-        loadingFlow,
-        searchQueryFlow.debounce(1_000)
-    ) { isLoading, query ->
-        Pair(isLoading, query)
-    }.flatMapConcat {
-        val (isLoading, query) = it
-        flow {
-            val movies = searchMovieUseCase(query).first().toImmutableList()
-            val tvs = searchTvUseCase(query).first().toImmutableList()
-            val contentState = if (movies.isEmpty() && tvs.isEmpty()) {
-                SearchContentState.Empty
-            } else {
-                SearchContentState.Content(movies, tvs)
+    val uiState: StateFlow<SearchUiState> = searchQueryFlow
+        .debounce(1_000)
+        .flatMapConcat { query ->
+            flow {
+                if (query.isEmpty()) {
+                    emit(SearchUiState(isLoading = false, query = query, contentState = SearchContentState.Idle))
+                } else {
+                    val movies = searchMovieUseCase(query).first().toImmutableList()
+                    val tvs = searchTvUseCase(query).first().toImmutableList()
+                    val contentState = if (movies.isEmpty() && tvs.isEmpty()) {
+                        SearchContentState.Empty
+                    } else {
+                        SearchContentState.Content(movies, tvs)
+                    }
+                    emit(SearchUiState(isLoading = false, query = query, contentState = contentState))
+                }
+            }.catch {
+                emit(SearchUiState(isLoading = false, query = query, contentState = SearchContentState.Error(message = "오류가 발생했습니다.")))
+            }.onCompletion {
+                loadingFlow.update { false }
             }
-            emit(SearchUiState(isLoading = isLoading, query = query, contentState = contentState))
-        }.catch {
-            emit(SearchUiState(isLoading = isLoading, query = query, contentState = SearchContentState.Error(message = "오류가 발생했습니다.")))
-        }.onCompletion { loadingFlow.update { false } }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = SearchUiState()
-    )
+        }.combine(loadingFlow) { uiState, isLoading ->
+            uiState.copy(isLoading = isLoading)
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = SearchUiState()
+        )
 
     fun onAction(action: SearchAction) {
         when (action) {

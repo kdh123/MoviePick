@@ -14,6 +14,7 @@ import com.dhkim.home.navigation.HOME_ROUTE
 import com.dhkim.home.navigation.MOVIE_ROUTE
 import com.dhkim.home.navigation.SERIES_COLLECTION_ROUTE
 import com.dhkim.home.navigation.TV_ROUTE
+import com.dhkim.moviepick.navigation.SEARCH_ROUTE
 import com.dhkim.moviepick.navigation.SERIES_DETAIL_ROUTE
 import com.dhkim.upcoming.navigation.UPCOMING_ROUTE
 import com.dhkim.video.navigation.navigateToVideo
@@ -24,8 +25,8 @@ import org.jetbrains.compose.resources.DrawableResource
 
 @Stable
 class AppState(val navController: NavHostController) {
-    val bottomNavItems = listOf(Screen.Home, Screen.Upcoming, Screen.Bookmark)
-    private val routes = listOf(HOME_ROUTE, MOVIE_ROUTE, TV_ROUTE, UPCOMING_ROUTE, BOOKMARK_ROUTE)
+    val bottomNavItems = listOf(Screen.Home, Screen.Upcoming, Screen.Search, Screen.Bookmark)
+    private val routes = listOf(HOME_ROUTE, MOVIE_ROUTE, TV_ROUTE, UPCOMING_ROUTE, SEARCH_ROUTE, BOOKMARK_ROUTE)
 
     val showBottomNavigation: Boolean
         @Composable get() {
@@ -75,6 +76,7 @@ fun rememberAppState(
 sealed class Screen(val title: String, val res: DrawableResource, val route: List<String>) {
     data object Home : Screen("홈", Res.drawable.ic_home, listOf(HOME_ROUTE, MOVIE_ROUTE, TV_ROUTE))
     data object Upcoming : Screen("NEW & HOT", Res.drawable.ic_upcoming, listOf(UPCOMING_ROUTE))
+    data object Search : Screen("검색", Resources.Icon.Search, listOf(SEARCH_ROUTE))
     data object Bookmark : Screen("찜", Resources.Icon.Favorite, listOf(BOOKMARK_ROUTE))
 }
 

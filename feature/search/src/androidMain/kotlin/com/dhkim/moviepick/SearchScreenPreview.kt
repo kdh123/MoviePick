@@ -76,6 +76,9 @@ class SearchScreenPreviewParameter: PreviewParameterProvider<SearchUiState> {
     override val values: Sequence<SearchUiState>
         get() = sequenceOf(
             uiState,
-            uiState.copy(contentState = SearchContentState.Content(movies = movies, tvs= tvs))
+            uiState.copy(contentState = SearchContentState.Content(movies = movies, tvs= tvs)),
+            uiState.copy(isLoading = true, contentState = SearchContentState.Content(movies = movies, tvs= tvs)),
+            uiState.copy(query = "Nothing", contentState = SearchContentState.Empty),
+            uiState.copy(query = "Error", contentState = SearchContentState.Error(message = "오류가 발생하였습니다."))
         )
 }
