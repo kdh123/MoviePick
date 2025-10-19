@@ -7,6 +7,8 @@ import com.dhkim.domain.tv.usecase.SearchTvUseCase
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +19,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
@@ -48,6 +51,8 @@ class SearchViewModel(
                 emit(SearchUiState(isLoading = false, query = query, contentState = SearchContentState.Error(message = "오류가 발생했습니다.")))
             }.onCompletion {
                 loadingFlow.update { false }
+                delay(300)
+                _sideEffect.send(SearchSideEffect.ScrollToFirstItem)
             }
         }.combine(loadingFlow) { uiState, isLoading ->
             uiState.copy(isLoading = isLoading)
@@ -56,6 +61,9 @@ class SearchViewModel(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = SearchUiState()
         )
+
+    private val _sideEffect = Channel<SearchSideEffect>()
+    val sideEffect = _sideEffect.receiveAsFlow()
 
     fun onAction(action: SearchAction) {
         when (action) {

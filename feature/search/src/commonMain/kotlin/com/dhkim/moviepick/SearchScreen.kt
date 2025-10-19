@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,6 +43,8 @@ import kotlinx.collections.immutable.ImmutableList
 @Composable
 fun SearchScreen(
     uiState: SearchUiState,
+    movieListState: LazyListState,
+    tvListState: LazyListState,
     onAction: (SearchAction) -> Unit,
     navigateToSeriesDetail: (seriesType: SeriesType, seriesId: String) -> Unit,
     onBack: () -> Unit
@@ -74,6 +77,8 @@ fun SearchScreen(
                 onAction = onAction
             )
             SearchResult(
+                movieListState = movieListState,
+                tvListState = tvListState,
                 isLoading = uiState.isLoading,
                 contentState = uiState.contentState,
                 navigateToSeriesDetail = navigateToSeriesDetail
@@ -112,6 +117,8 @@ fun QueryInputField(
 
 @Composable
 fun SearchResult(
+    movieListState: LazyListState,
+    tvListState: LazyListState,
     isLoading: Boolean,
     contentState: SearchContentState,
     navigateToSeriesDetail: (seriesType: SeriesType, seriesId: String) -> Unit
@@ -138,6 +145,7 @@ fun SearchResult(
                                     .padding(horizontal = 10.dp)
                             )
                             SearchSeries(
+                                listState = movieListState,
                                 series = contentState.movies,
                                 navigateToSeriesDetail = navigateToSeriesDetail
                             )
@@ -155,6 +163,7 @@ fun SearchResult(
                                     .padding(horizontal = 10.dp)
                             )
                             SearchSeries(
+                                listState = tvListState,
                                 series = contentState.tvs,
                                 navigateToSeriesDetail = navigateToSeriesDetail
                             )
@@ -201,10 +210,12 @@ fun SearchResult(
 
 @Composable
 fun SearchSeries(
+    listState: LazyListState,
     series: ImmutableList<Series>,
     navigateToSeriesDetail: (seriesType: SeriesType, seriesId: String) -> Unit,
 ) {
     LazyRow(
+        state = listState,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(horizontal = 10.dp)
     ) {

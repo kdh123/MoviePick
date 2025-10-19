@@ -2,6 +2,7 @@ package com.dhkim.moviepick
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -26,6 +27,8 @@ fun SearchScreenPreview(@PreviewParameter(SearchScreenPreviewParameter::class) u
         ) {
             SearchScreen(
                 uiState,
+                movieListState = rememberLazyListState(),
+                tvListState = rememberLazyListState(),
                 onAction = {},
                 navigateToSeriesDetail = { _, _ -> },
                 onBack = {}
