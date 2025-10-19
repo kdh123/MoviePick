@@ -22,4 +22,5 @@ interface TvRepository {
     fun getTvReviews(id: String): Flow<PagingData<Review>>
     fun getTvCastMembers(id: String, language: Language): Flow<List<String>>
     fun getTvImages(id: String): Flow<List<SeriesImage>>
+    fun searchTv(query: String, language: Language): Flow<List<Tv>>
 }

@@ -22,4 +22,5 @@ interface RemoteMovieDataSource {
     fun getMovieReviews(id: String): Flow<PagingData<Review>>
     fun getMovieActors(id: String, language: Language): Flow<List<String>>
     fun getMovieImages(id: String): Flow<List<SeriesImage>>
+    fun searchMovies(query: String, language: Language): Flow<List<Movie>>
 }

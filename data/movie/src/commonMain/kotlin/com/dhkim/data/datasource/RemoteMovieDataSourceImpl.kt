@@ -119,4 +119,18 @@ class RemoteMovieDataSourceImpl(
             emit(images)
         }
     }
+
+    override fun searchMovies(query: String, language: Language): Flow<List<Movie>> {
+        return flow {
+            val response = apiService.get {
+                url {
+                    path("/3/search/movie")
+                    parameter("query", query)
+                    parameter("language", language.code)
+                }
+            }
+            val results = response.body<MovieDto>().results
+            emit(results.map { it.toMovie() })
+        }
+    }
 }

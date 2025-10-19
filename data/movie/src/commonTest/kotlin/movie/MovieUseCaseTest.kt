@@ -11,6 +11,7 @@ import com.dhkim.core.testing.movie.FakeGetMovieWithCategoryUseCase
 import com.dhkim.core.testing.movie.FakeGetTopRatedMoviesUseCase
 import com.dhkim.core.testing.movie.FakeGetUpcomingMoviesUseCase
 import com.dhkim.core.testing.movie.FakeGetTodayRecommendationMovieUseCase
+import com.dhkim.core.testing.movie.FakeMovieRepository
 import com.dhkim.data.di.movieModule
 import com.dhkim.domain.movie.usecase.GetMovieDetailUseCase
 import com.dhkim.domain.movie.usecase.GetMovieReviewsUseCase
@@ -19,6 +20,7 @@ import com.dhkim.domain.movie.usecase.GetMovieWithCategoryUseCase
 import com.dhkim.domain.movie.usecase.GetMoviesUseCase
 import com.dhkim.domain.movie.usecase.GetUpcomingMoviesUseCase
 import com.dhkim.domain.movie.usecase.NOW_PLAYING_MOVIES_KEY
+import com.dhkim.domain.movie.usecase.SearchMovieUseCase
 import com.dhkim.domain.movie.usecase.TODAY_RECOMMENDATION_MOVIE_KEY
 import com.dhkim.domain.movie.usecase.TODAY_TOP_10_MOVIES_KEY
 import com.dhkim.domain.movie.usecase.TOP_RATED_MOVIES_KEY
@@ -188,6 +190,21 @@ class MovieUseCaseTest : KoinTest {
     @Test
     fun `영화 리뷰 가져오기_Fake - Only Android`() = runTest {
         FakeGetMovieReviewsUseCase().invoke(id = "447273").asSnapshot().forEach {
+            println(it)
+        }
+    }
+
+    @Test
+    fun `영화 검색 결과 가져오기_Real - Only Android`() = runTest {
+        val searchMovieUseCase = get<SearchMovieUseCase>()
+        searchMovieUseCase(query = "snow").first().forEach {
+            println(it)
+        }
+    }
+
+    @Test
+    fun `영화 검색 결과 가져오기_Fake - Only Android`() = runTest {
+        SearchMovieUseCase(movieRepository = FakeMovieRepository()).invoke(query = "title1").first().forEach {
             println(it)
         }
     }

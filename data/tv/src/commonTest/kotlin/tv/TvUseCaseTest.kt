@@ -11,6 +11,7 @@ import com.dhkim.core.testing.tv.FakeGetTopRatedTvsUseCase
 import com.dhkim.core.testing.tv.FakeGetTvDetailUseCase
 import com.dhkim.core.testing.tv.FakeGetTvReviewsUseCase
 import com.dhkim.core.testing.tv.FakeGetTvWithCategoryUseCase
+import com.dhkim.core.testing.tv.FakeTvRepository
 import com.dhkim.data.tv.di.tvModule
 import com.dhkim.domain.tv.usecase.AIRING_TODAY_TVS_KEY
 import com.dhkim.domain.tv.usecase.GetTvDetailUseCase
@@ -18,6 +19,7 @@ import com.dhkim.domain.tv.usecase.GetTvReviewsUseCase
 import com.dhkim.domain.tv.usecase.GetTvWithCategoryUseCase
 import com.dhkim.domain.tv.usecase.GetTvsUseCase
 import com.dhkim.domain.tv.usecase.ON_THE_AIR_TVS_KEY
+import com.dhkim.domain.tv.usecase.SearchTvUseCase
 import com.dhkim.domain.tv.usecase.TODAY_RECOMMENDATION_TV_KEY
 import com.dhkim.domain.tv.usecase.TOP_RATED_TVS_KEY
 import kotlinx.coroutines.Dispatchers
@@ -151,6 +153,21 @@ class TvUseCaseTest : KoinTest {
     @Test
     fun `TV 리뷰 가져오기_Fake - Only Android`() = runTest {
         FakeGetTvReviewsUseCase().invoke(id = "airingTodayId7").asSnapshot().forEach {
+            println(it)
+        }
+    }
+
+    @Test
+    fun `TV 검색 결과 가져오기_Real - Only Android`() = runTest {
+        val searchTvUseCase = get<SearchTvUseCase>()
+        searchTvUseCase(query = "modern family").first().forEach {
+            println(it)
+        }
+    }
+
+    @Test
+    fun `TV 검색 결과 가져오기_Fake - Only Android`() = runTest {
+        SearchTvUseCase(tvRepository = FakeTvRepository()).invoke(query = "title1").first().forEach {
             println(it)
         }
     }

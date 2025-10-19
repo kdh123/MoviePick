@@ -52,4 +52,8 @@ class TvRepositoryImpl(
     override fun getTvImages(id: String): Flow<List<SeriesImage>> {
         return remoteTvDataSource.getTvImages(id)
     }
+
+    override fun searchTv(query: String, language: Language): Flow<List<Tv>> {
+        return remoteTvDataSource.searchTv(query, language)
+    }
 }
